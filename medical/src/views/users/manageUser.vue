@@ -1,502 +1,249 @@
 <template>
+  <div>
+    <!-- <el-table  :data="usersList" style="width: 100%" v-if="isReloadData"> -->
+    <el-table :data="
+      usersList.filter(
+        (data) =>
+          !search ||
+          data.userName.toLowerCase().includes(search.toLowerCase())
+      )
+    " fit stripe mix-height="100" style="width: 100%">
+      <el-table-column label="用户ID" min-width="80px" fixed="left">
+        <template slot-scope="usersList">
+          <span style="margin-left: 10px">{{ usersList.row.userId }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="用户名" min-width="80px" fixed="left">
+        <template slot-scope="usersList">
+          <span style="margin-left: 10px">{{ usersList.row.userName }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="用户手机号" min-width="125px">
+        <template slot-scope="usersList">
+          <span style="margin-left: 10px">{{ usersList.row.userPhone }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="生日" min-width="125px">
+        <template slot-scope="usersList">
+          <span style="margin-left: 10px">{{ usersList.row.userBirthday }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="性别" min-width="125px">
+        <template slot-scope="usersList">
+          <span style="margin-left: 10px">{{ usersList.row.userGender }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="用户状态" width="85px">
+        <template slot-scope="usersList">
+          <el-switch v-model="usersList.row.userStatus" :active-value="1" :inactive-value="0" active-color="#13ce66"
+            inactive-color="#ff4949" @change="usersStateChaged(usersList.row)">
+          </el-switch>
+        </template>
+      </el-table-column>
+      <el-table-column label="用户Vip" width="80px">
+        <template slot-scope="usersList">
+          <span style="margin-left: 10px">{{ usersList.row.userVip }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="用户角色" width="80px">
+        <template slot-scope="usersList">
+          <span style="margin-left: 10px">{{ usersList.row.roleName }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="用户创建日期" width="180px">
+        <template slot-scope="usersList">
+          <span style="margin-left: 10px">{{ usersList.row.createTime }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="用户更新日期" width="180px">
+        <template slot-scope="usersList">
+          <span style="margin-left: 10px">{{
+            usersList.row.modifiedTime
+          }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="left" width="220px" fixed="right">
+        <template slot="header" slot-scope="usersList">
+          <el-col :span="14">
+            <el-input v-model="search" size="mini" v-if="usersList" placeholder="输入关键字搜索" />
+          </el-col>
+          <el-button type="primary" size="mini" icon="el-icon-circle-plus-outline" round
+            @click="addShowdialog">添加</el-button>
+        </template>
+        <template slot-scope="usersList">
+          <el-button size="mini" @click="handleEdit(usersList.$index, usersList.row)">编辑</el-button>
+          <el-button v-if="usersList.row.userStatus === 1" size="mini" type="warning"
+            @click="handleOffLine(usersList.$index, usersList.row)">封禁</el-button><el-button
+            v-if="usersList.row.userStatus === 0" size="mini" type="primary"
+            @click="handleOnLine(usersList.$index, usersList.row)">解禁</el-button><el-button size="mini" type="danger"
+            @click="handleDelete(usersList.$index, usersList.row)">删除</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+
     <div>
-      <!-- <el-table  :data="usersList" style="width: 100%" v-if="isReloadData"> -->
-      <el-table
-        :data="
-          usersList.filter(
-            (data) =>
-              !search ||
-              data.userName.toLowerCase().includes(search.toLowerCase())
-          )
-        "
-        fit
-        stripe
-        mix-height="100"
-        style="width: 100%"
-      >
-        <el-table-column label="用户ID" min-width="80px" fixed="left">
-          <template slot-scope="usersList">
-            <span style="margin-left: 10px">{{ usersList.row.userId }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="用户名" min-width="180px" fixed="left">
-          <template slot-scope="usersList">
-            <span style="margin-left: 10px">{{ usersList.row.userName }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="用户手机号" min-width="125px">
-          <template slot-scope="usersList">
-            <span style="margin-left: 10px">{{ usersList.row.userPhone }}</span>
-          </template>
-        </el-table-column>
-        <!-- <el-table-column label="用户类型" width="180px">
-          <template slot-scope="usersList">
-            <span
-              style="margin-left: 10px"
-              v-for="TbCategory in usersList.row.tbCategoryList"
-              :key="TbCategory.categoryId"
-              :index="TbCategory"
-            >
-              <label>{{ TbCategory.categoryName }}</label>
-            </span>
-          </template>
-        </el-table-column> -->
-        <el-table-column label="角色" width="180px">
-          <template slot-scope="usersList">
-            <span
-              style="margin-left: 10px"
-              v-for="role in roleList"
-              :key="role.roleId"
-              :index="usersList.row.roleId"
-            >
-              <label>{{ role.roleName }}</label>
-            </span>
-          </template>
-        </el-table-column>
-        <!-- <el-table-column label="用户微信" min-width="120px">
-          <template slot-scope="usersList">
-            <el-popover trigger="hover" placement="top">
-              <p>微信Id: {{ usersList.row.userWxId }}</p>
-              <div slot="reference" class="name-wrapper">
-                <el-tag size="medium">{{ usersList.row.userWxNickname }}</el-tag>
-              </div>
-            </el-popover>
-          </template>
-        </el-table-column> -->
-        <!-- <el-table-column label="用户状态" width="80px">
-          <template slot-scope="usersList">
-            <span style="margin-left: 10px" v-if="usersList.row.usersState === 1">
-              有效 </span
-            ><span
-              style="margin-left: 10px"
-              v-if="usersList.row.usersState === 0"
-            >
-              无效
-            </span>
-          </template>
-        </el-table-column> -->
-        <el-table-column label="用户状态" width="85px">
-          <template slot-scope="usersList">
-            <el-switch
-              v-model="usersList.row.userStatus"
-              :active-value="1"
-              :inactive-value="0"
-              active-color="#13ce66"
-              inactive-color="#ff4949"
-              @change="usersStateChaged(usersList.row)"
-            >
-            </el-switch>
-          </template>
-        </el-table-column>
-        <el-table-column label="用户Vip" width="80px">
-          <template slot-scope="usersList">
-            <span style="margin-left: 10px">{{ usersList.row.userVip }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="用户角色" width="80px">
-          <template slot-scope="usersList">
-            <span style="margin-left: 10px">{{ usersList.row.roleName }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="用户积分" min-width="80px">
-          <template slot-scope="usersList">
-            <span style="margin-left: 10px">{{ usersList.row.userBonus }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="用户余额" min-width="80px">
-          <template slot-scope="usersList">
-            <span style="margin-left: 10px">{{ usersList.row.userMoney }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="用户省份" min-width="80px">
-          <template slot-scope="usersList">
-            <span style="margin-left: 10px">{{
-              usersList.row.userProvince
-            }}</span>
-          </template>
-        </el-table-column>
-        <!-- <el-table-column label="用户上映日期" width="180px">
-          <template slot-scope="usersList">
-            <span style="margin-left: 10px" v-if="usersList.row.usersReleaseTime!==''">{{
-              usersList.row.usersReleaseTime
-            }}</span>
-            <span style="margin-left: 10px" v-if="usersList.row.usersReleaseTime===null">
-              <label>待定</label>
-            </span>
-          </template>
-        </el-table-column> -->
-        <el-table-column label="用户创建日期" width="180px">
-          <template slot-scope="usersList">
-            <span style="margin-left: 10px">{{ usersList.row.createTime }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="用户更新日期" width="180px">
-          <template slot-scope="usersList">
-            <span style="margin-left: 10px">{{
-              usersList.row.modifiedTime
-            }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column align="left" width="220px" fixed="right">
-          <template slot="header" slot-scope="usersList">
-            <el-col :span="14">
-              <el-input
-                v-model="search"
-                size="mini"
-                v-if="usersList"
-                placeholder="输入关键字搜索"
-              />
+      <el-dialog title="新数据" :visible.sync="dialogFormVisible">
+        <el-form ref="form" :model="user" label-width="80px" size="mini">
+          <el-form-item label="用户名">
+            <el-col>
+              <el-input type="text" maxlength="20" placeholder="请输入用户名" show-word-limit
+                v-model="user.userName"></el-input></el-col>
+          </el-form-item>
+          <el-form-item label="密码">
+            <el-col>
+              <el-input type="text" maxlength="20" placeholder="请输入密码" show-word-limit
+                v-model="user.userPassword"></el-input></el-col>
+          </el-form-item>
+          <el-form-item label="手机号">
+            <el-col>
+              <el-input type="text" maxlength="11" placeholder="请输入手机号" show-word-limit
+                v-model="user.userPhone"></el-input></el-col>
+          </el-form-item>
+          <el-form-item label="头像上传">
+            <el-col>
+              <el-upload class="upload-demo" action="http://localhost:8088/api/user/uploadplus?module=userpath"
+                :on-preview="handlePreview" :on-remove="handleRemove" :file="fileList" :on-success="filesuccess"
+                list-type="picture">
+                <el-button size="small" type="primary">点击上传</el-button>
+                <div slot="tip" class="el-upload__tip">
+                  只能上传jpg/png文件且不超过500kb
+                </div>
+              </el-upload>
             </el-col>
-            <el-button
-              type="primary"
-              size="mini"
-              icon="el-icon-circle-plus-outline"
-              round
-              @click="addShowdialog"
-              >添加</el-button
-            >
-          </template>
-          <template slot-scope="usersList">
-            <el-button
-              size="mini"
-              @click="handleEdit(usersList.$index, usersList.row)"
-              >编辑</el-button
-            >
-            <el-button
-              v-if="usersList.row.userStatus === 1"
-              size="mini"
-              type="warning"
-              @click="handleOffLine(usersList.$index, usersList.row)"
-              >封禁</el-button
-            ><el-button
-              v-if="usersList.row.userStatus === 0"
-              size="mini"
-              type="primary"
-              @click="handleOnLine(usersList.$index, usersList.row)"
-              >解禁</el-button
-            ><el-button
-              size="mini"
-              type="danger"
-              @click="handleDelete(usersList.$index, usersList.row)"
-              >删除</el-button
-            >
-          </template>
-        </el-table-column>
-      </el-table>
+            <el-input type="text" placeholder="头像路径，copy" v-model="user.userAvatarUrl"></el-input>
+          </el-form-item>
+          <el-form-item label="生日" align="left">
+            <el-date-picker v-model="user.userBirthday" type="date" placeholder="创建日期" align="right" style="width: 30%"
+              value-format="yyyy-MM-dd" :picker-options="pickerOptions">
+            </el-date-picker>
+          </el-form-item>
+          <el-form-item label="性别">
+            <!-- <el-col :span="5"> -->
+            <el-col>
+              <el-select v-model="user.userGender" placeholder="请选择用户状态">
+                <el-option v-for="item in ['男', '女', '未知']" :key="item.value" :label="item" :value="item">
+                </el-option>
+              </el-select>
+            </el-col>
+          </el-form-item>
+          <el-form-item label="用户状态">
+            <!-- <el-col :span="5"> -->
+            <el-col>
+              <el-select v-model="user.userStatus" placeholder="请选择用户状态">
+                <el-option label="有效" :value="1"></el-option>
+                <el-option label="无效" :value="0"></el-option>
+              </el-select>
+            </el-col>
+          </el-form-item>
 
-      <div>
-        <el-dialog title="新数据" :visible.sync="dialogFormVisible">
-          <el-form ref="form" :model="user" label-width="80px" size="mini">
-            <el-form-item label="用户名">
-              <el-col>
-                <el-input
-                  type="text"
-                  maxlength="20"
-                  placeholder="请输入用户名"
-                  show-word-limit
-                  v-model="user.userName"
-                ></el-input
-              ></el-col>
-            </el-form-item>
-            <el-form-item label="密码">
-              <el-col>
-                <el-input
-                  type="text"
-                  maxlength="20"
-                  placeholder="请输入密码"
-                  show-word-limit
-                  v-model="user.userPassword"
-                ></el-input
-              ></el-col>
-            </el-form-item>
-            <el-form-item label="手机号">
-              <el-col>
-                <el-input
-                  type="text"
-                  maxlength="11"
-                  placeholder="请输入手机号"
-                  show-word-limit
-                  v-model="user.userPhone"
-                ></el-input
-              ></el-col>
-            </el-form-item>
-            <el-form-item label="头像上传">
-              <el-col>
-                <el-upload
-                  class="upload-demo"
-                  action="http://localhost:8088/api/user/uploadplus?module=userpath"
-                  :on-preview="handlePreview"
-                  :on-remove="handleRemove"
-                  :file="fileList"
-                  :on-success="filesuccess"
-                  list-type="picture"
-                >
-                  <el-button size="small" type="primary">点击上传</el-button>
-                  <div slot="tip" class="el-upload__tip">
-                    只能上传jpg/png文件且不超过500kb
-                  </div>
-                </el-upload>
-              </el-col>
-              <el-input
-                type="text"
-                placeholder="头像路径，copy"
-                v-model="user.userAvatarUrl"
-              ></el-input>
-            </el-form-item>
-
-            <el-form-item label="用户状态">
-              <!-- <el-col :span="5"> -->
-              <el-col>
-                <el-select v-model="user.userStatus" placeholder="请选择用户状态">
-                  <el-option label="有效" :value="1"></el-option>
-                  <el-option label="无效" :value="0"></el-option>
-                </el-select>
-              </el-col>
-            </el-form-item>
-
-            <el-form-item label="用户Vip">
-              <!-- <el-col :span="5"> -->
-              <el-col>
-                <el-select v-model="user.userVip" placeholder="请选择用户状态">
-                  <el-option label="Vip" :value="1"></el-option>
-                  <el-option label="无" :value="0"></el-option>
-                </el-select>
-              </el-col>
-            </el-form-item>
-            <el-form-item label="用户类型">
-              <el-col>
-                <el-select v-model="user.roleId" placeholder="请选择">
-                  <el-option
-                    v-for="role in roleList"
-                    :key="role.roleId"
-                    :label="role.roleName"
-                    :value="role.roleId"
-                  >
-                  </el-option>
-                </el-select>
-              </el-col>
-            </el-form-item>
-            <el-form-item label="用户积分">
-              <el-col>
-                <el-input
-                  type="text"
-                  maxlength="20"
-                  placeholder="请输入积分"
-                  show-word-limit
-                  v-model="user.userBonus"
-                ></el-input
-              ></el-col>
-            </el-form-item>
-            <el-form-item label="用户余额">
-              <el-col>
-                <el-input
-                  type="text"
-                  maxlength="20"
-                  placeholder="请输入积分"
-                  show-word-limit
-                  v-model="user.userMoney"
-                ></el-input
-              ></el-col>
-            </el-form-item>
-            <el-form-item label="省">
-              <el-col>
-                <el-input
-                  type="text"
-                  maxlength="20"
-                  placeholder="请输入省"
-                  show-word-limit
-                  v-model="user.userProvince"
-                ></el-input
-              ></el-col>
-            </el-form-item>
-            <el-form-item label="微信Id">
-              <el-col>
-                <el-input
-                  type="text"
-                  maxlength="20"
-                  placeholder="请输入微信ID"
-                  show-word-limit
-                  v-model="user.userWxId"
-                ></el-input
-              ></el-col>
-            </el-form-item>
-            <el-form-item label="微信昵称">
-              <el-col>
-                <el-input
-                  type="text"
-                  maxlength="20"
-                  placeholder="请输入微信昵称"
-                  show-word-limit
-                  v-model="user.userWxNickname"
-                ></el-input
-              ></el-col>
-            </el-form-item>
-          </el-form>
-          <div slot="footer" class="dialog-footer">
-            <el-button @click="closedialog">取 消</el-button>
-            <el-button type="primary" @click="addItem">确 定</el-button>
-          </div>
-        </el-dialog>
-      </div>
-
-      <div>
-        <el-dialog title="修改数据" :visible.sync="dialogFormVisibles">
-          <el-form ref="form" :model="user" label-width="80px" size="mini">
-            <el-form-item label="用户名">
-              <el-col>
-                <el-input
-                  type="text"
-                  maxlength="20"
-                  placeholder="请输入用户名"
-                  show-word-limit
-                  v-model="user.userName"
-                ></el-input
-              ></el-col>
-            </el-form-item>
-            <el-form-item label="手机号">
-              <el-col>
-                <el-input
-                  type="text"
-                  maxlength="20"
-                  placeholder="请输入密码"
-                  show-word-limit
-                  v-model="user.userPhone"
-                ></el-input
-              ></el-col>
-            </el-form-item>
-            <el-form-item label="头像上传">
-              <el-col>
-                <el-upload
-                  class="upload-demo"
-                  action="http://localhost:8088/api/user/uploadplus?module=userpath"
-                  :on-preview="handlePreview"
-                  :on-remove="handleRemove"
-                  :file="fileList"
-                  :on-success="filesuccess"
-                  list-type="picture"
-                >
-                  <el-button size="small" type="primary">点击上传</el-button>
-                  <div slot="tip" class="el-upload__tip">
-                    只能上传jpg/png文件且不超过500kb
-                  </div>
-                </el-upload>
-                <el-input
-                  type="text"
-                  placeholder="头像路径，copy"
-                  v-model="user.userAvatarUrl"
-                ></el-input>
-              </el-col>
-            </el-form-item>
-
-            <el-form-item label="用户状态">
-              <!-- <el-col :span="5"> -->
-              <el-col>
-                <el-select v-model="user.userStatus" placeholder="请选择用户状态">
-                  <el-option label="有效" :value="1"></el-option>
-                  <el-option label="无效" :value="0"></el-option>
-                </el-select>
-              </el-col>
-            </el-form-item>
-
-            <el-form-item label="用户Vip">
-              <!-- <el-col :span="5"> -->
-              <el-col>
-                <el-select v-model="user.userVip" placeholder="请选择用户状态">
-                  <el-option label="Vip" :value="1"></el-option>
-                  <el-option label="无" :value="0"></el-option>
-                </el-select>
-              </el-col>
-            </el-form-item>
-            <el-form-item label="用户类型">
-              <el-col>
-                <el-select v-model="user.roleId" placeholder="请选择">
-                  <el-option
-                    v-for="role in roleList"
-                    :key="role.roleId"
-                    :label="role.roleName"
-                    :value="role.roleId"
-                  >
-                  </el-option>
-                </el-select>
-              </el-col>
-            </el-form-item>
-            <el-form-item label="用户积分">
-              <el-col>
-                <el-input
-                  type="text"
-                  maxlength="20"
-                  placeholder="请输入积分"
-                  show-word-limit
-                  v-model="user.userBonus"
-                ></el-input
-              ></el-col>
-            </el-form-item>
-            <el-form-item label="用户余额">
-              <el-col>
-                <el-input
-                  type="text"
-                  maxlength="20"
-                  placeholder="请输入余额"
-                  show-word-limit
-                  v-model="user.userMoney"
-                ></el-input
-              ></el-col>
-            </el-form-item>
-            <el-form-item label="省">
-              <el-col>
-                <el-input
-                  type="text"
-                  maxlength="20"
-                  placeholder="请输入省"
-                  show-word-limit
-                  v-model="user.userProvince"
-                ></el-input
-              ></el-col>
-            </el-form-item>
-            <el-form-item label="微信Id">
-              <el-col>
-                <el-input
-                  type="text"
-                  maxlength="20"
-                  placeholder="请输入微信ID"
-                  show-word-limit
-                  v-model="user.userWxId"
-                ></el-input
-              ></el-col>
-            </el-form-item>
-            <el-form-item label="微信昵称">
-              <el-col>
-                <el-input
-                  type="text"
-                  maxlength="20"
-                  placeholder="请输入微信昵称"
-                  show-word-limit
-                  v-model="user.userWxNickname"
-                ></el-input
-              ></el-col>
-            </el-form-item>
-          </el-form>
-          <div slot="footer" class="dialog-footer">
-            <el-button @click="closedialog">取 消</el-button>
-            <el-button type="primary" @click="updItem">确 定</el-button>
-          </div>
-        </el-dialog>
-      </div>
-
-      <div class="block">
-        <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page="pageInfo.current"
-          :page-sizes="[5, 10, 20, 30,100,1000,10000]"
-          :page-size="pageInfo.size"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="pageInfo.total"
-        >
-        </el-pagination>
-      </div>
+          <el-form-item label="用户Vip">
+            <!-- <el-col :span="5"> -->
+            <el-col>
+              <el-select v-model="user.userVip" placeholder="请选择用户状态">
+                <el-option label="Vip" :value="1"></el-option>
+                <el-option label="无" :value="0"></el-option>
+              </el-select>
+            </el-col>
+          </el-form-item>
+          <el-form-item label="用户类型">
+            <el-col>
+              <el-select v-model="user.roleId" placeholder="请选择">
+                <el-option v-for="role in roleList" :key="role.roleId" :label="role.roleName" :value="role.roleId">
+                </el-option>
+              </el-select>
+            </el-col>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="closedialog">取 消</el-button>
+          <el-button type="primary" @click="addItem">确 定</el-button>
+        </div>
+      </el-dialog>
     </div>
-  </template>
+
+    <div>
+      <el-dialog title="修改数据" :visible.sync="dialogFormVisibles">
+        <el-form ref="form" :model="user" label-width="80px" size="mini">
+          <el-form-item label="用户名">
+            <el-col>
+              <el-input type="text" maxlength="20" placeholder="请输入用户名" show-word-limit
+                v-model="user.userName"></el-input></el-col>
+          </el-form-item>
+          <el-form-item label="手机号">
+            <el-col>
+              <el-input type="text" maxlength="20" placeholder="请输入密码" show-word-limit
+                v-model="user.userPhone"></el-input></el-col>
+          </el-form-item>
+          <el-form-item label="头像上传">
+            <el-col>
+              <el-upload class="upload-demo" action="http://localhost:8088/api/user/uploadplus?module=userpath"
+                :on-preview="handlePreview" :on-remove="handleRemove" :file="fileList" :on-success="filesuccess"
+                list-type="picture">
+                <el-button size="small" type="primary">点击上传</el-button>
+                <div slot="tip" class="el-upload__tip">
+                  只能上传jpg/png文件且不超过500kb
+                </div>
+              </el-upload>
+              <el-input type="text" placeholder="头像路径，copy" v-model="user.userAvatarUrl"></el-input>
+            </el-col>
+          </el-form-item>
+          <el-form-item label="生日" align="left">
+            <el-date-picker v-model="user.userBirthday" type="date" placeholder="创建日期" align="right" style="width: 30%"
+              value-format="yyyy-MM-dd" :picker-options="pickerOptions">
+            </el-date-picker>
+          </el-form-item>
+          <el-form-item label="性别">
+            <!-- <el-col :span="5"> -->
+            <el-col>
+              <el-select v-model="user.userGender" placeholder="请选择用户状态">
+                <el-option v-for="item in ['男', '女', '未知']" :key="item.value" :label="item" :value="item">
+                </el-option>
+              </el-select>
+            </el-col>
+          </el-form-item>
+          <el-form-item label="用户状态">
+            <!-- <el-col :span="5"> -->
+            <el-col>
+              <el-select v-model="user.userStatus" placeholder="请选择用户状态">
+                <el-option label="有效" :value="1"></el-option>
+                <el-option label="无效" :value="0"></el-option>
+              </el-select>
+            </el-col>
+          </el-form-item>
+
+          <el-form-item label="用户Vip">
+            <!-- <el-col :span="5"> -->
+            <el-col>
+              <el-select v-model="user.userVip" placeholder="请选择用户状态">
+                <el-option label="Vip" :value="1"></el-option>
+                <el-option label="无" :value="0"></el-option>
+              </el-select>
+            </el-col>
+          </el-form-item>
+          <el-form-item label="用户类型">
+            <el-col>
+              <el-select v-model="user.roleId" placeholder="请选择">
+                <el-option v-for="role in roleList" :key="role.roleId" :label="role.roleName" :value="role.roleId">
+                </el-option>
+              </el-select>
+            </el-col>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="closedialog">取 消</el-button>
+          <el-button type="primary" @click="updItem">确 定</el-button>
+        </div>
+      </el-dialog>
+    </div>
+
+    <div class="block">
+      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
+        :current-page="pageInfo.current" :page-sizes="[5, 10, 20, 30, 100, 1000, 10000]" :page-size="pageInfo.size"
+        layout="total, sizes, prev, pager, next, jumper" :total="pageInfo.total">
+      </el-pagination>
+    </div>
+  </div>
+</template>
 
 <script>
 import Qs from 'qs'
@@ -564,17 +311,17 @@ export default {
       }
     }
   },
-  beforeCreate () {
-    this.getRoleList()
-  },
+
   created () {
+    // 先获取全部用户
     this.getUsersList()
   },
   methods: {
     updItem () {
+      console.log(this.user)
       axios({
-        method: 'post',
-        url: '/admin/user/update',
+        method: 'put',
+        url: '/admin/user',
         data: Qs.stringify(this.user)
       })
         .then((jsondata) => {
@@ -589,7 +336,7 @@ export default {
     addItem () {
       axios({
         method: 'post',
-        url: '/admin/user/add',
+        url: '/admin/user',
         data: Qs.stringify(this.user)
       })
         .then((jsondata) => {
@@ -651,11 +398,11 @@ export default {
     },
     getRoleList () {
       axios({
-        method: 'post',
-        url: '/admin/role/selectall'
+        method: 'get',
+        url: '/admin/role/'
       })
         .then((jsondata) => {
-          console.log(jsondata.data)
+          console.log('获取到的全部角色为：' + jsondata.data)
           this.roleList = jsondata.data
         })
         .then(console.error())
@@ -698,16 +445,19 @@ export default {
       this.getUsersList()
     },
     getUsersList () {
+      console.log('pageInfo:>' + this.pageInfo)
+      // 获取用户分页列表
       axios({
-        method: 'post',
+        method: 'get',
         url: '/admin/user/findpage',
-        data: Qs.stringify(this.pageInfo)
+        params: { 'current': this.pageInfo.current, 'size': this.pageInfo.size }
       }).then((jsondata) => {
         this.usersList = jsondata.data.records
         console.log('userList:', jsondata.data.records)
         this.pageInfo = jsondata.data
         // console.log(jsondata.data[0].usersDetail)
       })
+      this.getRoleList()
     },
     handleEdit (index, row) {
       // console.log(index, row)
@@ -725,12 +475,11 @@ export default {
     },
     handleDelete (index, row) {
       axios({
-        method: 'post',
-        url: '/admin/users/del',
-        data: Qs.stringify(row)
+        method: 'delete',
+        url: `/admin/user/` + row.userId
       })
         .then((jsondata) => {
-          console.log(jsondata)
+          console.log('删除' + jsondata.data)
           if (jsondata.code === '200') {
             this.noti('删除')
           }
@@ -739,9 +488,9 @@ export default {
     },
     handleOffLine (index, row) {
       axios({
-        method: 'post',
+        method: 'put',
         url: '/admin/user/offline',
-        data: Qs.stringify({ userId: row.userId })
+        params: { userId: row.userId }
       })
         .then((jsondata) => {
           console.log(jsondata)
@@ -754,7 +503,7 @@ export default {
     },
     handleOnLine (index, row) {
       axios({
-        method: 'post',
+        method: 'put',
         url: '/admin/user/online',
         data: Qs.stringify({ userId: row.userId })
       })
@@ -771,5 +520,4 @@ export default {
 }
 </script>
 
-  <style>
-  </style>
+<style></style>
