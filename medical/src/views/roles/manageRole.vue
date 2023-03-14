@@ -1,122 +1,72 @@
 <template>
-    <div class="manageRole">
-      <el-table
-        :data="
-          roleList.filter(
-            (data) =>
-              !search || data.roleName.toLowerCase().includes(search.toLowerCase())
-          )
-        "
-        fit
-        stripe
-        style="width: 100%"
-        :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
-      >
-        <el-table-column label="角色Id" prop="roleId"> </el-table-column>
-        <el-table-column label="角色名" prop="roleName"> </el-table-column>
-        <el-table-column label="创建时间" prop="createTime"> </el-table-column>
-        <el-table-column label="更新时间" prop="modifiedTime"> </el-table-column>
-        <el-table-column align="left">
-          <template slot="header" slot-scope="roleList">
-            <el-col :span="14">
-              <el-input
-                v-model="search"
-                size="mini"
-                v-if="roleList"
-                placeholder="输入关键字搜索"
-              />
-            </el-col>
-            <el-button
-              type="primary"
-              size="mini"
-              icon="el-icon-circle-plus-outline"
-              round
-              @click="addShowdialog"
-              >添加</el-button
-            >
-          </template>
-          <template slot-scope="scope">
-            <el-button size="mini" @click="handleEdit(scope.$index, scope.row)"
-              >Edit</el-button
-            >
-            <el-button
-              size="mini"
-              type="danger"
-              @click="handleDelete(scope.$index, scope.row)"
-              >Delete</el-button
-            >
-          </template>
-        </el-table-column>
-      </el-table>
+  <div class="manageRole">
+    <el-table :data="
+      roleList.filter(
+        (data) =>
+          !search || data.roleName.toLowerCase().includes(search.toLowerCase())
+      )
+    " fit stripe style="width: 100%" :tree-props="{ children: 'children', hasChildren: 'hasChildren' }">
+      <el-table-column label="角色Id" prop="roleId"> </el-table-column>
+      <el-table-column label="角色名" prop="roleName"> </el-table-column>
+      <el-table-column label="创建时间" prop="createTime"> </el-table-column>
+      <el-table-column label="更新时间" prop="modifiedTime"> </el-table-column>
+      <el-table-column align="left">
+        <template slot="header" slot-scope="roleList">
+          <el-col :span="14">
+            <el-input v-model="search" size="mini" v-if="roleList" placeholder="输入关键字搜索" />
+          </el-col>
+          <el-button type="primary" size="mini" icon="el-icon-circle-plus-outline" round
+            @click="addShowdialog">添加</el-button>
+        </template>
+        <template slot-scope="scope">
+          <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">Edit</el-button>
+          <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">Delete</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
 
-      <div>
-        <el-dialog title="新数据" :visible.sync="dialogFormVisible">
-          <el-form ref="form" label-width="80px" size="mini">
-            <el-form-item label="角色名">
-              <el-input
-                type="text"
-                maxlength="20"
-                placeholder="请输入角色名"
-                show-word-limit
-                v-model="roleName"
-              ></el-input
-            ></el-form-item>
-            <el-form-item label="赋权">
-              <el-tree
-                ref="action_tree"
-                :data="rightList"
-                show-checkbox
-                default-expand-all
-                node-key="rightId"
-                :default-expanded-keys="default_checked_keys"
-                :default-checked-keys="this.default_checked_keys"
-                :props="defaultProps"
-              >
-              </el-tree
-            ></el-form-item>
-          </el-form>
-          <div slot="footer" class="dialog-footer">
-            <el-button @click="closedialog">取 消</el-button>
-            <el-button type="primary" @click="addItem">确 定</el-button>
-          </div>
-        </el-dialog>
-      </div>
-
-      <div>
-        <el-dialog title="修改数据" :visible.sync="dialogFormVisibles">
-          <el-form ref="form" :model="role" label-width="80px" size="mini">
-            <el-form-item label="角色名称">
-              <el-col :span="10">
-                <el-input
-                  type="text"
-                  maxlength="20"
-                  show-word-limit
-                  v-model="role.roleName"
-                ></el-input
-              ></el-col>
-            </el-form-item>
-            <el-form-item label="菜单权限">
-              <el-tree
-                ref="action_tree"
-                :data="rightList"
-                show-checkbox
-                default-expand-all
-                node-key="rightId"
-                :default-expanded-keys="default_checked_keys"
-                :default-checked-keys="this.default_checked_keys"
-                :props="defaultProps"
-              >
-              </el-tree>
-            </el-form-item>
-          </el-form>
-          <div slot="footer" class="dialog-footer">
-            <el-button @click="closedialog">取 消</el-button>
-            <el-button type="primary" @click="updItem">确 定</el-button>
-          </div>
-        </el-dialog>
-      </div>
+    <div>
+      <el-dialog title="新数据" :visible.sync="dialogFormVisible">
+        <el-form ref="form" label-width="80px" size="mini">
+          <el-form-item label="角色名">
+            <el-input type="text" maxlength="20" placeholder="请输入角色名" show-word-limit v-model="roleName">
+            </el-input>
+          </el-form-item>
+          <el-form-item label="赋权">
+            <el-tree ref="action_tree" :data="rightList" show-checkbox default-expand-all node-key="rightId"
+              :default-expanded-keys="default_checked_keys" :default-checked-keys="this.default_checked_keys"
+              :props="defaultProps">
+            </el-tree></el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="closedialog">取 消</el-button>
+          <el-button type="primary" @click="addItem">确 定</el-button>
+        </div>
+      </el-dialog>
     </div>
-  </template>
+
+    <div>
+      <el-dialog title="修改数据" :visible.sync="dialogFormVisibles">
+        <el-form ref="form" :model="role" label-width="80px" size="mini">
+          <el-form-item label="角色名称">
+            <el-col :span="10">
+              <el-input type="text" maxlength="20" show-word-limit v-model="role.roleName"></el-input></el-col>
+          </el-form-item>
+          <el-form-item label="菜单权限">
+            <el-tree ref="action_tree" :data="rightList" show-checkbox default-expand-all node-key="rightId"
+              :default-expanded-keys="default_checked_keys" :default-checked-keys="this.default_checked_keys"
+              :props="defaultProps">
+            </el-tree>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="closedialog">取 消</el-button>
+          <el-button type="primary" @click="updItem">确 定</el-button>
+        </div>
+      </el-dialog>
+    </div>
+  </div>
+</template>
 
 <script>
 import Qs from 'qs'
@@ -247,16 +197,18 @@ export default {
         }
       })
     },
+
     getAllRight () {
       axios({
-        method: 'post',
-        url: '/admin/right/selecttree'
+        method: 'get',
+        url: '/admin/right/tree'
       }).then((jsondata2) => {
         console.log(jsondata2)
         this.rightList = jsondata2.data
         this.default_checked_keys = jsondata2.data
       })
     },
+
     noti (action) {
       const h = this.$createElement
       this.$notify({
@@ -266,13 +218,14 @@ export default {
     },
     getRoleList () {
       axios({
-        method: 'post',
-        url: '/admin/role/selectall'
+        method: 'get',
+        url: '/admin/role'
       }).then((jsondata) => {
         console.log(jsondata)
         this.roleList = jsondata.data
       })
     },
+
     handleEdit (index, row) {
       // console.log(index, row)
       console.log(index)
@@ -293,5 +246,4 @@ export default {
 }
 </script>
 
-  <style>
-  </style>
+<style></style>

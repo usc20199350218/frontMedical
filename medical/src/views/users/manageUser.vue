@@ -13,7 +13,7 @@
           <span style="margin-left: 10px">{{ usersList.row.userId }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="用户名" min-width="80px" fixed="left">
+      <el-table-column label="用户名" min-width="150px" fixed="left">
         <template slot-scope="usersList">
           <span style="margin-left: 10px">{{ usersList.row.userName }}</span>
         </template>
@@ -28,7 +28,7 @@
           <span style="margin-left: 10px">{{ usersList.row.userBirthday }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="性别" min-width="125px">
+      <el-table-column label="性别" min-width="60px">
         <template slot-scope="usersList">
           <span style="margin-left: 10px">{{ usersList.row.userGender }}</span>
         </template>
@@ -42,7 +42,9 @@
       </el-table-column>
       <el-table-column label="用户Vip" width="80px">
         <template slot-scope="usersList">
-          <span style="margin-left: 10px">{{ usersList.row.userVip }}</span>
+          <!-- <span style="margin-left: 10px">{{ usersList.row.userVip }}</span> -->
+          <span v-if="usersList.row.userVip==1">是</span>
+          <span v-if="usersList.row.userVip==0">否</span>
         </template>
       </el-table-column>
       <el-table-column label="用户角色" width="80px">
