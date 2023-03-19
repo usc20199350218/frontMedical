@@ -33,10 +33,17 @@
             </el-input>
           </el-form-item>
           <el-form-item label="赋权">
-            <el-tree ref="action_tree" :data="rightList" show-checkbox default-expand-all node-key="rightId"
-              :default-expanded-keys="default_checked_keys" :default-checked-keys="this.default_checked_keys"
-              :props="defaultProps">
-            </el-tree></el-form-item>
+            <el-tree
+              ref="action_tree"
+              :data="rightList"
+              show-checkbox
+              default-expand-all
+              node-key="rightId"
+              :default-expanded-keys=default_checked_keys
+              :default-checked-keys=this.default_checked_keys
+              :props=defaultProps >
+            </el-tree>
+          </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="closedialog">取 消</el-button>
@@ -85,7 +92,7 @@ export default {
       tbRightList: {},
       default_checked_keys: [],
       defaultProps: {
-        children: 'tbRightList',
+        children: 'rightList',
         label: 'rightText'
       },
       role: {}

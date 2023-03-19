@@ -6,7 +6,8 @@ import Login from '../views/Login'
 import manageRights from '../views/rights/manageRights'
 import manageUsers from '../views/users/manageUser'
 import manageRole from '../views/roles/manageRole'
-
+import manageDrug from '../views/drug/manageDrug'
+import manageDrugDetails from '../views/drug/manageDrugDetails'
 Vue.use(Router)
 
 export default new Router({
@@ -33,6 +34,14 @@ export default new Router({
         path: '/role/manage',
         name: 'manageRole',
         component: manageRole
+      }, {
+        path: '/drug/manage',
+        name: 'manageDrug',
+        component: manageDrug
+      }, {
+        path: '/drug/manage/details',
+        name: 'manageDrugDetails',
+        component: manageDrugDetails
       }
 
       ]
