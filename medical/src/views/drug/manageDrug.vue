@@ -149,8 +149,6 @@
                 layout="total, sizes, prev, pager, next, jumper" :total="pageInfo.total">
             </el-pagination>
         </div>
-        <div style="height: 700px;"></div>
-        <div>{{ drug }}</div>
     </div>
 </template>
 
