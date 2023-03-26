@@ -9,7 +9,7 @@
     " fit stripe mix-height="100" style="width: 100%">
       <el-table-column label="ID" min-width="80px" fixed="left">
         <template slot-scope="drugDetailsList">
-          <span style="margin-left: 10px">{{ drugDetailsList.row.drugDetailsId }}</span>
+          <span style="margin-left: 10px">{{ drugDetailsList.row.drugDetailId }}</span>
         </template>
       </el-table-column>
       <el-table-column label="品名" min-width="150px" fixed="left">
@@ -26,7 +26,7 @@
         <template slot-scope="drugDetailsList">
           <span style="margin-left: 10px">{{ drugDetailsList.row.drugSpecification }}</span>
         </template>
-      </el-table-column> =
+      </el-table-column>
 
       <el-table-column label="品类" min-width="60px">
         <template slot-scope="drugDetailsList">
@@ -41,17 +41,12 @@
           </el-switch>
         </template>
       </el-table-column>
-      <el-table-column label="保质期(月)" width="100px">
-        <template slot-scope="drugDetailsList">
-          <span style="margin-left: 10px">{{ drugDetailsList.row.drugShelfLife }}</span>
-        </template>
-      </el-table-column>
       <el-table-column label="创建日期" width="180px">
         <template slot-scope="drugDetailsList">
           <span style="margin-left: 10px">{{ drugDetailsList.row.createTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="更新日期" width="180px">
+      <el-table-column label="更新日期" width="100px">
         <template slot-scope="drugDetailsList">
           <span style="margin-left: 10px">{{
             drugDetailsList.row.modifiedTime
@@ -270,19 +265,19 @@ export default {
     },
     drugStateChaged (item) {
       console.log('change', item)
-      // let changeData = { status: item.drugStatus, drugId: item.drugId }
-      // axios({
-      //   method: 'put',
-      //   url: '/admin/drugDetail/status',
-      //   data: Qs.stringify(changeData)
-      // }).then((jsondata) => {
-      //   console.log(jsondata)
-      //   if (jsondata.code === '200') {
-      //     // alert('下架成功')
-      //     this.noti('状态修改操作')
-      //   }
-      // })
-      //   .then(console.error())
+      let changeData = { drugDetailsStatus: item.drugDetailsStatus, drugDetailId: item.drugDetailId }
+      axios({
+        method: 'put',
+        url: '/admin/drugdetail/status',
+        data: Qs.stringify(changeData)
+      }).then((jsondata) => {
+        console.log(jsondata)
+        if (jsondata.code === '200') {
+          // alert('下架成功')
+          this.noti('状态修改操作')
+        }
+      })
+        .then(console.error())
     },
     noti (action) {
       const h = this.$createElement
@@ -293,7 +288,7 @@ export default {
       this.getDrugDetailsList()
     },
     getDrugDetailsList () {
-      console.log('pageInfo:>' + this.pageInfo)
+      console.log('pageInfo:>', this.pageInfo)
       // 获取药品分页列表
       axios({
         method: 'get',
@@ -317,10 +312,10 @@ export default {
     handleDelete (index, row) {
       axios({
         method: 'delete',
-        url: `/admin/drugdetail/` + row.drugDetailsId
+        url: `/admin/drugdetail/` + row.drugDetailId
       })
         .then((jsondata) => {
-          console.log('删除' + jsondata.data)
+          console.log('删除', jsondata.data)
           if (jsondata.code === '200') {
             this.noti('删除')
           }

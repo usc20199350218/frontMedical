@@ -9,7 +9,7 @@ import manageRole from '../views/roles/manageRole'
 import manageDrug from '../views/drug/manageDrug'
 import manageBrand from '../views/drug/manageBrand'
 import manageDrugDetails from '../views/drug/manageDrugDetails'
-
+import purchase from '../views/storehouse/purchase'
 Vue.use(Router)
 
 export default new Router({
@@ -48,6 +48,10 @@ export default new Router({
         path: '/drug/manage/details',
         name: 'manageDrugDetails',
         component: manageDrugDetails
+      }, {
+        path: '/storehouse/purchase',
+        name: 'purchase',
+        component: purchase
       }
 
       ]
