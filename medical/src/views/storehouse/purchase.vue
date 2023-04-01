@@ -38,17 +38,37 @@
           <span style="margin-left: 10px">{{ batchsList.row.drugUnitPrice }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="零售价（元）" min-width="125px">
+      <el-table-column label="零售价（元）" min-width="100px">
         <template slot-scope="batchsList">
           <span style="margin-left: 10px">{{ batchsList.row.drugRetailPrice }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="数量" min-width="125px">
+      <el-table-column label="审批" min-width="100px">
         <template slot-scope="batchsList">
-          <span style="margin-left: 10px">{{ batchsList.row.quantity }}</span>
+          <span style="margin-left: 10px">{{ batchsList.row.totalCreated }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="left" width="320px" fixed="right">
+      <el-table-column label="进货" min-width="100px">
+        <template slot-scope="batchsList">
+          <span style="margin-left: 10px">{{ batchsList.row.totalNormalPurchase }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="可售" min-width="100px">
+        <template slot-scope="batchsList">
+          <span style="margin-left: 10px">{{ batchsList.row.totalSold }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="禁售" min-width="100px">
+        <template slot-scope="batchsList">
+          <span style="margin-left: 10px">{{ batchsList.row.totalNormalForbidden }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="总数量" min-width="100px">
+        <template slot-scope="batchsList">
+          <span style="margin-left: 10px">{{ batchsList.row.totalAll }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="left" width="300px" fixed="right">
         <template slot="header" slot-scope="batchsList">
           <el-col :span="14">
             <el-input v-model="search" size="mini" v-if="batchsList" placeholder="输入关键字搜索" />
@@ -67,7 +87,7 @@
     <!-- 到货之后就是通过编辑来更新，或者专门有按钮来设置，即更新 -->
     <!-- 不设置删除按钮，只设置禁用 / 取消禁用 -->
     <div>
-      <el-dialog title="新数据" :visible.sync="dialogFormVisible">
+      <el-dialog title="新建批次" :visible.sync="dialogFormVisible">
         <el-form ref="form" :model="batch" label-width="100px" size="mini">
           <el-form-item label="药品" min-width="150px" fixed="left">
             <el-select v-model="batch.drugDetailId" filterable placeholder="请选择药品">
@@ -84,17 +104,20 @@
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="closedialog(dialogFormVisible)">取 消</el-button>
-          <el-button type="primary" @click="addItem">确 定</el-button>
+          <!-- 关闭弹窗，刷新数据 -->
+          <!-- <el-button @click="dialogFormVisible = false, getBatchsList()">取 消</el-button> -->
+          <!-- <el-button @click="closedialog('dialogFormVisible')">取 消</el-button> -->
+          <el-button @click="dialogFormVisible = false, batch = {}">取 消</el-button>
+          <el-button type="primary" @click="addItem(), dialogFormVisible = false, batch = {}">确 定</el-button>
         </div>
       </el-dialog>
     </div>
 
     <div>
-      <el-dialog title="修改数据" :visible.sync="dialogFormVisibles">
+      <el-dialog title="修改批次信息" :visible.sync="dialogFormVisibles">
         <el-form ref="form" :model="batch" label-width="100px" size="mini">
           <el-form-item label="药品" min-width="150px" fixed="left">
-            <el-select v-model="batch.drugDetailId" filterable placeholder="请选择药品">
+            <el-select v-model="batch.drugDetailId" filterable placeholder="请选择药品" :disabled="true">
               <el-option v-for="item in drugDetailList" :key="item.drugDetailId" :value="item.drugDetailId"
                 :label="item.drugName">
                 {{ item.drugDetailId }}-{{ item.drugName }}-{{ item.drugSpecification }}
@@ -108,24 +131,28 @@
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="closedialog(dialogFormVisibles)">取 消</el-button>
-          <el-button type="primary" @click="updItem">确 定</el-button>
+          <!-- <el-button @click="getBatchDetails(activeDrugDetailId, nowActiveName), dialogFormVisibles = false">取
+            消</el-button> -->
+          <!-- <el-button @click="closedialog(dialogFormVisibles)">取 消</el-button> -->
+          <el-button @click="dialogFormVisibles = false, getBatchDetails(activeDrugDetailId, nowActiveName), batch = {}">取
+            消</el-button>
+          <el-button type="primary" @click="updItem(), dialogFormVisibles = false, batch = {}">确 定</el-button>
         </div>
       </el-dialog>
     </div>
 
     <div>
-      <el-dialog title="修改数据" :visible.sync="changeAllShow">
+      <el-dialog title="修改批次信息" :visible.sync="changeAllShow">
         <el-form ref="form" :model="batch" label-width="100px" size="mini">
           <el-form-item label="药品" min-width="150px" fixed="left">
-            <el-select v-model="batch.drugDetailId" filterable placeholder="请选择药品">
+            <el-select v-model="batch.drugDetailId" filterable placeholder="请选择药品" :disabled="true">
               <el-option v-for="item in drugDetailList" :key="item.drugDetailId" :value="item.drugDetailId"
                 :label="item.drugName">
                 {{ item.drugDetailId }}-{{ item.drugName }}-{{ item.drugSpecification }}
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="数量（盒）">
+          <el-form-item label="计划数量（盒）">
             <el-col>
               <el-input type="text" maxlength="20" placeholder="请输入数量（盒）" show-word-limit
                 v-model="batch.batchPurchaseQuantity"></el-input></el-col>
@@ -153,18 +180,25 @@
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="closedialog(changeAllShow)">取 消</el-button>
-          <el-button type="primary" @click="updItem">确 定</el-button>
+          <!-- <el-button @click="getBatchDetails(activeDrugDetailId, nowActiveName), changeAllShow = false">取 消</el-button> -->
+          <el-button @click="changeAllShow = false, batch = {}">取 消</el-button>
+          <el-button type="primary" @click="updItem(), changeAllShow = false, batch = {}">确 定</el-button>
         </div>
       </el-dialog>
     </div>
 
     <div>
-      <el-dialog title="详情" :visible.sync="dialogFormVisibleDetails" :max-width=this.maxWidth
+      <el-dialog :title="drugName + ' 库存情况'" :visible.sync="dialogFormVisibleDetails" :max-width=this.maxWidth
         :close-on-click-modal="false">
+        <!-- <el-dialog :title="`<span style='color: red; font-weight: bold;'>${drugName}</span> 库存情况`"
+        :visible.sync="dialogFormVisibleDetails" :max-width=this.maxWidth :close-on-click-modal="false"> -->
+        <!-- 标签页标签头 -->
         <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
-          <el-tab-pane v-for="(itemStatus, index ) in batchStatusList" :key="index" :label="itemStatus"></el-tab-pane>
+          <el-tab-pane v-for="(itemStatus, index ) in batchStatusList" :key="index" :label="itemStatus">
+          </el-tab-pane>
         </el-tabs>
+        <!-- 关于为什么不放入其中的原因在于放入其中会有明显卡顿 -->
+        <!-- 对应内容 -->
         <el-table :data="
           batchDetailsList.filter(
             (data) =>
@@ -214,8 +248,12 @@
               <el-col :span="14">
                 <el-input v-model="searchNew" size="mini" v-if="batchDetailsList" placeholder="输入关键字搜索" />
               </el-col>
-              <el-button type="primary" size="mini" icon="el-icon-circle-plus-outline" round
-                @click="addShowdialog">添加</el-button>
+              <!-- <el-button type="primary" size="mini" icon="el-icon-circle-plus-outline" round
+                @click="addShowdialog">添加</el-button> -->
+              <el-button type="primary" size="mini" icon="el-icon-circle-plus-outline" round @click="getDrugDetailList()
+                , dialogFormVisible = true">添加</el-button>
+              <!-- this.getDrugDetailList()
+              this.dialogFormVisible = true -->
             </template>
             <template slot-scope="batchDetailsList">
               <el-button size="mini"
@@ -234,7 +272,7 @@
     EXPIRED( "过期" ),
     FORBIDDEN( "禁止" ); -->
 
-              <!-- 通过变为正常进货 -->
+              <!-- 通过变为进货 -->
               <el-button size="mini" type="primary" v-if="batchDetailsList.row.batchStatus === 'CREATED'"
                 @click="batchStatusChange(batchDetailsList.$index, batchDetailsList.row, 'NORMAL_PURCHASE')">
                 通过
@@ -244,7 +282,7 @@
                 @click="batchStatusChange(batchDetailsList.$index, batchDetailsList.row, 'FORBIDDEN')">
                 不通过
               </el-button>
-              <!-- 上架变为正常销售 -->
+              <!-- 上架变为正常 -->
               <el-button size="mini" type="warning" v-if="batchDetailsList.row.batchStatus === 'NORMAL_PURCHASE'"
                 @click="batchStatusChange(batchDetailsList.$index, batchDetailsList.row, 'SOLD')">
                 上架
@@ -259,7 +297,7 @@
                 @click="batchStatusChange(batchDetailsList.$index, batchDetailsList.row, 0)">
                 销毁
               </el-button>
-              <!-- 恢复变为正常销售 -->
+              <!-- 恢复变为正常 -->
               <el-button size="mini" type="primary" v-if="batchDetailsList.row.batchStatus === 'FORBIDDEN'"
                 @click="batchStatusChange(batchDetailsList.$index, batchDetailsList.row, 'SOLD')">
                 恢复
@@ -271,6 +309,8 @@
             </template>
           </el-table-column>
         </el-table>
+        <!-- </el-tab-pane>
+        </el-tabs> -->
       </el-dialog>
     </div>
     <div class="block">
@@ -285,7 +325,7 @@
       </el-dialog>
     </div>
     <div>
-      <el-dialog title="备注" :visible.sync="RemarkShow">
+      <el-dialog title="添加备注" :visible.sync="RemarkShow">
         <el-form ref="form" :model="batch" label-width="100px" size="mini">
           <el-form-item label="备注">
             <el-col>
@@ -294,8 +334,8 @@
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="closedialog(RemarkShow)">取 消</el-button>
-          <el-button type="primary" @click="updItem">确 定</el-button>
+          <el-button @click="RemarkShow = false, batch.remark = ''">取 消</el-button>
+          <el-button type="primary" @click="updItem(), RemarkShow = false, batch.remark = ''">确 定</el-button>
         </div>
       </el-dialog>
     </div>
@@ -330,21 +370,28 @@
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="closedialog(Receipt)">取 消</el-button>
-          <el-button type="primary" @click="updItem">确 定</el-button>
+          <el-button @click="Receipt = false, batch = {}">取 消</el-button>
+          <el-button type="primary" @click="updItem(), Receipt = false, batch = {}">确 定</el-button>
         </div>
       </el-dialog>
     </div>
   </div>
 </template>
 
+<!-- 对于取消的按钮设计，全部改为val=false即可，不需要刷新 -->
+<!-- todo: 将所有的取消改为dialogFormVisible = false ，get***（）样式 -->
+<!-- todo: 将所有成功之后调用关闭的直接改，然后调用noti方法 -->
+<!-- TODO: 对于提交、更新按钮，设置为updItem(),val=false样式，精准关闭，这样不用再进行判断，直接关，而之前的取消设置刷新方法，太多余了 -->
+<!-- 关于取消是否需要刷新，应该是在涉及状态修改的按钮对应的窗体下的取消设置刷新，因为状态已经在前端进行了修改，而实际数据是取消了修改，所有应该是要刷新 -->
 <script>
 import Qs from 'qs'
 import axios from '../../utils/request'
 export default {
   data () {
     return {
+      // 分页信息
       pageInfo: { current: 0, size: 5 },
+      // 详情分页信息，废弃，——数据量不大
       pageInfoNew: { current: 0, size: 5 },
       search: '',
       dialogFormVisible: false,
@@ -361,7 +408,7 @@ export default {
         drugShelfLife: ''
       },
       batchsList: [],
-      batchStatus: -1,
+      batchStatus: 'kong',
       batch: {},
       batchDetailsList: [],
       maxWidth: '190%',
@@ -373,7 +420,11 @@ export default {
       Receipt: false,
       planNum: '',
       RemarkShow: false,
-      changeAllShow: false
+      changeAllShow: false,
+      batchName: '',
+      drugName: '',
+      drugDetailId: '',
+      nowActiveName: ''
     }
   },
 
@@ -385,6 +436,7 @@ export default {
     handleClick (tab, event) {
       console.log('切换', tab, event)
       console.log('此时为', this.activeName)
+      this.nowActiveName = this.batchStatusList[this.activeName]
       console.log('此时状态中文为', this.batchStatusList[this.activeName])
       this.getBatchDetails(this.activeDrugDetailId, this.batchStatusList[this.activeName])
     },
@@ -398,7 +450,6 @@ export default {
         .then((jsondata) => {
           console.log(jsondata)
           if (jsondata.code === '200') {
-            this.closedialog(2)
             this.noti('提交')
           }
         })
@@ -413,7 +464,7 @@ export default {
       }).then((jsondata) => {
         console.log(jsondata)
         if (jsondata.code === '200') {
-          this.closedialog(1)
+          // this.closedialog(1)
           this.noti('提交')
         }
       })
@@ -421,22 +472,8 @@ export default {
       this.getBatchsList()
     },
     closedialog (val) {
-      //       dialogFormVisible: false,
-      // dialogFormVisibles: false,
-      // dialogFormVisibleDetails: false,
-      // dialogVisible: false,
-      // Receipt: false,
-      // RemarkShow: false,
-      // changeAllShow: false
-
-      // if (val === 1) { this.dialogFormVisible = false } else if (val === 2) { this.dialogFormVisibles = false } else if (val === 3) { this.dialogFormVisibleDetails = false } else if (val === 'RemarkShow') {
-      //   this.RemarkShow = false
-      // } else {
-      //   this.dialogFormVisible = false
-      //   this.dialogFormVisibles = false
-      //   this.dialogFormVisibleDetails = false
-      // }
-      this[val] = false
+      this.value[val] = !this.value[val]
+      console.log(val, 'val:', this[val])
       this.batch = {
 
       }
@@ -445,6 +482,7 @@ export default {
       // 添加前展示
       // 只能选择相关信息，然后输入数量、生产日期、批号
       // this.getBrandList()
+      this.batch = {}
       this.getDrugDetailList()
       this.dialogFormVisible = true
     },
@@ -487,18 +525,20 @@ export default {
       this.getBatchsList()
     },
     async getBatchStatusList (row) {
+      // 异步获取批次状态枚举List，用于展示标签页按钮
       await axios({
         method: 'get',
         url: '/admin/batch/status'
       }).then(jsondata => {
         this.batchStatusList = jsondata.data
-
         console.log('批次状态List:', this.batchStatusList)
-        console.log('此时为', this.activeName)
         console.log('activeName', this.activeName)
         console.log('状态为:', this.batchStatusList[this.activeName])
+        this.nowActiveName = this.batchStatusList[this.activeName]
         this.batchDetail = row.drugName
-        this.getBatchDetails(row.drugDetailId, this.batchStatusList[this.activeName])
+        this.getBatchDetails(row.drugDetailId, this.nowActiveName)
+        // this.getBatchDetails(row.drugDetailId, this.batchStatusList[this.activeName])
+        // this.getBatchDetails(this.activeDrugDetailId, this.batchStatusList[this.activeName])
       })
     },
     getBrandList () {
@@ -524,13 +564,16 @@ export default {
       // 获取库存分页列表
       axios({
         method: 'get',
-        url: `/admin/batch/page/` + this.batchStatus,
+        // url: `/admin/batch/page/` + this.batchStatus,
+        url: '/admin/batch/page/',
         params: { 'current': this.pageInfo.current, 'size': this.pageInfo.size }
       }).then((jsondata) => {
-        this.batchsList = jsondata.data.records
-        console.log('batchsList:', jsondata.data.records)
-        this.pageInfo = jsondata.data
-        // console.log(jsondata.data[0].usersDetail)
+        if (jsondata.data !== '') {
+          this.batchsList = jsondata.data.records
+          console.log('获取整体batchsList:', jsondata.data.records)
+          this.pageInfo = jsondata.data
+          // console.log(jsondata.data[0].usersDetail)
+        }
       })
     },
     getBatchDetails (drugDetailId, active) {
@@ -558,6 +601,8 @@ export default {
       })
     },
     handleLook (index, row) {
+      // 查看按钮点击
+      this.drugName = row.drugName
       // 药品详情id
       this.activeDrugDetailId = row.drugDetailId
       // 获取状态list
@@ -604,6 +649,9 @@ export default {
       // NORMAL_PURCHASE( "正常进货" )
       console.log('编辑', row)
       this.batch = row
+      // 获取药品批次详情列表，展示药品名称，可以考虑设置val来替代
+      this.getDrugDetailList()
+      // 根据批次状态展示弹窗
       if (row.batchStatus === 'CREATED' || row.batchStatus === 'NORMAL_PURCHASE') {
         // console.log('编辑', row)
         // this.batch = row
@@ -613,17 +661,19 @@ export default {
       }
     },
     batchStatusChange (index, row, target) {
-      // 先赋值
+      // 先赋值，在前端修改状态，后面传回给后端
       row.batchStatus = target
       this.batch = row
-      // 上架
+      // 上架,根据日期是否填写来判断进货还是销售
       if (target === 'SOLD' && row.batchProductionDate == null) {
-        // 填补数据，走新增的方法
-        this.planNum = row.batchPurchaseQuantity
-        // 开启收货弹窗，之后更新即可
-        this.Receipt = true
-        console.log('新进药品', row)
-        return
+        // // 填补数据，走新增的方法
+        // this.planNum = row.batchPurchaseQuantity
+        // // 开启收货弹窗，之后更新即可
+        // this.Receipt = true
+        // console.log('新进药品', row)
+        // return
+        // 状态变为进货
+        this.batch.batchStatus = 'NORMAL_PURCHASE'
       } else if (target === 'FORBIDDEN') {
         // 填写备注
         console.log('禁止', row)
@@ -635,11 +685,16 @@ export default {
         // 更新为零 将sql语句加一条num不为零
         row.batchExistingQuantity = 0
       }
-
+      // 调用更新方法
+      this.changeBatchStatus(row, target)
+    },
+    changeBatchStatus (item, target) {
+      // 更新状态
       axios({
         method: 'put',
-        url: '/admin/batch/detail',
-        data: Qs.stringify(row)
+        // url: '/admin/batch/detail',
+        url: '/admin/batch/',
+        data: Qs.stringify(item)
       }).then(jsondata => {
         console.log(jsondata.data)
         this.noti(target)
