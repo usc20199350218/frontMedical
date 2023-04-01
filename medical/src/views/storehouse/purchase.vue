@@ -84,7 +84,7 @@
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="closedialog">取 消</el-button>
+          <el-button @click="closedialog(dialogFormVisible)">取 消</el-button>
           <el-button type="primary" @click="addItem">确 定</el-button>
         </div>
       </el-dialog>
@@ -108,7 +108,7 @@
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="closedialog">取 消</el-button>
+          <el-button @click="closedialog(dialogFormVisibles)">取 消</el-button>
           <el-button type="primary" @click="updItem">确 定</el-button>
         </div>
       </el-dialog>
@@ -153,7 +153,7 @@
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="closedialog">取 消</el-button>
+          <el-button @click="closedialog(changeAllShow)">取 消</el-button>
           <el-button type="primary" @click="updItem">确 定</el-button>
         </div>
       </el-dialog>
@@ -289,9 +289,8 @@
         <el-form ref="form" :model="batch" label-width="100px" size="mini">
           <el-form-item label="备注">
             <el-col>
-              <el-input type="text" maxlength="999" placeholder="备注" show-word-limit
-                v-model="batch.remark"></el-input>
-              </el-col>
+              <el-input type="text" maxlength="999" placeholder="备注" show-word-limit v-model="batch.remark"></el-input>
+            </el-col>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -331,7 +330,7 @@
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="closedialog">取 消</el-button>
+          <el-button @click="closedialog(Receipt)">取 消</el-button>
           <el-button type="primary" @click="updItem">确 定</el-button>
         </div>
       </el-dialog>
@@ -422,14 +421,22 @@ export default {
       this.getBatchsList()
     },
     closedialog (val) {
-      this.user = {}
-      if (val === 1) { this.dialogFormVisible = false } else if (val === 2) { this.dialogFormVisibles = false } else if (val === 3) { this.dialogFormVisibleDetails = false } else if (val === 'RemarkShow') {
-        this.RemarkShow = false
-      } else {
-        this.dialogFormVisible = false
-        this.dialogFormVisibles = false
-        this.dialogFormVisibleDetails = false
-      }
+      //       dialogFormVisible: false,
+      // dialogFormVisibles: false,
+      // dialogFormVisibleDetails: false,
+      // dialogVisible: false,
+      // Receipt: false,
+      // RemarkShow: false,
+      // changeAllShow: false
+
+      // if (val === 1) { this.dialogFormVisible = false } else if (val === 2) { this.dialogFormVisibles = false } else if (val === 3) { this.dialogFormVisibleDetails = false } else if (val === 'RemarkShow') {
+      //   this.RemarkShow = false
+      // } else {
+      //   this.dialogFormVisible = false
+      //   this.dialogFormVisibles = false
+      //   this.dialogFormVisibleDetails = false
+      // }
+      this[val] = false
       this.batch = {
 
       }
@@ -594,7 +601,7 @@ export default {
     },
     handleEditDetail (index, row) {
       // CREATED( "创建" ),
-    // NORMAL_PURCHASE( "正常进货" )
+      // NORMAL_PURCHASE( "正常进货" )
       console.log('编辑', row)
       this.batch = row
       if (row.batchStatus === 'CREATED' || row.batchStatus === 'NORMAL_PURCHASE') {
