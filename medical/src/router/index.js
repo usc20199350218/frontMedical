@@ -10,6 +10,9 @@ import manageDrug from '../views/drug/manageDrug'
 import manageBrand from '../views/drug/manageBrand'
 import manageDrugDetails from '../views/drug/manageDrugDetails'
 import purchase from '../views/storehouse/purchase'
+import manageStore from '../views/store/manageStore'
+import managePosition from '../views/store/managePosition'
+import manageStaff from '../views/store/manageStaff'
 Vue.use(Router)
 
 export default new Router({
@@ -52,6 +55,20 @@ export default new Router({
         path: '/storehouse/purchase',
         name: 'purchase',
         component: purchase
+      },
+      {
+        path: '/store/manage',
+        name: 'manageStore',
+        component: manageStore
+      },
+      {
+        path: '/store/position',
+        name: 'managePosition',
+        component: managePosition
+      }, {
+        path: '/store/staff',
+        name: 'manageStaff',
+        component: manageStaff
       }
 
       ]
