@@ -58,6 +58,11 @@
           <span style="margin-left: 10px">{{ batchsList.row.totalSold }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="待清理" min-width="100px">
+        <template slot-scope="batchsList">
+          <span style="margin-left: 10px">{{ batchsList.row.totalExpired }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="禁售" min-width="100px">
         <template slot-scope="batchsList">
           <span style="margin-left: 10px">{{ batchsList.row.totalNormalForbidden }}</span>
@@ -290,16 +295,16 @@
               <!-- 禁止，需要弹窗填写利用 -->
               <el-button size="mini" type="danger" v-if="batchDetailsList.row.batchStatus === 'SOLD'"
                 @click="batchStatusChange(batchDetailsList.$index, batchDetailsList.row, 'FORBIDDEN')">
-                禁止
+                下架
               </el-button>
               <!-- 销毁，数量变为零，需要弹窗 -->
               <el-button size="mini" type="danger" v-if="batchDetailsList.row.batchStatus === 'EXPIRED'"
-                @click="batchStatusChange(batchDetailsList.$index, batchDetailsList.row, 0)">
+                @click="batchStatusChange(batchDetailsList.$index, batchDetailsList.row, 'EXPIRED_PROCESSED')">
                 销毁
               </el-button>
               <!-- 恢复变为正常 -->
               <el-button size="mini" type="primary" v-if="batchDetailsList.row.batchStatus === 'FORBIDDEN'"
-                @click="batchStatusChange(batchDetailsList.$index, batchDetailsList.row, 'SOLD')">
+                @click="batchStatusChange(batchDetailsList.$index, batchDetailsList.row, null)">
                 恢复
               </el-button>
               <el-button size="mini" type="primary" v-if="batchDetailsList.row.batchStatus === 'SOLD_OUT'"
@@ -470,6 +475,10 @@ export default {
       })
         .then(console.error())
       this.getBatchsList()
+      // if (this.dialogFormVisibleDetails) {
+      //   console.log('内部添加,更新内部')
+      //   this.getBatchDetails(this.activeDrugDetailId, this.batchStatusList[this.activeName])
+      // }
     },
     closedialog (val) {
       this.value[val] = !this.value[val]
@@ -586,7 +595,6 @@ export default {
         this.batchDetailsList = jsondata.data
         console.log('batchDetailsList:', this.batchDetailsList)
       })
-
       this.dialogFormVisibleDetails = true
     },
     handleLookUser (index, row) {
@@ -664,28 +672,28 @@ export default {
       // 先赋值，在前端修改状态，后面传回给后端
       row.batchStatus = target
       this.batch = row
-      // 上架,根据日期是否填写来判断进货还是销售
-      if (target === 'SOLD' && row.batchProductionDate == null) {
-        // // 填补数据，走新增的方法
-        // this.planNum = row.batchPurchaseQuantity
-        // // 开启收货弹窗，之后更新即可
-        // this.Receipt = true
-        // console.log('新进药品', row)
-        // return
-        // 状态变为进货
-        this.batch.batchStatus = 'NORMAL_PURCHASE'
+      if (target === null) {
+        //  此时为恢复
+        if (!this.batch.batchProductionDate) {
+          console.log('此时应该变为进货')
+          this.batch.batchStatus = 'NORMAL_PURCHASE'
+        } else {
+          console.log('此时应该变为正常')
+          this.batch.batchStatus = 'SOLD'
+        }
+      } else if (target === 'EXPIRED_PROCESSED') {
+        // 此时为销毁
+        this.batch.batchExistingQuantity = 0
+        console.log('此时应该变为过期已经销毁')
       } else if (target === 'FORBIDDEN') {
-        // 填写备注
-        console.log('禁止', row)
-        // todo 备注弹窗
+        console.log('此时应该变为下架，开启备注弹窗')
         this.RemarkShow = true
         return
-      } else if (target === 0) {
-        console.log('销毁', row)
-        // 更新为零 将sql语句加一条num不为零
-        row.batchExistingQuantity = 0
+      } else if (target === 'SOLD') {
+        console.log('此时应该变为正常，开启编辑弹窗')
+        this.Receipt = true
+        return
       }
-      // 调用更新方法
       this.changeBatchStatus(row, target)
     },
     changeBatchStatus (item, target) {

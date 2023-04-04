@@ -13,6 +13,7 @@ import purchase from '../views/storehouse/purchase'
 import manageStore from '../views/store/manageStore'
 import managePosition from '../views/store/managePosition'
 import manageStaff from '../views/store/manageStaff'
+import manageStoreBatch from '../views/store/manageStoreBatch'
 Vue.use(Router)
 
 export default new Router({
@@ -69,6 +70,10 @@ export default new Router({
         path: '/store/staff',
         name: 'manageStaff',
         component: manageStaff
+      }, {
+        path: '/store/batch',
+        name: 'manageStoreBatch',
+        component: manageStoreBatch
       }
 
       ]

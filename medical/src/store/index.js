@@ -9,7 +9,8 @@ const state = {
   nowList: [],
   soonList: [],
   // user: {},
-  user: JSON.parse(localStorage.getItem('user')) || {}
+  user: JSON.parse(localStorage.getItem('user')) || {},
+  roleId: ''
 }
 
 // 实时监听 state 值的最新状态，注意这里的 getters 可以理解为计算属性

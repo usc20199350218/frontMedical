@@ -36,8 +36,8 @@
       </el-table-column>
       <el-table-column label="状态" width="85px">
         <template slot-scope="drugDetailsList">
-          <el-switch v-model="drugDetailsList.row.drugDetailsStatus" :active-value="1" :inactive-value="0" active-color="#13ce66"
-            inactive-color="#ff4949" @change="drugStateChaged(drugDetailsList.row)">
+          <el-switch v-model="drugDetailsList.row.drugDetailsStatus" :active-value="1" :inactive-value="0"
+            active-color="#13ce66" inactive-color="#ff4949" @change="drugStateChaged(drugDetailsList.row)">
           </el-switch>
         </template>
       </el-table-column>
@@ -98,10 +98,20 @@
                 v-model="drugDetail.drugSpecification"></el-input></el-col>
           </el-form-item>
 
-          <el-form-item label="保质期（月）">
+          <!-- <el-form-item label="保质期（月）">
             <el-col>
               <el-input type="text" maxlength="20" placeholder="请输入保质期（月）" show-word-limit
                 v-model="drugDetail.drugShelfLife"></el-input></el-col>
+          </el-form-item> -->
+          <el-form-item label="单价">
+            <el-col>
+              <el-input type="text" maxlength="20" placeholder="请输入单价" show-word-limit
+                v-model="drugDetail.drugUnitPrice"></el-input></el-col>
+          </el-form-item>
+          <el-form-item label="零售价">
+            <el-col>
+              <el-input type="text" maxlength="20" placeholder="请输入零售价" show-word-limit
+                v-model="drugDetail.drugRetailPrice"></el-input></el-col>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -140,10 +150,20 @@
                 v-model="drugDetail.drugSpecification"></el-input></el-col>
           </el-form-item>
 
-          <el-form-item label="保质期（月）">
+          <!-- <el-form-item label="保质期（月）">
             <el-col>
               <el-input type="text" maxlength="20" placeholder="请输入保质期（月）" show-word-limit
                 v-model="drugDetail.drugShelfLife"></el-input></el-col>
+          </el-form-item> -->
+          <el-form-item label="单价">
+            <el-col>
+              <el-input type="text" maxlength="20" placeholder="请输入单价" show-word-limit
+                v-model="drugDetail.drugUnitPrice"></el-input></el-col>
+          </el-form-item>
+          <el-form-item label="零售价">
+            <el-col>
+              <el-input type="text" maxlength="20" placeholder="请输入零售价" show-word-limit
+                v-model="drugDetail.drugRetailPrice"></el-input></el-col>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">

@@ -302,7 +302,7 @@ export default {
         // 把user 对象存在vuex 中
         // this.$store.commit('updateUser', jsondata.data)
         this.$store.commit('setUser', jsondata.data)
-        console.log(jsondata.data)
+        console.log('登录:', jsondata.data)
         this.noti('登录')
         // 跳转到my
         this.$router.push('/index')

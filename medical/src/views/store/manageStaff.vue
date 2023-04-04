@@ -113,23 +113,71 @@
           <el-form-item label="职位">
             <el-col :span="10">
               <el-select v-model="staff.positionId" placeholder="请选择" @change="getStaffList()">
-            <el-option v-for="item in positionList" :key="item.positionId" :label="item.positionName"
-              :value="item.positionId">
-            </el-option>
-          </el-select></el-col>
+                <el-option v-for="item in positionList" :key="item.positionId" :label="item.positionName"
+                  :value="item.positionId">
+                </el-option>
+              </el-select>
+            </el-col>
           </el-form-item>
           <el-form-item label="用户">
             <el-col :span="10">
-              <el-input type="textarea" maxlength="32" show-word-limit v-model="staff.userId"></el-input></el-col>
+              <el-select v-model="staff.userId" placeholder="请选择" @change="getStaffList()">
+                <el-option v-for="item in userList" :key="item.userId" :label="item.userRealName" :value="item.userId">
+                  {{ item.userId }}-{{ item.userName }}-{{ item.userRealName }}-{{ item.userPhone }}
+                </el-option>
+              </el-select>
+            </el-col>
           </el-form-item>
           <el-form-item label="工资">
             <el-col :span="10">
-              <el-input type="textarea" maxlength="32" show-word-limit v-model="staff.actualSalary"></el-input></el-col>
+              <el-input type="text" maxlength="10" show-word-limit v-model="staff.actualSalary">
+              </el-input>
+            </el-col>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="showAdd = false, store = {}">取 消</el-button>
+          <el-button @click="showAdd = false, staff = {}">取 消</el-button>
           <el-button type="primary" @click="addItem()">确 定</el-button>
+        </div>
+      </el-dialog>
+    </div>
+    <div>
+      <el-dialog title="编辑职员" :visible.sync="showUpd">
+        <el-form ref="form" :model="staff" label-width="80px" size="mini">
+          <el-form-item label="店铺">
+            <el-select v-model="staff.storeId" placeholder="请选择" @change="getStaffList()">
+              <el-option v-for="item in storeList" :key="item.storeId" :label="item.storeName" :value="item.storeId">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="职位">
+            <el-col :span="10">
+              <el-select v-model="staff.positionId" placeholder="请选择" @change="getStaffList()">
+                <el-option v-for="item in positionList" :key="item.positionId" :label="item.positionName"
+                  :value="item.positionId">
+                </el-option>
+              </el-select>
+            </el-col>
+          </el-form-item>
+          <el-form-item label="用户">
+            <el-col :span="10">
+              <el-select v-model="staff.userId" placeholder="请选择" @change="getStaffList()">
+                <el-option v-for="item in userList" :key="item.userId" :label="item.userRealName" :value="item.userId">
+                  {{ item.userId }}-{{ item.userName }}-{{ item.userRealName }}-{{ item.userPhone }}
+                </el-option>
+              </el-select>
+            </el-col>
+          </el-form-item>
+          <el-form-item label="工资">
+            <el-col :span="10">
+              <el-input type="text" maxlength="10" show-word-limit v-model="staff.actualSalary">
+              </el-input>
+            </el-col>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="showUpd = false, staff = {}">取 消</el-button>
+          <el-button type="primary" @click="updItem()">确 定</el-button>
         </div>
       </el-dialog>
     </div>
@@ -232,10 +280,12 @@ export default {
         url: '/admin/user/staff'
       }).then(jsondata => {
         this.userList = jsondata.data
+        console.log('获取到的员工list:', this.userList)
       })
     },
     handleEdit (row) {
       console.log('即将编辑:', row)
+      this.getUserList()
       this.staff = row
       this.showUpd = true
     },
@@ -252,6 +302,22 @@ export default {
           this.getStaffList()
           this.noti('添加')
           this.showAdd = false
+        }
+      })
+    },
+    updItem () {
+      console.log('addItem即将更新的职员:', this.staff)
+      axios({
+        method: 'put',
+        url: '/admin/staff',
+        data: Qs.stringify(this.staff)
+      }).then(jsondata => {
+        console.log('更新结果:', jsondata)
+        if (jsondata.code === '200') {
+          this.staff = {}
+          this.getStaffList()
+          this.noti('更新')
+          this.showUpd = false
         }
       })
     },
