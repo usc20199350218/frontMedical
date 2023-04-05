@@ -14,6 +14,8 @@ import manageStore from '../views/store/manageStore'
 import managePosition from '../views/store/managePosition'
 import manageStaff from '../views/store/manageStaff'
 import manageStoreBatch from '../views/store/manageStoreBatch'
+import manageType from '../views/drug/manageType'
+import manageApply from '../views/storehouse/manageApply'
 Vue.use(Router)
 
 export default new Router({
@@ -74,6 +76,14 @@ export default new Router({
         path: '/store/batch',
         name: 'manageStoreBatch',
         component: manageStoreBatch
+      }, {
+        path: '/drug/type',
+        name: 'manageType',
+        component: manageType
+      }, {
+        path: '/storehouse/store_apply',
+        name: 'manageApply',
+        component: manageApply
       }
 
       ]

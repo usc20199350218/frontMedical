@@ -1,155 +1,170 @@
 <template>
-    <div>
-        <el-table :data="
-            drugsList.filter(
-                (data) =>
-                    !search ||
-                    data.drugName.toLowerCase().includes(search.toLowerCase())
-            )
-        " fit stripe mix-height="100" style="width: 100%">
-            <el-table-column label="ID" min-width="80px" fixed="left">
-                <template slot-scope="drugsList">
-                    <span style="margin-left: 10px">{{ drugsList.row.drugId }}</span>
-                </template>
-            </el-table-column>
-            <el-table-column label="品名" min-width="150px" fixed="left">
-                <template slot-scope="drugsList">
-                    <span style="margin-left: 10px">{{ drugsList.row.drugName }}</span>
-                </template>
-            </el-table-column>
-            <!-- <el-table-column label="规格" min-width="125px">
+  <div>
+    <el-table :data="
+      drugsList.filter(
+        (data) =>
+          !search ||
+          data.drugName.toLowerCase().includes(search.toLowerCase())
+      )
+    " fit stripe mix-height="100" style="width: 100%">
+      <el-table-column label="ID" min-width="80px" fixed="left">
+        <template slot-scope="drugsList">
+          <span style="margin-left: 10px">{{ drugsList.row.drugId }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="品名" min-width="150px" fixed="left">
+        <template slot-scope="drugsList">
+          <span style="margin-left: 10px">{{ drugsList.row.drugName }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="品类" min-width="125px">
+        <template slot-scope="drugsList">
+          <span style="margin-left: 10px">{{ drugsList.row.typeName }}</span>
+        </template>
+      </el-table-column>
+      <!-- <el-table-column label="规格" min-width="125px">
                 <template slot-scope="drugsList">
                     <span style="margin-left: 10px">{{ drugsList.row.drugSpecification }}</span>
                 </template>
             </el-table-column> -->
-            <!-- <el-table-column label="品牌" min-width="125px">
+      <!-- <el-table-column label="品牌" min-width="125px">
                 <template slot-scope="drugsList">
                     <span style="margin-left: 10px">{{ drugsList.row.brandName }}</span>
                 </template>
             </el-table-column> -->
-            <el-table-column label="品类" min-width="60px">
-                <template slot-scope="drugsList">
-                    <span v-if="drugsList.row.isRx == '0'">非处方药</span>
-                    <span v-if="drugsList.row.isRx == '1'">处方药</span>
-                </template>
-            </el-table-column>
-            <el-table-column label="状态" width="85px">
-                <template slot-scope="drugsList">
-                    <el-switch v-model="drugsList.row.drugStatus" :active-value="1" :inactive-value="0"
-                        active-color="#13ce66" inactive-color="#ff4949" @change="drugStateChaged(drugsList.row)">
-                    </el-switch>
-                </template>
-            </el-table-column>
-            <!-- <el-table-column label="保质期(月)" width="100px">
+      <el-table-column label="处方" min-width="60px">
+        <template slot-scope="drugsList">
+          <span v-if="drugsList.row.isRx == '0'">非处方药</span>
+          <span v-if="drugsList.row.isRx == '1'">处方药</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="状态" width="85px">
+        <template slot-scope="drugsList">
+          <el-switch v-model="drugsList.row.drugStatus" :active-value="1" :inactive-value="0" active-color="#13ce66"
+            inactive-color="#ff4949" @change="drugStateChaged(drugsList.row)">
+          </el-switch>
+        </template>
+      </el-table-column>
+      <!-- <el-table-column label="保质期(月)" width="100px">
                 <template slot-scope="drugsList">
                     <span style="margin-left: 10px">{{ drugsList.row.drugShelfLife }}</span>
                 </template>
             </el-table-column> -->
-            <el-table-column label="创建日期" width="180px">
-                <template slot-scope="drugsList">
-                    <span style="margin-left: 10px">{{ drugsList.row.createTime }}</span>
-                </template>
-            </el-table-column>
-            <el-table-column label="更新日期" width="180px">
-                <template slot-scope="drugsList">
-                    <span style="margin-left: 10px">{{
-                        drugsList.row.modifiedTime
-                    }}</span>
-                </template>
-            </el-table-column>
-            <el-table-column align="left" width="220px" fixed="right">
-                <template slot="header" slot-scope="drugsList">
-                    <el-col :span="14">
-                        <el-input v-model="search" size="mini" v-if="drugsList" placeholder="输入关键字搜索" />
-                    </el-col>
-                    <el-button type="primary" size="mini" icon="el-icon-circle-plus-outline" round
-                        @click="addShowdialog">添加</el-button>
-                </template>
-                <template slot-scope="drugsList">
-                    <el-button size="mini" @click="handleEdit(drugsList.$index, drugsList.row)">编辑</el-button>
-                    <!-- <el-button v-if="drugsList.row.drugStatus == '1'" size="mini" type="warning"
+      <el-table-column label="创建日期" width="180px">
+        <template slot-scope="drugsList">
+          <span style="margin-left: 10px">{{ drugsList.row.createTime }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="更新日期" width="180px">
+        <template slot-scope="drugsList">
+          <span style="margin-left: 10px">{{
+            drugsList.row.modifiedTime
+          }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="left" width="220px" fixed="right">
+        <template slot="header" slot-scope="drugsList">
+          <el-col :span="14">
+            <el-input v-model="search" size="mini" v-if="drugsList" placeholder="输入关键字搜索" />
+          </el-col>
+          <el-button type="primary" size="mini" icon="el-icon-circle-plus-outline" round
+            @click="addShowdialog">添加</el-button>
+        </template>
+        <template slot-scope="drugsList">
+          <el-button size="mini" @click="handleEdit(drugsList.$index, drugsList.row)">编辑</el-button>
+          <!-- <el-button v-if="drugsList.row.drugStatus == '1'" size="mini" type="warning"
                         @click="handleOffLine(drugsList.$index, drugsList.row)">封禁</el-button>
                     <el-button v-if="drugsList.row.drugStatus == '0'" size="mini" type="primary"
                         @click="handleOnLine(drugsList.$index, drugsList.row)">解禁</el-button> -->
-                    <el-button size="mini" type="danger"
-                        @click="handleDelete(drugsList.$index, drugsList.row)">删除</el-button>
-                </template>
-            </el-table-column>
-        </el-table>
+          <el-button size="mini" type="danger" @click="handleDelete(drugsList.$index, drugsList.row)">删除</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
 
-        <div>
-            <el-dialog title="新数据" :visible.sync="dialogFormVisible">
-                <el-form ref="form" :model="drug" label-width="80px" size="mini">
-                    <el-form-item label="品名">
-                        <el-col>
-                            <el-input type="text" maxlength="20" placeholder="请输入品名" show-word-limit
-                                v-model="drug.drugName"></el-input></el-col>
-                    </el-form-item>
-                    <el-form-item label="品类">
-                        <el-col>
-                            <el-select v-model="drug.isRx" placeholder="请选择品类" default-first-option>
-                                <el-option label="非处方药" :value="0"></el-option><el-option label="处方药"
-                                    :value="1"></el-option>
+    <div>
+      <el-dialog title="新数据" :visible.sync="dialogFormVisible">
+        <el-form ref="form" :model="drug" label-width="80px" size="mini">
+          <el-form-item label="品名">
+            <el-col>
+              <el-input type="text" maxlength="20" placeholder="请输入品名" show-word-limit
+                v-model="drug.drugName"></el-input></el-col>
+          </el-form-item>
+          <el-form-item label="处方">
+            <el-col>
+              <el-select v-model="drug.isRx" placeholder="请选择品类" default-first-option>
+                <el-option label="非处方药" :value="0"></el-option><el-option label="处方药" :value="1"></el-option>
 
-                            </el-select>
-                        </el-col>
-                    </el-form-item>
-                    <el-form-item label="状态">
-                        <el-col>
-                            <el-select v-model="drug.drugStatus" placeholder="请选择状态">
-                                <el-option label="有效" :value="1"></el-option>
-                                <el-option label="无效" :value="0"></el-option>
-                            </el-select>
-                        </el-col>
-                    </el-form-item>
-                </el-form>
-                <div slot="footer" class="dialog-footer">
-                    <el-button @click="closedialog">取 消</el-button>
-                    <el-button type="primary" @click="addItem">确 定</el-button>
-                </div>
-            </el-dialog>
+              </el-select>
+            </el-col>
+          </el-form-item>
+          <el-form-item label="品类" min-width="150px" fixed="left">
+            <el-select v-model="drug.typeId" filterable placeholder="请选择药品">
+              <el-option v-for="item in typeList" :key="item.typeId" :value="item.typeId"
+                :label="item.typeName">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="状态">
+            <el-col>
+              <el-select v-model="drug.drugStatus" placeholder="请选择状态">
+                <el-option label="有效" :value="1"></el-option>
+                <el-option label="无效" :value="0"></el-option>
+              </el-select>
+            </el-col>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="closedialog">取 消</el-button>
+          <el-button type="primary" @click="addItem">确 定</el-button>
         </div>
-
-        <div>
-            <el-dialog title="修改数据" :visible.sync="dialogFormVisibles">
-                <el-form ref="form" :model="drug" label-width="80px" size="mini">
-                    <el-form-item label="品名">
-                        <el-col>
-                            <el-input type="text" maxlength="20" placeholder="请输入品名" show-word-limit
-                                v-model="drug.drugName"></el-input></el-col>
-                    </el-form-item>
-                    <el-form-item label="品类">
-                        <el-col>
-                            <el-select v-model="drug.isRx" placeholder="请选择品类" default-first-option>
-                                <el-option label="非处方药" :value="0"></el-option><el-option label="处方药"
-                                    :value="1"></el-option>
-
-                            </el-select>
-                        </el-col>
-                    </el-form-item>
-                    <el-form-item label="状态">
-                        <el-col>
-                            <el-select v-model="drug.drugStatus" placeholder="请选择状态">
-                                <el-option label="有效" :value="1"></el-option>
-                                <el-option label="无效" :value="0"></el-option>
-                            </el-select>
-                        </el-col>
-                    </el-form-item>
-                </el-form>
-                <div slot="footer" class="dialog-footer">
-                    <el-button @click="closedialog">取 消</el-button>
-                    <el-button type="primary" @click="updItem">确 定</el-button>
-                </div>
-            </el-dialog>
-        </div>
-
-        <div class="block">
-            <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
-                :current-page="pageInfo.current" :page-sizes="[5, 10, 20, 30, 100, 1000, 10000]" :page-size="pageInfo.size"
-                layout="total, sizes, prev, pager, next, jumper" :total="pageInfo.total">
-            </el-pagination>
-        </div>
+      </el-dialog>
     </div>
+
+    <div>
+      <el-dialog title="修改数据" :visible.sync="dialogFormVisibles">
+        <el-form ref="form" :model="drug" label-width="80px" size="mini">
+          <el-form-item label="品名">
+            <el-col>
+              <el-input type="text" maxlength="20" placeholder="请输入品名" show-word-limit
+                v-model="drug.drugName"></el-input></el-col>
+          </el-form-item>
+          <el-form-item label="处方">
+            <el-col>
+              <el-select v-model="drug.isRx" placeholder="请选择品类" default-first-option>
+                <el-option label="非处方药" :value="0"></el-option><el-option label="处方药" :value="1"></el-option>
+              </el-select>
+            </el-col>
+          </el-form-item>
+          <el-form-item label="品类" min-width="150px" fixed="left">
+            <el-select v-model="drug.typeId" filterable placeholder="请选择药品">
+              <el-option v-for="item in typeList" :key="item.typeId" :value="item.typeId"
+                :label="item.typeName">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="状态">
+            <el-col>
+              <el-select v-model="drug.drugStatus" placeholder="请选择状态">
+                <el-option label="有效" :value="1"></el-option>
+                <el-option label="无效" :value="0"></el-option>
+              </el-select>
+            </el-col>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="closedialog">取 消</el-button>
+          <el-button type="primary" @click="updItem">确 定</el-button>
+        </div>
+      </el-dialog>
+    </div>
+
+    <div class="block">
+      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
+        :current-page="pageInfo.current" :page-sizes="[5, 10, 20, 30, 100, 1000, 10000]" :page-size="pageInfo.size"
+        layout="total, sizes, prev, pager, next, jumper" :total="pageInfo.total">
+      </el-pagination>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -167,7 +182,8 @@ export default {
         drugName: '',
         isRx: '',
         drugStatus: ''
-      }
+      },
+      typeList: []
     }
   },
 
@@ -226,7 +242,13 @@ export default {
       }
     },
     addShowdialog () {
+      this.getTypeList()
       this.dialogFormVisible = true
+    },
+    getTypeList () {
+      axios.get('/admin/type').then(jsondata => {
+        this.typeList = jsondata.data
+      })
     },
     handleSizeChange (val) {
       console.log('修改条数')
@@ -252,7 +274,7 @@ export default {
       //     console.log('change to 1')
       //     this.handleOnLine(0, item)
       //   }
-      let changeData = {status: item.drugStatus, drugId: item.drugId}
+      let changeData = { status: item.drugStatus, drugId: item.drugId }
       axios({
         method: 'put',
         url: '/admin/drug/status',
@@ -289,6 +311,7 @@ export default {
       })
     },
     handleEdit (index, row) {
+      this.getTypeList()
       console.log(index)
       console.log(row)
       this.drug = row

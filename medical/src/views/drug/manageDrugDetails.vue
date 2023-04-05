@@ -27,8 +27,22 @@
           <span style="margin-left: 10px">{{ drugDetailsList.row.drugSpecification }}</span>
         </template>
       </el-table-column>
-
-      <el-table-column label="品类" min-width="60px">
+      <el-table-column label="品类" min-width="125px">
+        <template slot-scope="drugDetailsList">
+          <span style="margin-left: 10px">{{ drugDetailsList.row.typeName }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="单价" min-width="60px">
+        <template slot-scope="drugDetailsList">
+          <span style="margin-left: 10px">{{ drugDetailsList.row.drugUnitPrice }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="售价" min-width="60px">
+        <template slot-scope="drugDetailsList">
+          <span style="margin-left: 10px">{{ drugDetailsList.row.drugRetailPrice }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="处方" min-width="60px">
         <template slot-scope="drugDetailsList">
           <span v-if="drugDetailsList.row.isRx == '0'">非处方药</span>
           <span v-if="drugDetailsList.row.isRx == '1'">处方药</span>
