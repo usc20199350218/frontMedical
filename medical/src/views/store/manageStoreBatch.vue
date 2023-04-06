@@ -350,6 +350,7 @@
     </div>
     <div>
       <el-dialog title="联系人" :visible.sync="showContactPerson">
+        <span>{{   roleId}}</span>
         <span>{{ contactPerson }}</span>
       </el-dialog>
     </div>
