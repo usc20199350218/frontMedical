@@ -84,7 +84,7 @@
     </el-table>
 
     <div>
-      <el-dialog title="新数据" :visible.sync="dialogFormVisible">
+      <el-dialog title="新用户" :visible.sync="dialogFormVisible">
         <el-form ref="form" :model="user" label-width="80px" size="mini">
           <el-form-item label="用户名">
             <el-col>
@@ -100,6 +100,16 @@
             <el-col>
               <el-input type="text" maxlength="11" placeholder="请输入手机号" show-word-limit
                 v-model="user.userPhone"></el-input></el-col>
+          </el-form-item>
+          <el-form-item label="昵称">
+            <el-col>
+              <el-input type="text" maxlength="20" placeholder="请输入昵称" show-word-limit
+                v-model="user.userNickName"></el-input></el-col>
+          </el-form-item>
+          <el-form-item label="真实姓名">
+            <el-col>
+              <el-input type="text" maxlength="20" placeholder="请输入真实姓名" show-word-limit
+                v-model="user.userRealName"></el-input></el-col>
           </el-form-item>
           <el-form-item label="头像上传">
             <el-col>
@@ -175,6 +185,16 @@
             <el-col>
               <el-input type="text" maxlength="20" placeholder="请输入密码" show-word-limit
                 v-model="user.userPhone"></el-input></el-col>
+          </el-form-item>
+          <el-form-item label="昵称">
+            <el-col>
+              <el-input type="text" maxlength="20" placeholder="请输入昵称" show-word-limit
+                v-model="user.userNickName"></el-input></el-col>
+          </el-form-item>
+          <el-form-item label="真实姓名">
+            <el-col>
+              <el-input type="text" maxlength="20" placeholder="请输入真实姓名" show-word-limit
+                v-model="user.userRealName"></el-input></el-col>
           </el-form-item>
           <el-form-item label="头像上传">
             <el-col>

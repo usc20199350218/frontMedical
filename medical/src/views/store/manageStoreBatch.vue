@@ -130,218 +130,100 @@
       </el-dialog>
     </div>
 
-    <!-- <div>
-            <el-dialog title="修改批次信息" :visible.sync="dialogFormVisibles">
-                <el-form ref="form" :model="storeBatch" label-width="100px" size="mini">
-                    <el-form-item label="药品" min-width="150px" fixed="left">
-                        <el-select v-model="storeBatch.drugDetailId" filterable placeholder="请选择药品" :disabled="true">
-                            <el-option v-for="item in drugDetailList" :key="item.drugDetailId" :value="item.drugDetailId"
-                                :label="item.drugName">
-                                {{ item.drugDetailId }}-{{ item.drugName }}-{{ item.drugSpecification }}
-                            </el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="数量（盒）">
-                        <el-col>
-                            <el-input type="text" maxlength="20" placeholder="请输入数量（盒）" show-word-limit
-                                v-model="storeBatch.batchPurchaseQuantity"></el-input></el-col>
-                    </el-form-item>
-                </el-form>
-                <div slot="footer" class="dialog-footer"> -->
-    <!-- <el-button @click="getStoreBatchDetails(activeDrugDetailId, nowActiveName), dialogFormVisibles = false">取
-              消</el-button> -->
-    <!-- <el-button @click="closedialog(dialogFormVisibles)">取 消</el-button> -->
-    <!-- <el-button
-                        @click="dialogFormVisibles = false, getStoreBatchDetails(activeDrugDetailId, nowActiveName), storeBatch = {}">取
-                        消</el-button>
-                    <el-button type="primary" @click="updItem(), dialogFormVisibles = false, storeBatch = {}">确
-                        定</el-button>
+    <div>
+      <el-dialog :title="drugName + ' 库存情况'" :visible.sync="dialogFormVisibleDetails" :max-width=this.maxWidth
+        :close-on-click-modal="false">
+        <!-- 标签页标签头 -->
+        <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
+          <el-tab-pane v-for="(itemStatus, index ) in batchStatusList" :key="index" :label="itemStatus">
+          </el-tab-pane>
+        </el-tabs>
+        <!-- 关于为什么不放入其中的原因在于放入其中会有明显卡顿 -->
+        <!-- 对应内容 -->
+        <el-table :data="
+          storeBatchDetailsList.filter(
+            (data) =>
+              !searchNew ||
+              data.batchId == searchNew
+          )
+        " fit stripe mix-height="100" style="width: 100%">
+          <el-table-column label="批次ID" width="70px" fixed="left">
+            <template slot-scope="storeBatchDetailsList">
+              <span style="margin-left: 10px">{{ storeBatchDetailsList.row.storeBatchId }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="批次编号" max-width="130px" fixed="left">
+            <template slot-scope="storeBatchDetailsList">
+              <el-popover trigger="hover" placement="top">
+                <p>编号: {{ storeBatchDetailsList.row.batchNumber }}</p>
+                <p>备注: {{ storeBatchDetailsList.row.remark }}</p>
+                <div slot="reference" class="name-wrapper">
+                  <span style="margin-left: 10px">{{ storeBatchDetailsList.row.batchNumber }}</span>
                 </div>
-            </el-dialog>
-        </div> -->
+              </el-popover>
+            </template>
+          </el-table-column>
+          <el-table-column label="进货数量" max-width="100px">
+            <template slot-scope="storeBatchDetailsList">
+              <span style="margin-left: 10px">{{ storeBatchDetailsList.row.storeBatchPurchaseQuantity
+              }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="目前数量" max-width="100px">
+            <template slot-scope="storeBatchDetailsList">
+              <span style="margin-left: 10px">{{ storeBatchDetailsList.row.storeBatchExistingQuantity
+              }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="生产时间" width="125px">
+            <template slot-scope="storeBatchDetailsList">
+              <span style="margin-left: 10px">{{ storeBatchDetailsList.row.batchProductionDate }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="保质期" width="100px">
+            <template slot-scope="storeBatchDetailsList">
+              <span style="margin-left: 10px">{{ storeBatchDetailsList.row.batchValidityPeriod }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column align="left" width="270px" fixed="right">
+            <template slot="header" slot-scope="storeBatchDetailsList">
+              <el-col :span="14">
+                <el-input v-model="searchNew" size="mini" v-if="storeBatchDetailsList" placeholder="输入关键字搜索" />
+              </el-col>
 
-    <!-- <div>
-            <el-dialog title="修改批次信息" :visible.sync="changeAllShow">
-                <el-form ref="form" :model="storeBatch" label-width="100px" size="mini">
-                    <el-form-item label="药品" min-width="150px" fixed="left">
-                        <el-select v-model="storeBatch.drugDetailId" filterable placeholder="请选择药品" :disabled="true">
-                            <el-option v-for="item in drugDetailList" :key="item.drugDetailId" :value="item.drugDetailId"
-                                :label="item.drugName">
-                                {{ item.drugDetailId }}-{{ item.drugName }}-{{ item.drugSpecification }}
-                            </el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="计划数量（盒）">
-                        <el-col>
-                            <el-input type="text" maxlength="20" placeholder="请输入数量（盒）" show-word-limit
-                                v-model="storeBatch.batchPurchaseQuantity"></el-input></el-col>
-                    </el-form-item>
-                    <el-form-item label="实际数量（盒）">
-                        <el-col>
-                            <el-input type="text" maxlength="20" placeholder="请输入数量（盒）" show-word-limit
-                                v-model="storeBatch.batchPurchaseQuantity"></el-input></el-col>
-                    </el-form-item>
-                    <el-form-item label="生产日期">
-                        <el-col>
-                            <el-date-picker v-model="storeBatch.batchProductionDate" type="date" placeholder="选择日期">
-                            </el-date-picker>
-                        </el-col>
-                    </el-form-item>
-                    <el-form-item label="批号">
-                        <el-col>
-                            <el-input type="text" maxlength="20" placeholder="批号" show-word-limit
-                                v-model="storeBatch.batchNumber"></el-input></el-col>
-                    </el-form-item>
-                    <el-form-item label="保质期">
-                        <el-col>
-                            <el-input type="text" maxlength="20" placeholder="保质期(月)" show-word-limit
-                                v-model="storeBatch.batchValidityPeriod"></el-input></el-col>
-                    </el-form-item>
-                </el-form>
-                <div slot="footer" class="dialog-footer"> -->
-    <!-- <el-button @click="getStoreBatchDetails(activeDrugDetailId, nowActiveName), changeAllShow = false">取 消</el-button> -->
-    <!-- <el-button @click="changeAllShow = false, storeBatch = {}">取 消</el-button>
-                    <el-button type="primary" @click="updItem(), changeAllShow = false, storeBatch = {}">确 定</el-button>
-                </div>
-            </el-dialog>
-        </div> -->
-
-    <!-- <div>
-            <el-dialog :title="drugName + ' 库存情况'" :visible.sync="dialogFormVisibleDetails" :max-width=this.maxWidth
-                :close-on-click-modal="false"> -->
-    <!-- <el-dialog :title="`<span style='color: red; font-weight: bold;'>${drugName}</span> 库存情况`"
-          :visible.sync="dialogFormVisibleDetails" :max-width=this.maxWidth :close-on-click-modal="false"> -->
-    <!-- 标签页标签头 -->
-    <!-- <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
-                    <el-tab-pane v-for="(itemStatus, index ) in batchStatusList" :key="index" :label="itemStatus">
-                    </el-tab-pane>
-                </el-tabs> -->
-    <!-- 关于为什么不放入其中的原因在于放入其中会有明显卡顿 -->
-    <!-- 对应内容 -->
-    <!-- <el-table :data="
-                    storeBatchDetailsList.filter(
-                        (data) =>
-                            !searchNew ||
-                            data.batchId == searchNew
-                    )
-                " fit stripe mix-height="100" style="width: 100%">
-                    <el-table-column label="批次ID" width="70px" fixed="left">
-                        <template slot-scope="storeBatchDetailsList">
-                            <span style="margin-left: 10px">{{ storeBatchDetailsList.row.storeBatchId }}</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="批次编号" max-width="130px" fixed="left">
-                        <template slot-scope="storeBatchDetailsList">
-                            <el-popover trigger="hover" placement="top">
-                                <p>编号: {{ storeBatchDetailsList.row.batchNumber }}</p>
-                                <p>备注: {{ storeBatchDetailsList.row.remark }}</p>
-                                <div slot="reference" class="name-wrapper">
-                                    <span style="margin-left: 10px">{{ storeBatchDetailsList.row.batchNumber }}</span>
-                                </div>
-                            </el-popover> -->
-    <!-- <span style="margin-left: 10px">{{ storeBatchDetailsList.row.batchNumber }}</span> -->
-    <!-- </template>
-                    </el-table-column>
-                    <el-table-column label="进货数量" max-width="100px">
-                        <template slot-scope="storeBatchDetailsList">
-                            <span style="margin-left: 10px">{{ storeBatchDetailsList.row.storeBatchPurchaseQuantity
-                            }}</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="目前数量" max-width="100px">
-                        <template slot-scope="storeBatchDetailsList">
-                            <span style="margin-left: 10px">{{ storeBatchDetailsList.row.storeBatchExistingQuantity
-                            }}</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="生产时间" width="125px">
-                        <template slot-scope="storeBatchDetailsList">
-                            <span style="margin-left: 10px">{{ storeBatchDetailsList.row.batchProductionDate }}</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="保质期" width="100px">
-                        <template slot-scope="storeBatchDetailsList">
-                            <span style="margin-left: 10px">{{ storeBatchDetailsList.row.batchValidityPeriod }}</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column align="left" width="270px" fixed="right">
-                        <template slot="header" slot-scope="storeBatchDetailsList">
-                            <el-col :span="14">
-                                <el-input v-model="searchNew" size="mini" v-if="storeBatchDetailsList"
-                                    placeholder="输入关键字搜索" />
-                            </el-col> -->
-    <!-- <el-button type="primary" size="mini" icon="el-icon-circle-plus-outline" round
-                  @click="addShowdialog">添加</el-button> -->
-    <!-- <el-button type="primary" size="mini" icon="el-icon-circle-plus-outline" round @click="getDrugDetailList()
-                                , showAdd = true">添加</el-button> -->
-    <!-- this.getDrugDetailList()
-                this.showAdd = true -->
-    <!-- </template> -->
-    <!-- <template slot-scope="storeBatchDetailsList">
-                            <el-button size="mini"
-                                @click="handleEditDetail(storeBatchDetailsList.$index, storeBatchDetailsList.row)">编辑</el-button> -->
-    <!-- 批次状态/0-创建/1-正常/2-售完/3-过期/4-禁止-后期增加/ -->
-    <!-- 创建对应编辑、通过、不通过 -->
-    <!-- 正常进货对应编辑 -->
-    <!-- 正常销售对应编辑、禁止 -->
-    <!-- 售完对应快速进货，如何默认选择一样进货数量，等待确认 -->
-    <!-- 过期对应销毁，销毁清零，然后修改为null -->
-    <!-- 禁止对应原状态，具体看编号是否存在，以区分进货与售卖 -->
-    <!-- CREATED( "创建" ),
-                            NORMAL_PURCHASE( "正常进货" ),
-                            SOLD( "正常销售" ),
-                            SOLD_OUT( "售完" ),
-                            EXPIRED( "过期" ),
-                            FORBIDDEN( "禁止" ); -->
-
-    <!-- 通过变为进货 -->
-    <!-- <el-button size="mini" type="primary"
-                                v-if="storeBatchDetailsList.row.storeBatchStatus === 'CREATED'"
-                                @click="batchStatusChange(storeBatchDetailsList.$index, storeBatchDetailsList.row, 'NORMAL_PURCHASE')">
-                                通过
-                            </el-button> -->
-    <!-- 不通过变为禁止，且需要弹窗填写备注 -->
-    <!-- <el-button size="mini" type="warning"
-                                v-if="storeBatchDetailsList.row.storeBatchStatus === 'CREATED'"
-                                @click="batchStatusChange(storeBatchDetailsList.$index, storeBatchDetailsList.row, 'FORBIDDEN')">
-                                不通过
-                            </el-button> -->
-    <!-- 上架变为正常 -->
-    <!-- <el-button size="mini" type="warning"
-                                v-if="storeBatchDetailsList.row.storeBatchStatus === 'NORMAL_PURCHASE'"
-                                @click="batchStatusChange(storeBatchDetailsList.$index, storeBatchDetailsList.row, 'SOLD')">
-                                上架
-                            </el-button> -->
-    <!-- 禁止，需要弹窗填写利用 -->
-    <!-- <el-button size="mini" type="danger"
-                                v-if="storeBatchDetailsList.row.storeBatchStatus === 'SOLD'"
-                                @click="batchStatusChange(storeBatchDetailsList.$index, storeBatchDetailsList.row, 'FORBIDDEN')">
-                                禁止
-                            </el-button> -->
-    <!-- 销毁，数量变为零，需要弹窗 -->
-    <!-- <el-button size="mini" type="danger"
-                                v-if="storeBatchDetailsList.row.storeBatchStatus === 'EXPIRED'"
-                                @click="batchStatusChange(storeBatchDetailsList.$index, storeBatchDetailsList.row, 0)">
-                                销毁
-                            </el-button> -->
-    <!-- 恢复变为正常 -->
-    <!-- <el-button size="mini" type="primary"
-                                v-if="storeBatchDetailsList.row.storeBatchStatus === 'FORBIDDEN'"
-                                @click="batchStatusChange(storeBatchDetailsList.$index, storeBatchDetailsList.row, 'SOLD')">
-                                恢复
-                            </el-button>
-                            <el-button size="mini" type="primary"
-                                v-if="storeBatchDetailsList.row.storeBatchStatus === 'SOLD_OUT'"
-                                @click="batchAdd(storeBatchDetailsList.$index, storeBatchDetailsList.row)">
-                                +1
-                            </el-button>
-                        </template>
-                    </el-table-column>
-                </el-table> -->
-    <!-- </el-tab-pane>
-          </el-tabs> -->
-    <!-- </el-dialog>
-        </div> -->
+              <el-button type="primary" size="mini" icon="el-icon-circle-plus-outline" round
+                @click="addShowdialog">添加</el-button>
+            </template>
+            <!-- 关于店铺批次详情状态的操作，可以发起申请，由仓库通过，然后我们等待配送，到达之后清点上架，清理过期，禁用药品 -->
+            <!-- 对于修改的问题，因为提交之后仓库随时会同意，所有我不在这里设置修改，只能是重新发起并联系仓库退回申请 -->
+            <template slot-scope="storeBatchDetailsList">
+              <!-- 上架变为正常 -->
+              <el-button size="mini" type="warning"
+                v-if="storeBatchDetailsList.row.storeBatchStatus === 'NORMAL_PURCHASE'"
+                @click="batchStatusChange(storeBatchDetailsList.$index, storeBatchDetailsList.row, 'SOLD')">
+                上架
+              </el-button>
+              <!-- 禁止，需要弹窗填写利用 -->
+              <el-button size="mini" type="danger" v-if="storeBatchDetailsList.row.storeBatchStatus === 'SOLD'"
+                @click="batchStatusChange(storeBatchDetailsList.$index, storeBatchDetailsList.row, 'FORBIDDEN')">
+                禁止
+              </el-button>
+              <!-- 销毁，数量变为零，需要弹窗 -->
+              <el-button size="mini" type="danger" v-if="storeBatchDetailsList.row.storeBatchStatus === 'EXPIRED'"
+                @click="batchStatusChange(storeBatchDetailsList.$index, storeBatchDetailsList.row, 'EXPIRED_PROCESSED')">
+                销毁
+              </el-button>
+              <!-- 恢复变为正常 -->
+              <el-button size="mini" type="primary" v-if="storeBatchDetailsList.row.storeBatchStatus === 'FORBIDDEN'
+                && storeBatchDetailsList.row.storeBatchExistingQuantity !== 0"
+                @click="batchStatusChange(storeBatchDetailsList.$index, storeBatchDetailsList.row, 'SOLD_AGAIN')">
+                恢复
+              </el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-dialog>
+    </div>
     <div class="block">
       <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
         :current-page="pageInfo.current" :page-sizes="[5, 10, 20, 30, 100, 1000, 10000]" :page-size="pageInfo.size"
@@ -350,63 +232,28 @@
     </div>
     <div>
       <el-dialog title="联系人" :visible.sync="showContactPerson">
-        <span>{{   roleId}}</span>
+        <span>{{ roleId }}</span>
         <span>{{ contactPerson }}</span>
       </el-dialog>
     </div>
-    <!-- <div>
-            <el-dialog title="添加备注" :visible.sync="RemarkShow">
-                <el-form ref="form" :model="storeBatch" label-width="100px" size="mini">
-                    <el-form-item label="备注">
-                        <el-col>
-                            <el-input type="text" maxlength="999" placeholder="备注" show-word-limit
-                                v-model="storeBatch.remark"></el-input>
-                        </el-col>
-                    </el-form-item>
-                </el-form>
-                <div slot="footer" class="dialog-footer">
-                    <el-button @click="RemarkShow = false, storeBatch.remark = ''">取 消</el-button>
-                    <el-button type="primary" @click="updItem(), RemarkShow = false, storeBatch.remark = ''">确 定</el-button>
-                </div>
-            </el-dialog>
-        </div> -->
-    <!-- <div>
-            <el-dialog title="收货" :visible.sync="Receipt">
-                <el-form ref="form" :model="storeBatch" label-width="100px" size="mini">
-                    <el-form-item label="计划数量（盒）">
-                        <el-col>
-                            <el-input type="text" maxlength="20" placeholder="请输入数量（盒）" :disabled="true" show-word-limit
-                                v-model="planNum"></el-input></el-col>
-                    </el-form-item>
-                    <el-form-item label="实际数量（盒）">
-                        <el-col>
-                            <el-input type="text" maxlength="20" placeholder="请输入数量（盒）" show-word-limit
-                                v-model="storeBatch.batchPurchaseQuantity"></el-input></el-col>
-                    </el-form-item>
-                    <el-form-item label="生产日期">
-                        <el-col>
-                            <el-date-picker v-model="storeBatch.batchProductionDate" type="date" placeholder="选择日期">
-                            </el-date-picker>
-                        </el-col>
-                    </el-form-item>
-                    <el-form-item label="批号">
-                        <el-col>
-                            <el-input type="text" maxlength="20" placeholder="批号" show-word-limit
-                                v-model="storeBatch.batchNumber"></el-input></el-col>
-                    </el-form-item>
-                    <el-form-item label="保质期">
-                        <el-col>
-                            <el-input type="text" maxlength="20" placeholder="保质期(月)" show-word-limit
-                                v-model="storeBatch.batchValidityPeriod"></el-input></el-col>
-                    </el-form-item>
-                </el-form>
-                <div slot="footer" class="dialog-footer">
-                    <el-button @click="Receipt = false, storeBatch = {}">取 消</el-button>
-                    <el-button type="primary" @click="updItem(), Receipt = false, storeBatch = {}">确 定</el-button>
-                </div>
-            </el-dialog>
-        </div> -->
-
+    <div>
+      <el-dialog title="添加备注" :visible.sync="remarkShow">
+        <el-form ref="form" :model="storeBatch" label-width="100px" size="mini">
+          <el-form-item label="备注">
+            <el-col>
+              <el-input type="text" maxlength="999" placeholder="备注" show-word-limit
+                v-model="storeBatch.remark"></el-input>
+            </el-col>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="remarkShow = false, storeBatch = {}, storeBatch.remark = ''">取 消</el-button>
+          <el-button type="primary" @click="changeBatchStatus(storeBatch, '禁止'), remarkShow = false">
+            确定
+          </el-button>
+        </div>
+      </el-dialog>
+    </div>
   </div>
 </template>
 
@@ -452,7 +299,7 @@ export default {
       searchNew: '',
       Receipt: false,
       planNum: '',
-      RemarkShow: false,
+      remarkShow: false,
       changeAllShow: false,
       batchName: '',
       drugName: '',
@@ -682,6 +529,7 @@ export default {
         url: '/admin/batch/status'
       }).then(jsondata => {
         this.batchStatusList = jsondata.data
+        console.log('获取批次:', jsondata)
         console.log('批次状态List:', this.batchStatusList)
         console.log('activeName', this.activeName)
         console.log('状态为:', this.batchStatusList[this.activeName])
@@ -701,20 +549,24 @@ export default {
         console.log('获取brandList:', this.brandList)
       })
     },
+    // 获取详情
     getStoreBatchDetails (drugDetailId, active) {
+      console.log('获取详情,drugDetailId:', drugDetailId, active)
       console.log('active', active)
+      console.log('此时店铺Id为:', this.activeStoreId)
       axios({
         method: 'get',
         url: `/admin/store_batch/detail/` + drugDetailId,
-        params: { 'active': active }
+        params: { 'active': active, 'storeId': this.activeStoreId }
       }).then(jsondata => {
+        console.log('详情:', jsondata)
         this.storeBatchDetailsList = jsondata.data
-        console.log('storeBatchDetailsList:', this.storeBatchDetailsList)
+        console.log('详情storeBatchDetailsList:', this.storeBatchDetailsList)
       })
-
-      //   this.dialogFormVisibleDetails = true
+      this.dialogFormVisibleDetails = true
     },
     handleLook (index, row) {
+      console.log('查看row:', row)
       // 查看按钮点击
       this.drugName = row.drugName
       // 药品详情id
@@ -743,40 +595,29 @@ export default {
       // 先赋值，在前端修改状态，后面传回给后端
       row.storeBatchStatus = target
       this.storeBatch = row
-      // 上架,根据日期是否填写来判断进货还是销售
-      if (target === 'SOLD' && row.batchProductionDate == null) {
-        // // 填补数据，走新增的方法
-        // this.planNum = row.batchPurchaseQuantity
-        // // 开启收货弹窗，之后更新即可
-        // this.Receipt = true
-        // console.log('新进药品', row)
-        // return
-        // 状态变为进货
-        this.storeBatch.storeBatchStatus = 'NORMAL_PURCHASE'
-      } else if (target === 'FORBIDDEN') {
-        // 填写备注
-        console.log('禁止', row)
-        // todo 备注弹窗
-        this.RemarkShow = true
+      //
+      if (target === 'FORBIDDEN') {
+        // 点击禁止则开启弹窗，
+        this.remarkShow = true
         return
-      } else if (target === 0) {
-        console.log('销毁', row)
-        // 更新为零 将sql语句加一条num不为零
-        row.batchExistingQuantity = 0
       }
       // 调用更新方法
-      this.changeBatchStatus(row, target)
+      // this.changeBatchStatus(row, target)
+      console.log('判断前的:', this.storeBatch)
+      this.changeBatchStatus(this.storeBatch, target)
     },
     changeBatchStatus (item, target) {
+      // changeBatchStatus () {
+      console.log('状态更新', item)
       // 更新状态
       axios({
         method: 'put',
-        // url: '/admin/storeBatch/detail',
-        url: '/admin/storeBatch/',
+        url: '/admin/store_batch',
         data: Qs.stringify(item)
       }).then(jsondata => {
         console.log(jsondata.data)
         this.noti(target)
+        this.storeBatch = {}
       })
     }
   }

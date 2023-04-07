@@ -147,11 +147,11 @@
         </div>
       </el-dialog>
     </div>
-    <div>
+    <!-- <div>
       <el-dialog :title="staffTitle" :visible.sync="showAdd">
 
       </el-dialog>
-    </div>
+    </div> -->
   </div>
 </template>
 

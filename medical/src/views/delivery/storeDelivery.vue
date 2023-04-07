@@ -9,136 +9,109 @@
     <div>
 
       <el-table :data="
-        applyBatchList.filter(
+        deliveryList.filter(
           (data) =>
             !search ||
-            data.positionName.toLowerCase().includes(search.toLowerCase())
+            data.storeName.toLowerCase().includes(search.toLowerCase())
         )
       " fit stripe mix-height="100" style="width: 100%">
-        <el-table-column label="药品详情ID" min-width="80px" fixed="left">
-          <template slot-scope="applyBatchList">
-            <span style="margin-left: 10px">{{ applyBatchList.row.drugDetailId }}</span>
+        <el-table-column label="配送Id" min-width="40px" fixed="left">
+          <template slot-scope="deliveryList">
+            <span style="margin-left: 10px">{{ deliveryList.row.deliveryId }}</span>
           </template>
         </el-table-column>
         <el-table-column label="品名" min-width="80px" fixed="left">
-          <template slot-scope="applyBatchList">
-            <span style="margin-left: 10px">{{ applyBatchList.row.drugName }}</span>
+          <template slot-scope="deliveryList">
+            <el-popover trigger="hover" placement="top">
+              <p>生产日期: {{ deliveryList.row.batchProductionDate }}</p>
+              <p>保质期: {{ deliveryList.row.batchValidityPeriod }}</p>
+              <div slot="reference" class="name-wrapper">
+                <el-tag size="medium">{{ deliveryList.row.drugName }}</el-tag>
+              </div>
+            </el-popover>
           </template>
         </el-table-column>
         <el-table-column label="品牌" min-width="80px" fixed="left">
-          <template slot-scope="applyBatchList">
-            <span style="margin-left: 10px">{{ applyBatchList.row.brandName }}</span>
+          <template slot-scope="deliveryList">
+            <span style="margin-left: 10px">{{ deliveryList.row.brandName }}</span>
           </template>
         </el-table-column>
         <el-table-column label="处方" min-width="80px" fixed="left">
-          <template slot-scope="applyBatchList">
-            <span v-if="applyBatchList.row.isRx == '0'">非处方药</span>
-            <span v-if="applyBatchList.row.isRx == '1'">处方药</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="品类" min-width="80px" fixed="left">
-          <template slot-scope="applyBatchList">
-            <span style="margin-left: 10px">{{ applyBatchList.row.typeName }}</span>
+          <template slot-scope="deliveryList">
+            <span v-if="deliveryList.row.isRx == '0'">非处方药</span>
+            <span v-if="deliveryList.row.isRx == '1'">处方药</span>
           </template>
         </el-table-column>
         <el-table-column label="规格" min-width="80px" fixed="left">
-          <template slot-scope="applyBatchList">
-            <span style="margin-left: 10px">{{ applyBatchList.row.drugSpecification }}</span>
+          <template slot-scope="deliveryList">
+            <span style="margin-left: 10px">{{ deliveryList.row.drugSpecification }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="申请数量" min-width="80px" fixed="left">
-          <template slot-scope="applyBatchList">
-            <span style="margin-left: 10px">{{ applyBatchList.row.totalCreated }}</span>
+        <el-table-column label="批次编号" min-width="80px" fixed="left">
+          <template slot-scope="deliveryList">
+            <span style="margin-left: 10px">{{ deliveryList.row.batchNumber }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="可用数量" min-width="80px" fixed="left">
-          <template slot-scope="applyBatchList">
-            <span style="margin-left: 10px">{{ applyBatchList.row.totalSold }}</span>
+        <el-table-column label="店内批次" min-width="80px" fixed="left">
+          <template slot-scope="deliveryList">
+            <span style="margin-left: 10px">{{ deliveryList.row.batchNumber }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="预计结余" min-width="80px" fixed="left">
-          <template slot-scope="applyBatchList">
-            <span style="margin-left: 10px">{{ applyBatchList.row.totalBalance }}</span>
+        <el-table-column label="数量" min-width="80px" fixed="left">
+          <template slot-scope="deliveryList">
+            <span style="margin-left: 10px">{{ deliveryList.row.deliveryNum }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="店铺" min-width="80px" fixed="left">
+          <template slot-scope="deliveryList">
+            <el-popover trigger="hover" placement="top">
+              <!-- businessDistrict  area-->
+              <p>区域: {{ deliveryList.row.area }}</p>
+              <p>商圈: {{ deliveryList.row.businessDistrict }}</p>
+              <p>电话: {{ deliveryList.row.contactPhone }}</p>
+              <p>地址: {{ deliveryList.row.storeAddress }}</p>
+              <div slot="reference" class="name-wrapper">
+                <el-tag size="medium">{{ deliveryList.row.storeName }}</el-tag>
+              </div>
+            </el-popover>
+          </template>
+        </el-table-column>
+        <el-table-column label="电话" min-width="80px" fixed="left">
+          <template slot-scope="deliveryList">
+            <span style="margin-left: 10px">{{ deliveryList.row.contactPhone }}</span>
           </template>
         </el-table-column>
 
         <el-table-column align="left" width="220px" fixed="right">
-          <template slot="header" slot-scope="applyBatchList">
+          <template slot="header" slot-scope="deliveryList">
             <el-col :span="14">
-              <el-input v-model="search" size="mini" v-if="applyBatchList" placeholder="输入关键字搜索" />
+              <el-input v-model="search" size="mini" v-if="deliveryList" placeholder="输入关键字搜索" />
             </el-col>
             <el-button type="primary" size="mini" icon="el-icon-circle-plus-outline" round
               @click="position = {}">添加</el-button>
           </template>
-          <template slot-scope="applyBatchList">
-            <el-button size="mini" @click="handleClick(applyBatchList.row, 'pass')">通过</el-button>
-            <el-button size="mini" @click="handleLook(applyBatchList.$index, applyBatchList.row)">详情</el-button>
-            <el-button size="mini" type="danger" @click="handleClick(applyBatchList.row, 'fail')">退回</el-button>
+          <template slot-scope="deliveryList">
+            <!-- 抢单 -->
+            <el-button size="mini" v-if="deliveryList.row.deliveryStatus === 'CREATED'" type="primary"
+              @click="handleClick(deliveryList.row, 'PICKUP')">抢单</el-button>
+            <!-- 取货 -->
+            <el-button size="mini" v-if="deliveryList.row.deliveryStatus === 'PICKUP'"
+              @click="handleClick(deliveryList.row, 'SHIP')">已取货</el-button>
+            <el-button size="mini" v-if="deliveryList.row.deliveryStatus === 'PICKUP'"  type="danger"
+              @click="handleClick(deliveryList.row, 'CREATED')">退回</el-button>
+            <!-- 配送 -->
+            <el-button size="mini" v-if="deliveryList.row.deliveryStatus === 'SHIP'"
+              @click="handleClick(deliveryList.row, 'ARRIVE')">到达</el-button>
           </template>
         </el-table-column>
       </el-table>
     </div>
-
-    <!-- <div>
-        <el-dialog title="添加备注" :visible.sync="remarkShow">
-          <el-form ref="form" label-width="100px" size="mini">
-            <el-form-item label="备注">
-              <el-col>
-                <el-input type="text" maxlength="999" placeholder="备注" show-word-limit v-model="remarkText"></el-input>
-              </el-col>
-            </el-form-item>
-          </el-form>
-          <div slot="footer" class="dialog-footer">
-            <el-button @click="remarkShow = false, this.activeApplyIdList = [], remarkText = ''">取 消</el-button>
-            <el-button type="primary" @click="handleFail()">确 定</el-button>
-          </div>
-        </el-dialog>
-      </div> -->
-    <!-- <div>
-        <el-dialog :title="activeTit" :visible.sync="showDetail">
-          <el-table :data="
-            storeBatchDetailList.filter(
-              (data) =>
-                !searchNew ||
-                data.batchId == searchNew
-            )
-          " fit stripe mix-height="100" style="width: 100%">
-            <el-table-column label="店内批次Id" min-width="80px" fixed="left">
-              <template slot-scope="storeBatchDetailList">
-                <span style="margin-left: 10px">{{ storeBatchDetailList.row.storeBatchId }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column label="申请数量" min-width="80px" fixed="left">
-              <template slot-scope="storeBatchDetailList">
-                <span style="margin-left: 10px">{{ storeBatchDetailList.row.totalCreated }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column label="可用数量" min-width="80px" fixed="left">
-              <template slot-scope="storeBatchDetailList">
-                <span style="margin-left: 10px">{{ storeBatchDetailList.row.totalSold }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column label="预计结余" min-width="80px" fixed="left">
-              <template slot-scope="storeBatchDetailList">
-                <span style="margin-left: 10px">{{ storeBatchDetailList.row.totalBalance }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column align="left" width="220px" fixed="right">
-              <template slot="header" slot-scope="applyBatchList">
-                <el-col :span="14">
-                  <el-input v-model="search" size="mini" v-if="applyBatchList" placeholder="输入关键字搜索" />
-                </el-col>
-                <el-button type="primary" size="mini" icon="el-icon-circle-plus-outline" round
-                  @click="position = {}">添加</el-button>
-              </template>
-              <template slot-scope="applyBatchList">
-                <el-button size="mini" @click="detailClick(applyBatchList.row, 'pass')">通过</el-button>
-                <el-button size="mini" type="danger" @click="detailClick(applyBatchList.row, 'fail')">退回</el-button>
-              </template>
-            </el-table-column>
-          </el-table>
-        </el-dialog>
-      </div> -->
+    <div class="block">
+      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
+        :current-page="pageInfo.current" :page-sizes="[5, 10, 20, 30, 100, 1000, 10000]" :page-size="pageInfo.size"
+        layout="total, sizes, prev, pager, next, jumper" :total="pageInfo.total">
+      </el-pagination>
+    </div>
   </div>
 </template>
 
@@ -149,8 +122,9 @@ import axios from '../../utils/request'
 export default {
   data () {
     return {
+      pageInfo: { current: 0, size: 5 },
       search: '',
-      applyBatchList: [],
+      deliveryList: [],
       deliveryStatusList: [],
       activeStoreId: '',
       activeStoreNum: 0,
@@ -178,6 +152,20 @@ export default {
         message: h('i', { style: 'color: teal' }, action + '成功')
       })
     },
+    handleSizeChange (val) {
+      console.log('修改条数')
+      console.log(`每页 ${val} 条`)
+      this.pageInfo.size = val
+      console.log(this.pageInfo)
+      this.getDeliveryList()
+    },
+    handleCurrentChange (val) {
+      console.log('修改当前页')
+      console.log(`当前页: ${val}`)
+      this.pageInfo.current = val
+      console.log(this.pageInfo)
+      this.getDeliveryList()
+    },
     async getDeliveryStatusList () {
       try {
         const response = await axios.get('/admin/delivery/status')
@@ -199,9 +187,12 @@ export default {
         console.log('此时查询的activeStoreNum为:', this.activeStoreNum)
         console.log('此时查询的activeStatus为:', this.activeStatus)
         this.activeStoreName = this.deliveryStatusList[this.activeStoreNum].storeName
-        const jsondata = await axios.get('/admin/delivery/list/', { params: { 'userId': this.userId, 'status': this.activeStatus } })
-        this.applyBatchList = jsondata.data
-        console.log('获取到的当前店铺请求的list:', this.applyBatchList)
+        const jsondata = await axios.get('/admin/delivery/list',
+          { params: { 'userId': this.userId, 'status': this.activeStatus, 'current': this.pageInfo.current, 'size': this.pageInfo.size } })
+        console.log('jsondata:', jsondata)
+        this.deliveryList = jsondata.data.records
+        this.pageInfo = jsondata.data
+        console.log('获取到的当前店铺请求的list:', this.deliveryList)
       } catch (error) {
         console.log(error)
       }
@@ -217,14 +208,24 @@ export default {
       this.getDeliveryList()
     },
     handleClick (row, status) {
-      console.log(status, row)
-      if (status === 'fail') {
-        this.activeApplyIdList = row.applyIdList
-        this.remarkShow = true
-      } else {
-        this.activeDrugDetailId = row.drugDetailId
-        axios.put('/admin/store_batch/fast', { 'applyIdList': row.applyIdList, 'status': status, 'drugDetailId': this.activeDrugDetailId })
-      }
+      console.log('操作配送:', status, row)
+      // 前端修改状态，然后后端对退回操作进行userId重置
+      // this.activeDrugDetailId = row.drugDetailId
+      console.log('row:', row)
+      axios({
+        method: 'put',
+        url: '/admin/delivery',
+        params: {
+          deliveryId: row.deliveryId,
+          deliveryStatus: status,
+          userId: this.userId
+        }
+      }).then(
+        jsondata => {
+          console.log('click:', jsondata)
+          this.getDeliveryList()
+        }
+      )
     },
     handleFail () {
       axios.put('/admin/store_batch/fast', {
