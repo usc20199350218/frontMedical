@@ -14,7 +14,12 @@
       </el-table-column>
       <el-table-column label="品名" min-width="150px" fixed="left">
         <template slot-scope="drugDetailsList">
-          <span style="margin-left: 10px">{{ drugDetailsList.row.drugName }}</span>
+          <el-popover trigger="hover" placement="top">
+            <p>编码: {{ drugDetailsList.row.drugNumber }}</p>
+            <div slot="reference" class="name-wrapper">
+              <el-tag size="medium">{{ drugDetailsList.row.drugName }}</el-tag>
+            </div>
+          </el-popover>
         </template>
       </el-table-column>
       <el-table-column label="品牌" min-width="125px">
@@ -117,6 +122,12 @@
               <el-input type="text" maxlength="20" placeholder="请输入保质期（月）" show-word-limit
                 v-model="drugDetail.drugShelfLife"></el-input></el-col>
           </el-form-item> -->
+          <el-form-item label="编码">
+            <el-col>
+              <el-input type="text" maxlength="20" placeholder="请输入编码" show-word-limit v-model="drugDetail.drugNumber">
+              </el-input>
+            </el-col>
+          </el-form-item>
           <el-form-item label="单价">
             <el-col>
               <el-input type="text" maxlength="20" placeholder="请输入单价" show-word-limit
@@ -169,6 +180,12 @@
               <el-input type="text" maxlength="20" placeholder="请输入保质期（月）" show-word-limit
                 v-model="drugDetail.drugShelfLife"></el-input></el-col>
           </el-form-item> -->
+          <el-form-item label="编码">
+            <el-col>
+              <el-input type="text" maxlength="20" placeholder="请输入编码" show-word-limit v-model="drugDetail.drugNumber">
+              </el-input>
+            </el-col>
+          </el-form-item>
           <el-form-item label="单价">
             <el-col>
               <el-input type="text" maxlength="20" placeholder="请输入单价" show-word-limit

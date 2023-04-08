@@ -17,6 +17,8 @@ import manageStoreBatch from '../views/store/manageStoreBatch'
 import manageType from '../views/drug/manageType'
 import manageApply from '../views/storehouse/manageApply'
 import storeDelivery from '../views/delivery/storeDelivery'
+import offlineSales from '../views/store/offlineSales'
+import mode from '../views/mode'
 Vue.use(Router)
 
 export default new Router({
@@ -89,6 +91,14 @@ export default new Router({
         path: '/delivery/store',
         name: 'storeDelivery',
         component: storeDelivery
+      }, {
+        path: '/store/offline',
+        name: 'offlineSales',
+        component: offlineSales
+      }, {
+        path: '/mode',
+        name: 'mode',
+        component: mode
       }
 
       ]
