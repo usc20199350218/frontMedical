@@ -34,6 +34,8 @@
               </el-table-column>
               <el-table-column label="零售价" prop="drugRetailPrice">
               </el-table-column>
+              <el-table-column label="剩余库存" prop="storeBatchExistingQuantity">
+              </el-table-column>
 
               <el-table-column align="right">
                 <template slot="header" slot-scope="scope">
@@ -82,6 +84,7 @@
           </el-table>
         </div>
         <div class="orderOperate">
+          <span>{{ amount }}</span>
           <el-button type="warning" @click="clearOrder()">重置</el-button>
           <el-button type="primary" @click="generateOrder()">结算</el-button>
         </div>
@@ -92,7 +95,8 @@
 </template>
 
 <script>
-// import Qs from 'qs'
+import Qs from 'qs'
+import mystore from '../../store'
 import axios from '../../utils/request'
 export default {
   data () {
@@ -107,7 +111,10 @@ export default {
       search: '',
       orderList: [],
       menuKey: 1,
-      previousTab: 1
+      previousTab: 1,
+      ordersIdList: [],
+      amount: 0,
+      userId: mystore.state.user.userId
     }
   },
   created () {
@@ -137,33 +144,55 @@ export default {
       //   .catch(error => {
       //     console.error(error)
       //   })
-      const order = this.orderList.map(item => ({
-        batchId: item.batchId,
-        batchNumber: item.batchNumber,
-        batchProductionDate: item.batchProductionDate,
-        brandId: item.brandId,
-        brandName: item.brandName,
-        drugDetailId: item.drugDetailId,
-        drugId: item.drugId,
-        drugName: item.drugName,
-        drugRetailPrice: item.drugRetailPrice,
-        drugSpecification: item.drugSpecification,
-        purchaseQuantity: item.purchaseQuantity,
-        storeBatchExistingQuantity: item.storeBatchExistingQuantity,
-        storeBatchId: item.storeBatchId
-      }))
+
+      // const order = this.orderList.map(item => ({
+      //   batchId: item.batchId,
+      //   batchNumber: item.batchNumber,
+      //   batchProductionDate: item.batchProductionDate,
+      //   brandId: item.brandId,
+      //   brandName: item.brandName,
+      //   drugDetailId: item.drugDetailId,
+      //   drugId: item.drugId,
+      //   drugName: item.drugName,
+      //   drugRetailPrice: item.drugRetailPrice,
+      //   drugSpecification: item.drugSpecification,
+      //   purchaseQuantity: item.purchaseQuantity,
+      //   storeBatchExistingQuantity: item.storeBatchExistingQuantity,
+      //   storeBatchId: item.storeBatchId
+      // }))
+      // axios({
+      //   url: '/admin/offline/post1',
+      //   method: 'post',
+      //   data: { order }
+      // }).then(response => {
+      //   console.log(response.data)
+      // }).catch(error => {
+      //   console.error(error)
+      // })
+
+      const orderVo = {
+        userId: this.userId,
+        storeBatchId: this.ordersIdList
+      }
       axios({
         url: '/admin/offline/post1',
         method: 'post',
-        data: { order }
-      }).then(response => {
-        console.log(response.data)
-      }).catch(error => {
-        console.error(error)
+        data: Qs.stringify(orderVo)
+      }).then((jsondata) => {
+        console.log('下单:', jsondata)
+        this.$router.push({
+          path: '/store/offline/order/details',
+          query: {
+            resultList: this.orderList,
+            result: jsondata.data
+          }
+        })
       })
     },
     clearOrder () {
       this.orderList = []
+      this.ordersIdList = []
+      this.amount = 0
     },
     handleOrderAdd (index, row) {
       console.log('handleOrderAdd')
@@ -174,9 +203,20 @@ export default {
       console.log(' row.purchaseQuantity:', row.purchaseQuantity)
       console.log('操作完成:', this.orderList)
       ++this.menuKey
+      // 添加
+      this.ordersIdList.push(row.storeBatchId)
+      console.log('添加this.ordersIdList:', this.ordersIdList)
+      this.amount = this.amount + row.drugRetailPrice
+      // this.amount = parseFloat((this.amount + row.drugRetailPrice).toFixed(2))
+      console.log('this.amount:', this.amount)
     },
     handleOrderRemove (index, row) {
       console.log('删除')
+      this.ordersIdList.splice(this.ordersIdList.indexOf(row.storeBatchId), 1)
+      console.log('添加this.ordersIdList:', this.ordersIdList)
+      this.amount = this.amount - row.drugRetailPrice
+      // this.amount = parseFloat((this.amount + row.drugRetailPrice).toFixed(2))
+      console.log('this.amount:', this.amount)
       if (this.orderList[index].purchaseQuantity === 1) {
         console.log('当前剩余1件,执行删除')
         this.orderList.splice(index, 1)
@@ -192,6 +232,11 @@ export default {
         row.purchaseQuantity = 1
         this.orderList.push(row)
         console.log('this.orderList:', this.orderList)
+        this.ordersIdList.push(row.storeBatchId)
+        console.log('添加this.ordersIdList:', this.ordersIdList)
+        this.amount = this.amount + row.drugRetailPrice
+        // this.amount = parseFloat((this.amount + row.drugRetailPrice).toFixed(2))
+        console.log('this.amount:', this.amount)
       } else {
         this.$message('已经添加')
       }
@@ -220,6 +265,8 @@ export default {
       if (this.previousTab !== this.activeStoreNum) {
         console.log('有变化,订单清空')
         this.orderList = []
+        this.orderIdList = []
+        this.amount = 0
       } else {
         console.log('没有变化')
       }
@@ -318,5 +365,4 @@ export default {
 .orderOperate {
   flex: 1;
   background-color: lightyellow;
-}
-</style>
+}</style>

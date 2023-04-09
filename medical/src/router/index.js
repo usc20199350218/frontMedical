@@ -19,6 +19,8 @@ import manageApply from '../views/storehouse/manageApply'
 import storeDelivery from '../views/delivery/storeDelivery'
 import offlineSales from '../views/store/offlineSales'
 import mode from '../views/mode'
+import offlineOrderDetails from '../views/store/offlineOrderDetails'
+
 Vue.use(Router)
 
 export default new Router({
@@ -99,6 +101,10 @@ export default new Router({
         path: '/mode',
         name: 'mode',
         component: mode
+      }, {
+        path: '/store/offline/order/details',
+        name: 'offlineOrderDetails',
+        component: offlineOrderDetails
       }
 
       ]
