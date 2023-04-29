@@ -20,7 +20,8 @@ import storeDelivery from '../views/delivery/storeDelivery'
 import offlineSales from '../views/store/offlineSales'
 import mode from '../views/mode'
 import offlineOrderDetails from '../views/store/offlineOrderDetails'
-
+import paytest from '../views/test/paytest'
+import pay from '../views/pay/pay'
 Vue.use(Router)
 
 export default new Router({
@@ -105,6 +106,14 @@ export default new Router({
         path: '/store/offline/order/details',
         name: 'offlineOrderDetails',
         component: offlineOrderDetails
+      }, {
+        path: '/pay/test',
+        name: 'paytest',
+        component: paytest
+      }, {
+        path: '/pay/pay',
+        name: 'pay',
+        component: pay
       }
 
       ]

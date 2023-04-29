@@ -1,49 +1,57 @@
 <template>
+  <div>
     <div>
-        <div>
-            <span>{{ val1 }}-{{ val2 }}-{{ val3 }}-{{ val4 }}-{{ list }} </span>
-        </div>
-        <div class="top">
-            <div class="left">
-                get
-                <el-button @click="get1()">默认按钮</el-button>
-                <el-button @click="get2()">默认按钮</el-button>
-                <el-button @click="get3()">默认按钮</el-button>
-                <el-button @click="get4()">默认按钮</el-button>
-                <el-button @click="get5()">默认按钮</el-button>
-                <el-button @click="get6()">默认按钮</el-button>
-            </div>
-            <div class="right">
-                post
-                <el-button>默认按钮</el-button>
-                <el-button>默认按钮</el-button>
-                <el-button>默认按钮</el-button>
-                <el-button>默认按钮</el-button>
-                <el-button>默认按钮</el-button>
-                <el-button>默认按钮</el-button>
-            </div>
-        </div>
-        <div class="bottom">
-            <div class="left">
-                del
-                <el-button>默认按钮</el-button>
-                <el-button>默认按钮</el-button>
-                <el-button>默认按钮</el-button>
-                <el-button>默认按钮</el-button>
-                <el-button>默认按钮</el-button>
-                <el-button>默认按钮</el-button>
-            </div>
-            <div class="right">
-                put
-                <el-button>默认按钮</el-button>
-                <el-button>默认按钮</el-button>
-                <el-button>默认按钮</el-button>
-                <el-button>默认按钮</el-button>
-                <el-button>默认按钮</el-button>
-                <el-button>默认按钮</el-button>
-            </div>
-        </div>
+      <div>
+        <img v-if="showImg" src="https://www.itheima.com/images/logo.png">
+        <!-- <img v-if="showImg" src="http://localhost:8088/api/alipay/pay?money=${money}"> -->
+      </div>
+      <img :src="getImgUrl()" v-if="showImg" alt="fail">
+      <span>{{ val1 }}-{{ val2 }}-{{ val3 }}-{{ val4 }}-{{ list }} </span>
+      <el-button @click="showImgF()">开关</el-button>
+      <!-- <a href="http://localhost:8088/api/alipay/pay">支付/a> -->
+      <a href="../pay/index">W3School</a>
     </div>
+    <div class="top">
+      <div class="left">
+        get
+        <el-button @click="get1()">默认按钮</el-button>
+        <el-button @click="get2()">默认按钮</el-button>
+        <el-button @click="get3()">默认按钮</el-button>
+        <el-button @click="get4()">默认按钮</el-button>
+        <el-button @click="get5()">默认按钮</el-button>
+        <el-button @click="get6()">默认按钮</el-button>
+      </div>
+      <div class="right">
+        post
+        <el-button>默认按钮</el-button>
+        <el-button>默认按钮</el-button>
+        <el-button>默认按钮</el-button>
+        <el-button>默认按钮</el-button>
+        <el-button>默认按钮</el-button>
+        <el-button>默认按钮</el-button>
+      </div>
+    </div>
+    <div class="bottom">
+      <div class="left">
+        del
+        <el-button>默认按钮</el-button>
+        <el-button>默认按钮</el-button>
+        <el-button>默认按钮</el-button>
+        <el-button>默认按钮</el-button>
+        <el-button>默认按钮</el-button>
+        <el-button>默认按钮</el-button>
+      </div>
+      <div class="right">
+        put
+        <el-button>默认按钮</el-button>
+        <el-button>默认按钮</el-button>
+        <el-button>默认按钮</el-button>
+        <el-button>默认按钮</el-button>
+        <el-button>默认按钮</el-button>
+        <el-button>默认按钮</el-button>
+      </div>
+    </div>
+  </div>
 </template>
 <script>
 import Qs from 'qs'
@@ -52,6 +60,8 @@ import axios from '../utils/request'
 export default {
   data () {
     return {
+      money: 12,
+      showImg: false,
       val1: 1,
       val2: true,
       val3: 1.3,
@@ -71,10 +81,16 @@ export default {
         val2: true,
         val3: 1.3,
         val4: 'val4'
-      }]
+      }],
+      img: 19
     }
   },
   methods: {
+
+    getImgUrl () { return 'http://localhost:8088/api/alipay/pay?money=' + this.img },
+    showImgF () {
+      this.showImg = !this.showImg
+    },
     get1 () {
       console.log('get1')
       console.log(this.val1)
@@ -156,26 +172,26 @@ export default {
 </script>
 <style>
 .top {
-    border: 1px solid red;
-    display: flex;
-    height: 50vh;
-    flex-direction: row;
+  border: 1px solid red;
+  display: flex;
+  height: 50vh;
+  flex-direction: row;
 }
 
 .bottom {
-    height: 50vh;
-    display: flex;
-    flex-direction: row;
-    border: 1px solid green;
+  height: 50vh;
+  display: flex;
+  flex-direction: row;
+  border: 1px solid green;
 }
 
 .left {
-    border: 1px solid rebeccapurple;
-    flex: 1;
+  border: 1px solid rebeccapurple;
+  flex: 1;
 }
 
 .right {
-    border: 1px solid yellow;
-    flex: 1;
+  border: 1px solid yellow;
+  flex: 1;
 }
 </style>

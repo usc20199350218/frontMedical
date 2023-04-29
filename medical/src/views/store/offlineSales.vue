@@ -70,6 +70,13 @@
             </el-table-column>
             <el-table-column label="数量" prop="purchaseQuantity">
             </el-table-column>
+            <!-- <el-table-column label="数量" min-width="80px">
+              <template slot-scope="orderList">
+                <el-input-number size="mini" v-model="orderList.row.purchaseQuantity" @change="handleChange" :min="0"
+                  label="描述文字"></el-input-number>
+              </template>
+            </el-table-column> -->
+            <!-- <el-input-number v-model="num" @change="handleChange" :min="1" :max="10" label="描述文字"></el-input-number> -->
             <el-table-column align="right">
               <template slot="header" slot-scope="scope">
                 <el-input v-model="search" size="mini" v-if="scope" placeholder="输入关键字搜索" />
@@ -123,6 +130,9 @@ export default {
   },
 
   methods: {
+    handleChange (value) {
+      console.log(value)
+    },
     generateOrder () {
       console.log('this.orderList:', this.orderList)
       //   const tableData = this.orderList
@@ -365,4 +375,5 @@ export default {
 .orderOperate {
   flex: 1;
   background-color: lightyellow;
-}</style>
+}
+</style>
