@@ -1,12 +1,11 @@
 <template>
   <div>
-    <el-table :data="
-      drugDetailsList.filter(
-        (data) =>
-          !search ||
-          data.drugName.toLowerCase().includes(search.toLowerCase())
-      )
-    " fit stripe mix-height="100" style="width: 100%">
+    <el-table :data="drugDetailsList.filter(
+      (data) =>
+        !search ||
+        data.drugName.toLowerCase().includes(search.toLowerCase())
+    )
+      " fit stripe mix-height="100" style="width: 100%">
       <el-table-column label="ID" min-width="80px" fixed="left">
         <template slot-scope="drugDetailsList">
           <span style="margin-left: 10px">{{ drugDetailsList.row.drugDetailId }}</span>
@@ -16,6 +15,7 @@
         <template slot-scope="drugDetailsList">
           <el-popover trigger="hover" placement="top">
             <p>编码: {{ drugDetailsList.row.drugNumber }}</p>
+            <span style="margin-left: 10px">{{ drugDetailsList.row.createTime }}</span>
             <div slot="reference" class="name-wrapper">
               <el-tag size="medium">{{ drugDetailsList.row.drugName }}</el-tag>
             </div>
@@ -35,6 +35,12 @@
       <el-table-column label="品类" min-width="125px">
         <template slot-scope="drugDetailsList">
           <span style="margin-left: 10px">{{ drugDetailsList.row.typeName }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="图片" min-width="125px">
+        <template slot-scope="drugDetailsList">
+          <!-- <span style="margin-left: 10px">{{ drugDetailsList.row.drugDetailPath }}</span> -->
+          <img :src="drugDetailsList.row.drugDetailPath" width="100px" alt="图片">
         </template>
       </el-table-column>
       <el-table-column label="单价" min-width="60px">
@@ -58,11 +64,6 @@
           <el-switch v-model="drugDetailsList.row.drugDetailsStatus" :active-value="1" :inactive-value="0"
             active-color="#13ce66" inactive-color="#ff4949" @change="drugStateChaged(drugDetailsList.row)">
           </el-switch>
-        </template>
-      </el-table-column>
-      <el-table-column label="创建日期" width="180px">
-        <template slot-scope="drugDetailsList">
-          <span style="margin-left: 10px">{{ drugDetailsList.row.createTime }}</span>
         </template>
       </el-table-column>
       <el-table-column label="更新日期" width="100px">
@@ -103,6 +104,22 @@
               </el-option>
             </el-select>
           </el-form-item>
+          <el-form-item label="图片上传" align="left">
+            <el-col>
+              运行正常
+              <el-upload class="upload-demo" action="http://localhost:8088/api/upload?module=drugpath"
+                :on-preview="handlePreview" :on-remove="handleRemove" :file="fileList" :on-success="filesuccess"
+                list-type="picture" :limit="1">
+                <el-button size="small" type="primary">点击上传</el-button>
+                <div slot="tip" class="el-upload__tip">
+                  只能上传jpg/png文件且不超过500kb
+                </div>
+              </el-upload>
+            </el-col>
+            <el-col>
+              <el-input type="text" placeholder="电影路径，直接输路径，cpoy用" v-model="drugDetail.drugDetailPath">
+              </el-input></el-col>
+          </el-form-item>
           <el-form-item label="状态">
             <el-col>
               <el-select v-model="drugDetail.drugDetailsStatus" placeholder="请选择状态">
@@ -116,12 +133,6 @@
               <el-input type="text" maxlength="20" placeholder="请输入品名" show-word-limit
                 v-model="drugDetail.drugSpecification"></el-input></el-col>
           </el-form-item>
-
-          <!-- <el-form-item label="保质期（月）">
-            <el-col>
-              <el-input type="text" maxlength="20" placeholder="请输入保质期（月）" show-word-limit
-                v-model="drugDetail.drugShelfLife"></el-input></el-col>
-          </el-form-item> -->
           <el-form-item label="编码">
             <el-col>
               <el-input type="text" maxlength="20" placeholder="请输入编码" show-word-limit v-model="drugDetail.drugNumber">
@@ -160,6 +171,22 @@
               <el-option v-for="item in brandsList" :key="item.brandId" :value="item.brandId" :label="item.brandName">
               </el-option>
             </el-select>
+          </el-form-item>
+          <el-form-item label="图片上传" align="left">
+            <el-col>
+              运行正常
+              <el-upload class="upload-demo" action="http://localhost:8088/api/upload?module=drugpath"
+                :on-preview="handlePreview" :on-remove="handleRemove" :file="fileList" :on-success="filesuccess"
+                list-type="picture" :limit="1">
+                <el-button size="small" type="primary">点击上传</el-button>
+                <div slot="tip" class="el-upload__tip">
+                  只能上传jpg/png文件且不超过500kb
+                </div>
+              </el-upload>
+            </el-col>
+            <el-col>
+              <el-input type="text" placeholder="图片路径，直接输路径，cpoy用" v-model="drugDetail.drugDetailPath">
+              </el-input></el-col>
           </el-form-item>
           <el-form-item label="状态">
             <el-col>
@@ -219,7 +246,7 @@ import axios from '../../utils/request'
 export default {
   data () {
     return {
-      pageInfo: { current: 0, size: 5 },
+      pageInfo: { current: 0, size: 10 },
       search: '',
       dialogFormVisible: false,
       dialogFormVisibles: false,
@@ -236,16 +263,30 @@ export default {
         brandId: '',
         drugDetailsStatus: '',
         drugSpecification: '',
-        drugShelfLife: ''
-      }
+        drugShelfLife: '',
+        drugDetailPath: ''
+      },
+      fileList: ''
     }
   },
 
   created () {
-    // 先获取全部用户
     this.getDrugDetailsList()
   },
   methods: {
+    filesuccess (response, file, fileList) {
+      console.log(response)
+      if (response.data !== null) {
+        this.noti('上传')
+      }
+      this.drugDetail.drugDetailPath = response.data
+    },
+    handleRemove (file, fileList) {
+      console.log(file, fileList)
+    },
+    handlePreview (file) {
+      console.log(file)
+    },
     updItem () {
       console.log(this.drugDetail)
       axios({
@@ -258,6 +299,7 @@ export default {
           if (jsondata.code === '200') {
             this.closedialog(2)
             this.noti('提交')
+            this.fileList = ''
           }
         })
         .then(console.error())
@@ -273,6 +315,7 @@ export default {
           if (jsondata.code === '200') {
             this.closedialog(1)
             this.noti('提交')
+            this.fileList = ''
           }
         })
         .then(console.error())
@@ -296,6 +339,7 @@ export default {
       }
     },
     addShowdialog () {
+      this.drugDetail = {}
       this.getBrandList()
       this.getDrugList()
       this.dialogFormVisible = true
@@ -358,6 +402,7 @@ export default {
       this.getBrandList()
       this.getDrugList()
       this.drugDetail = row
+      this.fileList = this.drugDetail.drugDetailPath
       this.dialogFormVisibles = true
     },
     handleDelete (index, row) {

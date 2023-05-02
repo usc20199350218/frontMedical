@@ -8,13 +8,12 @@
     </div>
     <div>
 
-      <el-table :data="
-        applyBatchList.filter(
+      <el-table :data="applyBatchList.filter(
           (data) =>
             !search ||
             data.positionName.toLowerCase().includes(search.toLowerCase())
         )
-      " fit stripe mix-height="100" style="width: 100%">
+        " fit stripe mix-height="100" style="width: 100%">
         <el-table-column label="药品详情ID" min-width="80px" fixed="left">
           <template slot-scope="applyBatchList">
             <span style="margin-left: 10px">{{ applyBatchList.row.drugDetailId }}</span>
@@ -96,13 +95,12 @@
     </div>
     <div>
       <el-dialog :title="activeTit" :visible.sync="showDetail">
-        <el-table :data="
-          storeBatchDetailList.filter(
+        <el-table :data="storeBatchDetailList.filter(
             (data) =>
               !searchNew ||
               data.batchId == searchNew
           )
-        " fit stripe mix-height="100" style="width: 100%">
+          " fit stripe mix-height="100" style="width: 100%">
           <el-table-column label="店内批次Id" min-width="80px" fixed="left">
             <template slot-scope="storeBatchDetailList">
               <span style="margin-left: 10px">{{ storeBatchDetailList.row.storeBatchId }}</span>
@@ -148,6 +146,7 @@ import axios from '../../utils/request'
 export default {
   data () {
     return {
+      refreshKey: 0,
       search: '',
       applyBatchList: [],
       storeList: [],
@@ -246,6 +245,10 @@ export default {
         this.activeDrugDetailId = row.drugDetailId
         axios.put('/admin/store_batch/fast', { 'applyIdList': row.applyIdList, 'status': status, 'drugDetailId': this.activeDrugDetailId })
       }
+      // 刷新
+      this.getApplyBatchList()
+      // this.refreshKey++
+      location.reload()
     },
     handleFail () {
       axios.put('/admin/store_batch/fast', {

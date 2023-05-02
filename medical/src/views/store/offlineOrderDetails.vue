@@ -5,7 +5,7 @@
         订单：
         {{ this.result.orderNum }}
       </label>
-      <button @click="dialogVisible = true">{{ buttonText }}</button>
+      <!-- <button @click="dialogVisible = true">{{ buttonText }}</button> -->
     </div>
     <div class="replenish">
       <el-row :gutter="24">
@@ -71,24 +71,14 @@
               <div class="userTit">
                 <span>订单支付情况:</span>
               </div>
+
               <div class="detail">
-                <div class="detailLeft">订单Id:</div>
-                <div class="detailRight">{{ order.userRealName }}</div>
+                <div class="detailLeft">金额:</div>
+                <div class="detailRight">{{ result.amount }}</div>
               </div>
               <div class="detail">
-                <div class="detailLeft">订单名称:</div>
-                <div class="detailRight">{{ user.userPhone }}</div>
-              </div>
-              <div class="detail">
-                <div class="detailLeft">生日:</div>
-                <div class="detailRight">{{ user.userBirthday }}</div>
-              </div>
-              <div class="detail">
-                <div class="detailLeft">vip:</div>
-                <div class="detailRight">
-                  <span v-if="user.userVip === 1">是</span>
-                  <span v-if="user.userVip === 0">否</span>
-                </div>
+                <div class="detailLeft">方式:</div>
+                <div class="detailRight">{{ payment }}</div>
               </div>
             </div>
           </div>
@@ -96,19 +86,27 @@
       </el-row>
     </div>
     <div class="activity">
+      this.result.orderNum+
       {{ this.result.orderNum }}
-      {{ this.orderList }}
-      {{ this.result }}
+      <br />
+      | this.orderList+ {{ this.orderList }}
+      <br />|this.result+ {{ this.result }}
     </div>
     <div class="pay">
       <div class="payChoose">
         <el-radio-group v-model="payment">
-          <el-radio-button v-for="item in paymentList" :label="item" :key="item"></el-radio-button>
+          <el-radio-button v-for="item in paymentList" :label="item" :key="item"
+            :disabled="chosePayMent"></el-radio-button>
         </el-radio-group>
       </div>
       <div class="payBtn">
-        <el-button type="primary" @click="clear()">清零</el-button>
+        <el-button type="primary" @click="clear()">取消</el-button>
         <el-button type="primary" @click="finish()">结算</el-button>
+        <!-- <el-button type="primary" @click="settlement()">结算</el-button> -->
+        <!-- <el-button type="primary" @click="openAlipay()">支付宝结算</el-button> -->
+        <!-- <el-button type="primary" @click="start()">支付宝前结算</el-button> -->
+        <el-button type="primary" @click="end()">支付完成</el-button>
+        <el-button type="primary" @click="chosePayMent = false">解锁支付方式</el-button>
       </div>
 
     </div>
@@ -178,6 +176,9 @@
     <el-dialog :visible.sync="dialogVisible" @open="startCountDown" @close="closeFunction">
       <button v-bind:disabled="isDisabled" v-on:click="disableButton">{{ buttonText }}</button>
     </el-dialog>
+    <div class="payMode">
+
+    </div>
   </div>
 </template>
 
@@ -195,12 +196,15 @@
 
 -->
 <script>
+// import store from '../../store'
+import Qs from 'qs'
 import axios from '../../utils/request'
 import Index from '../Index.vue'
 export default {
   components: { Index },
   data () {
     return {
+      chosePayMent: false,
       isDisabled: true,
       buttonText: 'Please wait 5 seconds',
       dialogVisible: false,
@@ -210,9 +214,9 @@ export default {
       showModal: false,
       modalContent: '<h1>这是一个HTML弹窗</h1><p>这是一些HTML内容</p><img :src="getImgUrl()" alt="支付二维码"></img>',
       orderList: this.$route.query.resultList,
-      //   result: this.$route.query.result,
+      result: this.$route.query.result,
       //   resultList: [],
-      result: { amount: 30, orderNum: '20230409202115957651' },
+      // result: { amount: 30, orderNum: '20230409202115957651' },
       paymentList: ['现金', '支付宝', '微信', '其他'],
       radio: '',
       payment: '现金',
@@ -225,13 +229,109 @@ export default {
       money: 0,
       showImg: false,
       showSelectUser: false,
-      showPayQrCode: false
+      showPayQrCode: false,
+      timer: null,
+      startPay: false,
+      paySuccess: false
     }
   },
   created () {
     // this.searchType1 = 'realName'
   },
   methods: {
+    settlement () {
+
+    },
+    examine () {
+      console.log('开始检查')
+      axios({
+        method: 'get',
+        url: `/admin/order/examine/` + this.result.orderId
+      }).then((jsondata) => {
+        console.log(jsondata)
+        console.log(jsondata.data)
+        this.paySuccess = jsondata.data
+        console.log('this.paySuccess:', this.paySuccess)
+        return jsondata.data
+      })
+    },
+    end () {
+      if (this.startPay) {
+        console.log('examine:', this.examine())
+        console.log('payment:', this.payment)
+        this.examine()
+
+        if (this.paySuccess) {
+          console.log('清理开始')
+          clearInterval(this.timer)
+          this.timer = null
+          console.log(this.timer)
+          this.$router.push({ path: '/store/offline' })
+        } else {
+          console.log('清理失败')
+        }
+      } else {
+        this.$message({
+          message: '还未支付,请支付，取消支付请点击取消按钮',
+          type: 'warning'
+        })
+      }
+    },
+    start () {
+      this.timer = setInterval(() => {
+        console.log('检查中---')
+        if (this.examine()) {
+          console.log('检查正常')
+          clearInterval(this.timer)
+        }
+      }, 10000)
+    },
+    openAlipay () {
+      // this.intervalId = setInterval(this.examine(), 1000)
+      // axios.post('/api/alipay/pay')
+
+      const alipayDTO = {
+        totalAmount: this.result.amount,
+        merchantOrderNo: this.result.orderNum,
+        storeId: 1,
+        userId: this.user.userId
+      }
+      console.log('alipayDTO:', alipayDTO)
+      axios({
+        method: 'post',
+        url: '/api/alipay/last',
+        data: Qs.stringify(alipayDTO)
+      })
+        // .then((jsondata) => {
+        // console.log('jsondata:', jsondata)
+        // })
+
+        // axios
+        //   .post(
+        //     '/api/alipay/pay'
+        //   )
+
+        .then((resp) => {
+          console.log('resp:', resp)
+          const divForm = document.querySelector('.payMode')
+          console.log('divForm:', divForm)
+          if (divForm.length) {
+            console.log('divForm.length:', divForm.length)
+            document.body.removeChild(divForm[0])
+          }
+          divForm.innerHTML = resp.data.body
+          console.log('document:', document)
+          const form = document.forms[0]
+          console.log('form', form)
+          if (form) {
+            form.setAttribute('target', '_blank')
+            form.submit()
+            setTimeout(this.start(), 10000)
+          } else {
+            console.error('文档中未找到表单元素。')
+          }
+        })
+    },
     closeFunction () {
       this.countDown = 0
       console.log('close')
@@ -337,10 +437,12 @@ export default {
          * 根据选择的支付方式，动态的展示结果（支付宝则开始获取二维码地址）
          *
          */
+      this.chosePayMent = true
       console.log('开始结算')
       console.log('this.user.userId:', this.user.userId)
       console.log('this.payment:', this.payment)
       console.log('this.result.orderId:', this.result.orderId)
+      this.startPay = true
       this.money = this.result.amount
       // this.showImg()
       // 支付中，先将订单状态进行修改
@@ -354,15 +456,18 @@ export default {
         }
       }).then((jsondata) => {
         console.log('提交jsondata:', jsondata)
-
-        this.showPayQrCode = true
+        // this.showPayQrCode = true
+        if (this.payment === '支付宝' && jsondata != null) {
+          console.log('支付宝，开始获取二维码')
+          // this.showImg = true
+          this.openAlipay()
+        }
       })
-
-      if (this.payment === '支付宝') {
-        console.log('支付宝，开始获取二维码')
-        this.showImg = true
-      }
     }
+  },
+  beforeDestroy () {
+    // js提供的clearInterval方法用来清除定时器
+    clearInterval(this.timer)
   }
 }
 </script>

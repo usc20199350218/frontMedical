@@ -2,16 +2,20 @@
   <div>
     <div>
       <div>
-        <img v-if="showImg" src="https://www.itheima.com/images/logo.png">
-        <!-- <img v-if="showImg" src="http://localhost:8088/api/alipay/pay?money=${money}"> -->
+        <p>Count: {{ count }}</p>
+        <button @click="increment">Increment</button>
       </div>
-      <img :src="getImgUrl()" v-if="showImg" alt="fail">
-      <span>{{ val1 }}-{{ val2 }}-{{ val3 }}-{{ val4 }}-{{ list }} </span>
-      <el-button @click="showImgF()">开关</el-button>
+      <!-- <div>
+        <img v-if="showImg" src="https://www.itheima.com/images/logo.png"> -->
+        <!-- <img v-if="showImg" src="http://localhost:8088/api/alipay/pay?money=${money}"> -->
+      <!-- </div> -->
+      <!-- <img :src="getImgUrl()" v-if="showImg" alt="fail"> -->
+      <!-- <span>{{ val1 }}-{{ val2 }}-{{ val3 }}-{{ val4 }}-{{ list }} </span> -->
+      <!-- <el-button @click="showImgF()">开关</el-button> -->
       <!-- <a href="http://localhost:8088/api/alipay/pay">支付/a> -->
-      <a href="../pay/index">W3School</a>
+      <!-- <a href="../pay/index">W3School</a> -->
     </div>
-    <div class="top">
+    <!-- <div class="top">
       <div class="left">
         get
         <el-button @click="get1()">默认按钮</el-button>
@@ -50,7 +54,7 @@
         <el-button>默认按钮</el-button>
         <el-button>默认按钮</el-button>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 <script>
@@ -85,8 +89,23 @@ export default {
       img: 19
     }
   },
+  computed: {
+    count () {
+      // const carts = this.$store.getters.getUser.shoppingCarts
+      var s = 'k'
+      // console.log(carts)
+      // if (this.$store.getters.getUser.shoppingCarts.size > 0) {
+      //   carts.forEach((value, key) => {
+      //     s += key + '|' + value
+      //   })
+      // }
+      return s
+    }
+  },
   methods: {
-
+    increment () {
+      // this.$store.dispatch('asyncAddShoppingCarts', 1)
+    },
     getImgUrl () { return 'http://localhost:8088/api/alipay/pay?money=' + this.img },
     showImgF () {
       this.showImg = !this.showImg

@@ -24,6 +24,9 @@ const getters = {
   },
   getUser (state) {
     return state.user
+  },
+  getShoppingCartsNum (state) {
+    return state.user.shoppingCarts
   }
 }
 
@@ -41,8 +44,19 @@ const mutations = {
   },
   setUser (state, user) {
     localStorage.setItem('user', JSON.stringify(user))
+    // user.shoppingCarts = new Map()
     state.user = user
   }
+  // addShoppingCarts (state, val) {
+  //   console.log('开始添加购物车', val)
+  //   const map = state.user.shoppingCarts
+  //   if (map.has(val)) {
+  //     console.log('存在', val)
+  //   } else {
+  //     console.log('不存在', val)
+  //     state.user.shoppingCarts.set(val, 1)
+  //   }
+  // }
 
 }
 
@@ -58,6 +72,9 @@ const actions = {
   asyncUpdateUser (context, user) {
     context.commit('updateUser', user)
   }
+  // asyncAddShoppingCarts (context, val) {
+  //   context.commit('addShoppingCarts', val)
+  // }
 }
 
 export default new Vuex.Store({

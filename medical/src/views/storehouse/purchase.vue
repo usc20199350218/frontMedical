@@ -350,12 +350,12 @@
           <el-form-item label="计划数量（盒）">
             <el-col>
               <el-input type="text" maxlength="20" placeholder="请输入数量（盒）" :disabled="true" show-word-limit
-                v-model="planNum"></el-input></el-col>
+                v-model="batch.batchPurchaseQuantity"></el-input></el-col>
           </el-form-item>
           <el-form-item label="实际数量（盒）">
             <el-col>
               <el-input type="text" maxlength="20" placeholder="请输入数量（盒）" show-word-limit
-                v-model="batch.batchPurchaseQuantity"></el-input></el-col>
+                v-model="batch.batchExistingQuantity"></el-input></el-col>
           </el-form-item>
           <el-form-item label="生产日期">
             <el-col>
@@ -375,7 +375,7 @@
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="Receipt = false, batch = {}">取 消</el-button>
+          <el-button @click="getBatchDetails(activeDrugDetailId, nowActiveName),Receipt = false, batch = {}">取 消</el-button>
           <el-button type="primary" @click="updItem(), Receipt = false, batch = {}">确 定</el-button>
         </div>
       </el-dialog>

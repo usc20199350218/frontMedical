@@ -204,7 +204,6 @@ export default {
           'http://localhost:8088/api/alipay/ali'
         )
         .then((resp) => {
-          // 添加之前先删除一下，如果单页面，页面不刷新，添加进去的内容会一直保留在页面中，二次调用form表单会出错
           console.log('resp:', resp)
           const divForm = document.querySelector('.payMode')
           console.log('divForm:', divForm)
@@ -212,16 +211,7 @@ export default {
             console.log('divForm.length:', divForm.length)
             document.body.removeChild(divForm[0])
           }
-          // const div = document.createElement('div')
-
-          // const newDoc = document.implementation.createHTMLDocument()
-          // const div = newDoc.createElement('div')
           divForm.innerHTML = resp.data.data.body
-          // div.innerHTML = resp.data.data.body // data就是接口返回的form 表单字符串
-
-          // console.log('div:', div)
-          // document.body.appendChild(div)
-          // document.body.appendChild(resp.data.data.body)
           console.log('document:', document)
           const form = document.forms[0]
           console.log('form', form)

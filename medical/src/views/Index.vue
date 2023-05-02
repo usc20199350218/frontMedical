@@ -206,7 +206,7 @@ body,
 .el-container {
   padding: 0;
   margin: 0;
-  height: 100vh;
+  height: 100%;
 }
 
 .el-header,
@@ -229,6 +229,7 @@ body,
   background-color: #e9eef3;
   color: #333;
   text-align: center;
+  height: 95vh;
   /* line-height: 160px; */
   /* padding-bottom: 300px; */
 
@@ -237,9 +238,8 @@ body,
 body>.el-container {
   margin-bottom: 60px;
   /* margin-bottom: 40px; */
-
   /*  */
-  height: 100%;
+  height:100px;
 }
 
 .el-container:nth-child(5) .el-aside,

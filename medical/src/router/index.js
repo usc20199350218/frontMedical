@@ -22,6 +22,12 @@ import mode from '../views/mode'
 import offlineOrderDetails from '../views/store/offlineOrderDetails'
 import paytest from '../views/test/paytest'
 import pay from '../views/pay/pay'
+import onlineStore from '../views/online/onlineStore'
+import onlineIndex from '../views/online/onlineIndex'
+import onlineSearch from '../views/online/onlineSearch'
+import shoppingCart from '../views/online/shoppingCart'
+import confirm from '../views/online/confirm'
+
 Vue.use(Router)
 
 export default new Router({
@@ -114,6 +120,26 @@ export default new Router({
         path: '/pay/pay',
         name: 'pay',
         component: pay
+      }, {
+        path: '/online/store',
+        name: 'onlineStore',
+        component: onlineStore
+      }, {
+        path: '/online/search',
+        name: 'onlineSearch',
+        component: onlineSearch
+      }, {
+        path: '/online/index',
+        name: 'onlineIndex',
+        component: onlineIndex
+      }, {
+        path: '/online/shoppingcart',
+        name: 'shoppingCart',
+        component: shoppingCart
+      }, {
+        path: '/online/confirm',
+        name: 'confirm',
+        component: confirm
       }
 
       ]
