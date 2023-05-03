@@ -280,7 +280,8 @@ export default {
     start () {
       this.timer = setInterval(() => {
         console.log('检查中---')
-        if (this.examine()) {
+        this.examine()
+        if (this.paySuccess) {
           console.log('检查正常')
           clearInterval(this.timer)
         }
@@ -326,7 +327,7 @@ export default {
           if (form) {
             form.setAttribute('target', '_blank')
             form.submit()
-            setTimeout(this.start(), 10000)
+            // setTimeout(this.start(), 10000)
           } else {
             console.error('文档中未找到表单元素。')
           }
@@ -457,7 +458,7 @@ export default {
       }).then((jsondata) => {
         console.log('提交jsondata:', jsondata)
         // this.showPayQrCode = true
-        if (this.payment === '支付宝' && jsondata != null) {
+        if (this.payment === '支付宝' && jsondata != null && jsondata.code === '200') {
           console.log('支付宝，开始获取二维码')
           // this.showImg = true
           this.openAlipay()

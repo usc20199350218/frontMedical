@@ -13,7 +13,7 @@
               <span class="decss">{{ store.businessHours }}</span>
               <hr />
               <div class="bottom clearfix">
-                <el-link type="danger" @click="enter(store.storeId)">进店</el-link>
+                <el-link type="danger" @click="enter(store)">进店</el-link>
               </div>
             </div>
           </el-card>
@@ -179,12 +179,13 @@ export default {
         this.storeList = jsondata.data
       })
     },
-    enter (val) {
-      console.log('打开id为', val, '的店铺')
-      this.storeId = val
+    enter (store) {
+      console.log('打开id为', store, '的店铺')
+      this.storeId = store.storeId
+      this.storeName = store.storeName
       this.$router.push({
-        path: '/online/search',
-        query: { storeId: this.storeId }
+        path: '/online/index',
+        query: { storeId: this.storeId, storeName: this.storeName }
       })
     }
   }

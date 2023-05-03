@@ -1,6 +1,11 @@
 <template>
   <div>
-    <div class="condition" style="background-color: antiquewhite;">
+    <div class="condition">
+      <div>
+        <h1>
+          {{ storeName }}
+        </h1>
+      </div>
       <el-row :height="20">
         <el-col :span="1">
           <label>品类选择</label>
@@ -33,11 +38,12 @@
           <el-button @click="backChoose()">选择店铺</el-button>
         </el-col>
         <el-col :span="4">
-          <el-button icon="el-icon-shopping-cart-full">{{ shoppingCartNum }}</el-button>
+          <el-button icon="el-icon-shopping-cart-full" @click="toShoppingCart()">{{ shoppingCartNum }}</el-button>
         </el-col>
       </el-row>
     </div>
-    <div class="content" style="background-color: azure;">
+    <hr/>
+    <div class="content">
       <div>
         <!-- <el-table :data="drugDetailsList.filter(
                   (data) =>
@@ -136,7 +142,7 @@
 </template>
 
 <script>
-// import Qs from 'qs'
+import Qs from 'qs'
 import mystore from '../../store'
 import axios from '../../utils/request'
 export default {
@@ -151,32 +157,58 @@ export default {
       searchMethod: '药品名称',
       searchText: '',
       search: '',
-      shoppingCartNum: 0
+      shoppingCartNum: 0,
+      storeName: '店铺名称'
     }
   },
   created () {
-    this.storeId = 1
-    // this.storeId = this.$route.query.storeId
+    // this.storeId = 1
+    this.storeId = this.$route.query.storeId
+    this.storeName = this.$route.query.storeName
     this.getTypeList()
 
     this.searchStart()
   },
   methods: {
+    toShoppingCart () {
+      this.$router.push({
+        path: '/online/shoppingcart',
+        query: { storeId: this.storeId, storeName: this.storeName }
+      })
+    },
     settlement (val) {
       console.log('结算', val, this.userId)
 
-      const list = [{ val },
-        {val: this.drugDetailsList[1]}
+      const list = [
+        { val }
       ]
       list[0].val.confirmNum = 1
       console.log('list[0]', list[0])
       this.$router.push({
         path: '/online/confirm',
-        query: { drugDetailList: list }
+        query: { drugDetailList: list, storeId: this.storeId }
       })
     },
     addCrat (val) {
       console.log('添加购物车', val, this.userId)
+      const data = {
+        userId: this.userId,
+        drugDetailId: val,
+        storeId: this.storeId
+      }
+      axios({
+        method: 'post',
+        url: '/api/shopping_cart',
+        data: Qs.stringify(data)
+      }).then((jsondata) => {
+        console.log('加入购物车jsondata:', jsondata)
+        if (jsondata.code === '200') {
+          this.$message({
+            message: '添加成功',
+            type: 'success'
+          })
+        }
+      })
     },
     searchStart () {
       console.log('storeId', this.storeId)

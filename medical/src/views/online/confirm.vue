@@ -8,9 +8,10 @@
                         <el-link>新增地址</el-link>
                     </div>
                     <div class="address" style="background-color: aqua;clear: both; ">
-                        <el-radio v-model="delivery" label="0" style="padding-left: 5vh;display: inline-block">自取</el-radio>
-                        <el-radio v-model="delivery" v-for="item in 12" :key="item" :label="item"
-                            style=" display: inline-block">
+                        <el-radio v-model="delivery" label="自取"
+                            style="padding-left: 5vh;display: inline-block" :disabled="startPay">自取</el-radio>
+                        <el-radio v-model="delivery" v-for="item in 12" :key="item" :label="item + item"
+                            style=" display: inline-block" :disabled="startPay">
                             {{ item }}|{{ item }}|{{ item }}
                         </el-radio>
                     </div>
@@ -65,7 +66,7 @@
                                             <span v-if="drugDetailList.row.val.confirmNum == ''">0</span> -->
                                             <el-input-number v-model="drugDetailList.row.val.confirmNum"
                                                 controls-position="right" @change="handleChange" :min="1"
-                                                style="width: 85px;" :max="50"></el-input-number>
+                                                style="width: 85px;" :max="50" :disabled="startPay"></el-input-number>
                                         </template>
                                     </el-table-column>
                                     <!-- <el-table-column align="left" width="220px" fixed="right">
@@ -91,8 +92,9 @@
                                 </div>
                                 <div>
                                     <el-button @click="back()">返回</el-button>
-                                    <el-button @click="calculate()">计算</el-button>
+                                    <!-- <el-button @click="calculate()">计算</el-button> -->
                                     <el-button style="float: right;" @click="settlement()">提交订单</el-button>
+                                    <el-button v-show="showOver" @click="checkOrder()">完成支付</el-button>
                                 </div>
                             </el-col>
                         </el-row>
@@ -100,7 +102,9 @@
                 </div>
             </el-col>
         </el-row>
+        <div class="payMode">
 
+        </div>
     </div>
 </template>
 
@@ -112,18 +116,51 @@ export default {
   data () {
     return {
       userId: mystore.state.user.userId,
-      delivery: '',
+      storeId: '',
+      delivery: '自取',
       drugDetailList: [],
       search: '',
-      totalPrice: 0
+      totalPrice: 0,
+      remark: '',
+      address: '自取',
+      showOver: false,
+      orderNum: '',
+      startPay: false
+
     }
   },
   created () {
     this.drugDetailList = this.$route.query.drugDetailList
+    this.storeId = this.$route.query.storeId
+    console.log('进入确认页面')
+    console.log('storeId:', this.storeId)
     console.log('drugDetailList:', this.$route.query.drugDetailList)
+    console.log('-----')
+    this.calculate()
   },
   methods: {
+    checkOrder () {
+      // 检查订单状态，然后进入详情页
+      if (this.orderNum !== '') {
+        console.log('检查订单是否支付')
+        axios({
+          method: 'get',
+          url: `/api/online/examine/` + this.orderNum
+        }).then((jsondata) => {
+          console.log(jsondata)
+          if (jsondata.code === '200') {
+            this.$router.push('/online/index')
+          }
+        })
+      }
+    },
     settlement () {
+      console.log('delivery:', this.delivery)
+      this.startPay = true
+      var condition = false
+      if (condition) {
+        return
+      }
       const drugDetailIdList = []
       for (var i = 0; i < this.drugDetailList.length; i++) {
         for (var z = 0; z < this.drugDetailList[i].val.confirmNum; z++) {
@@ -133,17 +170,89 @@ export default {
       console.log('添加的drugDetailIdList:', drugDetailIdList)
       const order = {
         userId: this.userId,
+        storeId: this.storeId,
         totalPrice: this.totalPrice,
-        drugDetailIdList: drugDetailIdList
+        drugDetailIdList: drugDetailIdList,
+        remark: this.remark,
+        address: this.delivery
       }
       axios({
         method: 'post',
         url: '/api/online/order',
         data: Qs.stringify(order)
-
-      }).then((jsondata) => {
-        console.log('结算：', jsondata)
       })
+      // .then((resp) => {
+      //   console.log('结算：', resp)
+      //   const divForm = document.querySelector('.payMode')
+      //   console.log('divForm:', divForm)
+      //   if (divForm.length) {
+      //     console.log('divForm.length:', divForm.length)
+      //     document.body.removeChild(divForm[0])
+      //   }
+      //   divForm.innerHTML = resp.data.body
+      //   console.log('document:', document)
+      //   const form = document.forms[0]
+      //   console.log('form', form)
+      //   if (form) {
+      //     form.setAttribute('target', '_blank')
+      //     form.submit()
+      //     //   setTimeout(this.start(), 10000)
+      //   } else {
+      //     console.error('文档中未找到表单元素。')
+      //   }
+      // })
+        .then((resp) => {
+          // 检查创建状态，调用支付宝
+          console.log('resp:', resp)
+          if (resp.code === '200') {
+            this.orderNum = resp.data.merchantOrderNo
+            this.openAlipay(resp.data.totalAmount, this.orderNum)
+          }
+        })
+    },
+    openAlipay (amount, orderNum) {
+      console.log('准备支付宝二维码')
+      this.showOver = true
+      const alipayDTO = {
+        totalAmount: amount,
+        merchantOrderNo: orderNum,
+        storeId: 1,
+        userId: this.userId
+      }
+      console.log('alipayDTO:', alipayDTO)
+      axios({
+        method: 'post',
+        url: '/api/alipay/last',
+        data: Qs.stringify(alipayDTO)
+      })
+      // .then((jsondata) => {
+      // console.log('jsondata:', jsondata)
+      // })
+
+      // axios
+      //   .post(
+      //     '/api/alipay/pay'
+      //   )
+
+        .then((resp) => {
+          console.log('resp:', resp)
+          const divForm = document.querySelector('.payMode')
+          console.log('divForm:', divForm)
+          if (divForm.length) {
+            console.log('divForm.length:', divForm.length)
+            document.body.removeChild(divForm[0])
+          }
+          divForm.innerHTML = resp.data.body
+          console.log('document:', document)
+          const form = document.forms[0]
+          console.log('form', form)
+          if (form) {
+            form.setAttribute('target', '_blank')
+            form.submit()
+          } else {
+            console.error('文档中未找到表单元素。')
+          }
+        })
     },
     handleChange (value) {
       console.log(value)

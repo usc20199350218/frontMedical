@@ -1,11 +1,52 @@
 <template>
   <div>
-    <el-row style="height: 100vh;">
+    <el-row>
+      <el-col :span="1" style="float: left;">
+        <el-input placeholder="请输入内容" v-model="searchText" class="input-with-select" style="width: 50vw;">
+          <el-select v-model="storeId" slot="prepend" placeholder="请选择店铺" style="width: 15vw;" @change="searchF()">
+            <el-option label="全部店铺" value=""></el-option>
+            <el-option v-for="store in storeList" :key="store.storeId" :label="store.storeName"
+              :value="store.storeId"></el-option>
+          </el-select>
+          <el-select v-model="searchMethod" slot="prepend" placeholder="请选择搜索方式" style="width: 8vw;" @change="searchF()">
+            <el-option label="药品名称" value="药品名称"></el-option>
+            <el-option label="药品编号" value="药品编号"></el-option>
+          </el-select>
+          <el-button slot="append" icon="el-icon-search" @click="searchF()"></el-button>
+        </el-input>
+      </el-col>
+    </el-row>
+    <el-row style="height: 60vh;">
       <el-col :span="12" style="background-color: aqua;">
-
+        <el-table ref="multipleTable" :data="scDrugList" tooltip-effect="dark" @selection-change="handleSelectionChange">
+          <el-table-column type="selection" width="55">
+          </el-table-column>
+          <el-table-column label="图片" width="120">
+            <template slot-scope="scope">
+              <img :src="scope.row.drugDetailPath" width="100px">
+            </template>
+          </el-table-column>
+          <el-table-column label="品名" width="120">
+            <template slot-scope="scope">{{ scope.row.drugName }}</template>
+          </el-table-column>
+          <el-table-column prop="drugSpecification" label="规格" width="120">
+          </el-table-column>
+          <el-table-column prop="drugRetailPrice" label="单价" width="120">
+          </el-table-column>
+          <el-table-column label="数量" width="120">
+            <template slot-scope="scope">
+              <el-input-number size="mini" style="width: 80px;" v-model="scope.row.number" controls-position="right"
+                @change="sizeChange(scope.row)" :min="1" :max="50"></el-input-number>
+            </template>
+          </el-table-column>
+        </el-table>
       </el-col>
       <el-col :span="12" style="background-color: blanchedalmond;">
-
+        <div>
+          <span>
+            {{ totalPrice }}
+          </span>
+        </div>
       </el-col>
     </el-row>
 
@@ -16,28 +57,91 @@
 </template>
 
 <script>
-// import Qs from 'qs'
+import Qs from 'qs'
 import mystore from '../../store'
-// import axios from '../../utils/request'
+import axios from '../../utils/request'
 export default {
   data () {
     return {
       storeId: '',
       userId: mystore.state.user.userId,
-      showStoreList: ''
+      searchMethod: '药品名称',
+      showStoreList: '',
+      storeList: [],
+      searchText: '',
+      scDrugList: [],
+      totalPrice: 0,
+      temp: ''
     }
   },
   created () {
-    this.storeId = this.$route.query.storeId
+    this.temp = this.$route.query.storeId
+
+    this.getStoreList()
+
     // 判断是从那边打开
-    if (typeof this.storeId !== 'undefined' && this.storeId) {
+    if (typeof this.temp !== 'undefined' && this.temp) {
       console.log('店铺进入')
+      this.storeId = this.temp
+      this.searchF()
     } else {
       console.log('外部进入')
+      this.storeId = 1
+      this.searchF()
     }
   },
   methods: {
-
+    sizeChange (val) {
+      // 单独更新这条数据
+      console.log('sizeChange:', val)
+      console.log('sizeChange:', val.cartId)
+      console.log('sizeChange:', val.number)
+      this.calculate()
+      const data = {
+        cartId: val.cartId,
+        number: val.number
+      }
+      console.log('data:', data)
+      axios.put('/api/shopping_cart', Qs.stringify(data))
+        .then((jsondata) => {
+          console.log('更新jsondata:', jsondata)
+        })
+    },
+    handleSelectionChange () {
+      console.log('change')
+      // this.calculate()
+    },
+    getStoreList () {
+      axios({
+        method: 'get',
+        url: '/admin/store'
+      }).then((jsondata) => {
+        console.log('storeList:', jsondata)
+        this.storeList = jsondata.data
+      })
+    },
+    searchF () {
+      console.log('this.storeId:', this.storeId)
+      console.log('searchMethod:', this.searchMethod)
+      axios({
+        method: 'get',
+        url: `/api/shopping_cart/search/` + this.userId,
+        params: {
+          searchMethod: this.searchMethod,
+          searchText: this.searchText,
+          storeId: this.storeId
+        }
+      }).then((jsondata) => {
+        console.log('jsondata:', jsondata)
+        this.scDrugList = jsondata.data
+      })
+    },
+    calculate () {
+      this.totalPrice = 0
+      for (var i = 0; i < this.scDrugList.length; i++) {
+        this.totalPrice += this.scDrugList[i].drugRetailPrice * this.scDrugList[i].number
+      }
+    }
   }
 }
 </script>
