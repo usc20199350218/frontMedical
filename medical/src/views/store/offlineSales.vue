@@ -171,7 +171,7 @@ export default {
       //   storeBatchId: item.storeBatchId
       // }))
       // axios({
-      //   url: '/admin/offline/post1',
+      //   url: '/admin/offline/corder',
       //   method: 'post',
       //   data: { order }
       // }).then(response => {
@@ -182,21 +182,25 @@ export default {
 
       const orderVo = {
         userId: this.userId,
-        storeBatchId: this.ordersIdList
+        storeBatchId: this.ordersIdList,
+        storeId: this.storeList[this.activeStoreNum].storeId
       }
       axios({
-        url: '/admin/offline/post1',
+        url: '/admin/offline/corder',
         method: 'post',
         data: Qs.stringify(orderVo)
       }).then((jsondata) => {
         console.log('下单:', jsondata)
-        this.$router.push({
-          path: '/store/offline/order/details',
-          query: {
-            resultList: this.orderList,
-            result: jsondata.data
-          }
-        })
+        if (jsondata.code === '200') {
+          // 成功之后跳转到详情页面，准备支付
+          this.$router.push({
+            path: '/store/offline/order/details',
+            query: {
+              resultList: this.orderList,
+              result: jsondata.data
+            }
+          })
+        }
       })
     },
     clearOrder () {

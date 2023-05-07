@@ -4,7 +4,6 @@
       <el-col :span="1" style="float: left;">
         <el-input placeholder="请输入内容" v-model="searchText" class="input-with-select" style="width: 50vw;">
           <el-select v-model="storeId" slot="prepend" placeholder="请选择店铺" style="width: 15vw;" @change="searchF()">
-            <el-option label="全部店铺" value=""></el-option>
             <el-option v-for="store in storeList" :key="store.storeId" :label="store.storeName"
               :value="store.storeId"></el-option>
           </el-select>
@@ -47,6 +46,9 @@
             {{ totalPrice }}
           </span>
         </div>
+        <div>
+          <el-button @click="settlement()">结算</el-button>
+        </div>
       </el-col>
     </el-row>
 
@@ -71,7 +73,8 @@ export default {
       searchText: '',
       scDrugList: [],
       totalPrice: 0,
-      temp: ''
+      temp: '',
+      multipleSelection: []
     }
   },
   created () {
@@ -91,12 +94,25 @@ export default {
     }
   },
   methods: {
+    settlement () {
+      // 遍历已选数据
+      // this.multipleSelection
+      // 获取详情，带入数据
+      const list = []
+      for (var i = 0; i < this.multipleSelection.length; i++) {
+        list.push({'val': this.multipleSelection[i]})
+      }
+      // 进入confirm页面准备结算
+      this.$router.push({
+        path: '/online/confirm',
+        query: { drugDetailList: list, storeId: this.storeId }
+      })
+    },
     sizeChange (val) {
       // 单独更新这条数据
       console.log('sizeChange:', val)
       console.log('sizeChange:', val.cartId)
       console.log('sizeChange:', val.number)
-      this.calculate()
       const data = {
         cartId: val.cartId,
         number: val.number
@@ -106,10 +122,14 @@ export default {
         .then((jsondata) => {
           console.log('更新jsondata:', jsondata)
         })
+      this.calculate()
     },
-    handleSelectionChange () {
-      console.log('change')
+    handleSelectionChange (val) {
+      console.log('change', val)
       // this.calculate()
+      this.multipleSelection = val
+      console.log('multipleSelection', this.multipleSelection)
+      this.calculate()
     },
     getStoreList () {
       axios({
@@ -138,8 +158,8 @@ export default {
     },
     calculate () {
       this.totalPrice = 0
-      for (var i = 0; i < this.scDrugList.length; i++) {
-        this.totalPrice += this.scDrugList[i].drugRetailPrice * this.scDrugList[i].number
+      for (var i = 0; i < this.multipleSelection.length; i++) {
+        this.totalPrice += this.multipleSelection[i].drugRetailPrice * this.multipleSelection[i].number
       }
     }
   }

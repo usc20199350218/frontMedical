@@ -27,7 +27,8 @@ import onlineIndex from '../views/online/onlineIndex'
 import onlineSearch from '../views/online/onlineSearch'
 import shoppingCart from '../views/online/shoppingCart'
 import confirm from '../views/online/confirm'
-
+import userOrder from '../views/online/userOrder'
+import storeOrder from '../views/order/storeOrder'
 Vue.use(Router)
 
 export default new Router({
@@ -140,6 +141,14 @@ export default new Router({
         path: '/online/confirm',
         name: 'confirm',
         component: confirm
+      }, {
+        path: '/user/order',
+        name: 'userOrder',
+        component: userOrder
+      }, {
+        path: '/store/order',
+        name: 'storeOrder',
+        component: storeOrder
       }
 
       ]

@@ -60,11 +60,11 @@
                                     </el-table-column>
                                     <el-table-column label="数量">
                                         <template slot-scope="drugDetailList">
-                                            <!-- <span v-if="drugDetailList.row.val.confirmNum !== ''">{{
-                                                drugDetailList.row.val.confirmNum
+                                            <!-- <span v-if="drugDetailList.row.val.number !== ''">{{
+                                                drugDetailList.row.val.number
                                             }}</span>
-                                            <span v-if="drugDetailList.row.val.confirmNum == ''">0</span> -->
-                                            <el-input-number v-model="drugDetailList.row.val.confirmNum"
+                                            <span v-if="drugDetailList.row.val.number == ''">0</span> -->
+                                            <el-input-number v-model="drugDetailList.row.val.number"
                                                 controls-position="right" @change="handleChange" :min="1"
                                                 style="width: 85px;" :max="50" :disabled="startPay"></el-input-number>
                                         </template>
@@ -163,7 +163,7 @@ export default {
       }
       const drugDetailIdList = []
       for (var i = 0; i < this.drugDetailList.length; i++) {
-        for (var z = 0; z < this.drugDetailList[i].val.confirmNum; z++) {
+        for (var z = 0; z < this.drugDetailList[i].val.number; z++) {
           drugDetailIdList.push(this.drugDetailList[i].val.drugDetailId)
         }
       }
@@ -216,7 +216,7 @@ export default {
       const alipayDTO = {
         totalAmount: amount,
         merchantOrderNo: orderNum,
-        storeId: 1,
+        storeId: this.storeId,
         userId: this.userId
       }
       console.log('alipayDTO:', alipayDTO)
@@ -268,7 +268,7 @@ export default {
       console.log('开始计算')
       for (var i = 0; i < this.drugDetailList.length; i++) {
         console.log(this.drugDetailList[i])
-        this.totalPrice += this.drugDetailList[i].val.confirmNum * this.drugDetailList[i].val.drugRetailPrice
+        this.totalPrice += this.drugDetailList[i].val.number * this.drugDetailList[i].val.drugRetailPrice
       }
       console.log('结束计算')
     }

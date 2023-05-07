@@ -182,7 +182,7 @@ export default {
       const list = [
         { val }
       ]
-      list[0].val.confirmNum = 1
+      list[0].val.number = 1
       console.log('list[0]', list[0])
       this.$router.push({
         path: '/online/confirm',

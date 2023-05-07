@@ -429,6 +429,10 @@ export default {
         url: `/admin/order/cancel/` + this.result.orderId
       }).then((jsondata) => {
         console.log('取消订单jsondata:', jsondata)
+        if (jsondata.code === '200') {
+          console.log('取消成功:')
+          this.$router.push('/store/offline')
+        }
       })
     },
     finish () {
