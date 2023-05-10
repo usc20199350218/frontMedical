@@ -15,7 +15,7 @@
         </el-button>
       </el-col>
       <el-col :span="1">
-      <el-button @click="clearUser()">重置</el-button>
+        <el-button @click="clearUser()">重置</el-button>
       </el-col>
     </el-row>
     <el-row :span="24">
@@ -84,26 +84,35 @@
         </el-table-column>
         <el-table-column prop="paymentTime" label="支付时间" show-overflow-tooltip>
         </el-table-column>
-        <el-table-column label="支付状态">
+        <el-table-column label="订单状态">
           <template slot-scope="scope">
             <span v-if="scope.row.status == 'CREATED'">创建</span>
             <span v-else-if="scope.row.status == 'SUCCESS'">成功</span>
             <span v-else-if="scope.row.status == 'ING'">支付中</span>
             <span v-else-if="scope.row.status == 'GIVE_UP'">放弃</span>
+            <span v-else-if="scope.row.status == 'REFUNDING'">退款中</span>
+            <span v-else-if="scope.row.status == 'REFUND'">退款</span>
             <span v-else>error</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+            <el-button @click="handleLook(scope.row)">详情</el-button>
+            <el-button v-if="scope.row.status !== 'REFUND' && scope.row.status !== 'REFUNDING'"
+              @click="refund(scope.row)">退款</el-button>
           </template>
         </el-table-column>
       </el-table>
       <div class="block">
-        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
-          :current-page="pageInfo.current" :page-sizes="[5, 10, 20, 30, 100, 1000, 10000]" :page-size="pageInfo.size"
-          layout="total, sizes, prev, pager, next, jumper" :total="pageInfo.total">
+        <el-pagination @size-change=" handleSizeChange " @current-change=" handleCurrentChange "
+          :current-page=" pageInfo.current " :page-sizes=" [5, 10, 20, 30, 100, 1000, 10000] " :page-size=" pageInfo.size "
+          layout="total, sizes, prev, pager, next, jumper" :total=" pageInfo.total ">
         </el-pagination>
       </div>
     </div>
 
-    <el-dialog title="选择用户" :visible.sync="showSelectUser" :before-close="handleClose">
-      <el-table :data="userList" style="width: 100%">
+    <el-dialog title="选择用户" :visible.sync=" showSelectUser " :before-close=" handleClose ">
+      <el-table :data=" userList " style="width: 100%">
         <el-table-column label="用户Id">
           <template slot-scope="userList">
             <span style="margin-left: 10px">{{ userList.row.userId }}</span>
@@ -133,9 +142,9 @@
         </el-table-column>
         <el-table-column label="vip">
           <template slot-scope="userList">
-            <span v-if="userList.row.userVip == '0'">非vip</span>
-            <span v-if="userList.row.userVip != '0'" style="margin-left: 10px">{{ userList.row.userVip
-            }}级</span>
+            <span v-if=" userList.row.userVip == '0' ">非vip</span>
+            <span v-if=" userList.row.userVip != '0' " style="margin-left: 10px">{{ userList.row.userVip
+              }}级</span>
           </template>
         </el-table-column>
         <el-table-column label="操作">
@@ -145,15 +154,44 @@
         </el-table-column>
       </el-table>
       <div class="block">
-        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
-          :current-page="pageInfo.current" :page-sizes="[5, 10, 20, 30, 100, 1000, 10000]" :page-size="pageInfo.size"
-          layout="total, sizes, prev, pager, next, jumper" :total="pageInfo.total">
+        <el-pagination @size-change=" handleSizeChange " @current-change=" handleCurrentChange "
+          :current-page=" pageInfo.current " :page-sizes=" [5, 10, 20, 30, 100, 1000, 10000] " :page-size=" pageInfo.size "
+          layout="total, sizes, prev, pager, next, jumper" :total=" pageInfo.total ">
         </el-pagination>
       </div>
     </el-dialog>
-    <span>
-      {{ shooseUser }}
-    </span>
+
+    <div>
+      <el-dialog :title=" showTitle " :visible.sync=" showDetail ">
+        <el-table :data=" orderDetailList ">
+          <el-table-column label="药品名称">
+            <template slot-scope="scope">
+              <el-popover trigger="hover" placement="top">
+                <p>Id: {{ scope.row.orderDetailId }}</p>
+                <div slot="reference" class="name-wrapper">
+                  <el-tag size="medium">{{ scope.row.drugName }}</el-tag>
+                </div>
+              </el-popover>
+            </template>
+          </el-table-column>
+          <el-table-column label="价格">
+            <template slot-scope="scope">
+              <span style="margin-left: 10px">{{ scope.row.drugPrice }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="数量">
+            <template slot-scope="scope">
+              <span style="margin-left: 10px">{{ scope.row.quantity }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="总价">
+            <template slot-scope="scope">
+              <span style="margin-left: 10px">{{ scope.row.totalPrice }}</span>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-dialog>
+    </div>
   </div>
 </template>
 
@@ -214,7 +252,10 @@ export default {
       userValue: '',
       showSelectUser: false,
       userLabel: '',
-      shooseUser: ''
+      shooseUser: '',
+      showTitle: '',
+      showDetail: false,
+      orderDetailList: []
     }
   },
   created () {
@@ -226,6 +267,27 @@ export default {
     this.searchStart()
   },
   methods: {
+    refund (row) {
+      console.log('退款:', row)
+      axios.put(`/admin/order/refund/` + row.orderId).then((jsondata) => {
+        console.log('jsondata:', jsondata)
+        this.searchStart()
+      })
+    },
+    handleLook (row) {
+      this.showTitle = 'orderNum为' + row.orderNum + '的订单'
+      console.log('查看订单详情', row)
+      axios({
+        method: 'get',
+        url: `/admin/order/detail/` + row.orderId
+      }).then((jsondata) => {
+        console.log('订单详情', jsondata)
+        if (jsondata.code === '200') {
+          this.orderDetailList = jsondata.data
+          this.showDetail = true
+        }
+      })
+    },
     clearUser () {
       this.userLabel = ''
       this.chooseUserStart = true
@@ -267,7 +329,7 @@ export default {
       console.log('multipleSelection2:', this.multipleSelection)
     },
     searchStart () {
-      console.log('搜索', this.payStatus, this.chooseDate[0], this.chooseDate[1], 1)
+      // console.log('搜索', this.payStatus, this.chooseDate[0], this.chooseDate[1], 1)
       let id = 0
       if (this.shooseUser !== '') {
         id = this.shooseUser.userId

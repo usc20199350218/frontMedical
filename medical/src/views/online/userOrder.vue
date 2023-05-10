@@ -74,6 +74,11 @@
             <span v-else>error</span>
           </template>
         </el-table-column>
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+            <el-button @click="handleLook(scope.row)">详情</el-button>
+          </template>
+        </el-table-column>
       </el-table>
       <div class="block">
         <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
@@ -81,6 +86,37 @@
           layout="total, sizes, prev, pager, next, jumper" :total="pageInfo.total">
         </el-pagination>
       </div>
+    </div>
+    <div>
+      <el-dialog :title="showTitle" :visible.sync="showDetail">
+        <el-table :data="orderDetailList">
+          <el-table-column label="药品名称">
+            <template slot-scope="scope">
+              <el-popover trigger="hover" placement="top">
+                <p>Id: {{ scope.row.orderDetailId }}</p>
+                <div slot="reference" class="name-wrapper">
+                  <el-tag size="medium">{{ scope.row.drugName }}</el-tag>
+                </div>
+              </el-popover>
+            </template>
+          </el-table-column>
+          <el-table-column label="价格">
+            <template slot-scope="scope">
+              <span style="margin-left: 10px">{{ scope.row.drugPrice }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="数量">
+            <template slot-scope="scope">
+              <span style="margin-left: 10px">{{ scope.row.quantity }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="总价">
+            <template slot-scope="scope">
+              <span style="margin-left: 10px">{{ scope.row.totalPrice }}</span>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -129,7 +165,10 @@ export default {
       payment: '',
       paymentList: [],
       paymentMethodMap: {},
-      pageInfo: { current: 0, size: 10 }
+      pageInfo: { current: 0, size: 10 },
+      orderDetailList: [],
+      showTitle: '详情',
+      showDetail: false
 
     }
   },
@@ -142,6 +181,20 @@ export default {
     this.searchStart()
   },
   methods: {
+    handleLook (row) {
+      this.showTitle = 'orderNum为' + row.orderNum + '的订单'
+      console.log('查看订单详情', row)
+      axios({
+        method: 'get',
+        url: `/admin/order/detail/` + row.orderId
+      }).then((jsondata) => {
+        console.log('订单详情', jsondata)
+        if (jsondata.code === '200') {
+          this.orderDetailList = jsondata.data
+          this.showDetail = true
+        }
+      })
+    },
     handleSelectionChange (val) {
       console.log('multipleSelection1:', this.multipleSelection)
       this.multipleSelection = val

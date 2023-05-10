@@ -29,6 +29,10 @@ import shoppingCart from '../views/online/shoppingCart'
 import confirm from '../views/online/confirm'
 import userOrder from '../views/online/userOrder'
 import storeOrder from '../views/order/storeOrder'
+import nothing from '../views/nothing'
+import serviceUser from '../views/service/serviceUser'
+import serviceDetail from '../views/service/detail'
+import serviceManage from '../views/service/manage'
 Vue.use(Router)
 
 export default new Router({
@@ -42,114 +46,131 @@ export default new Router({
     {
       path: '/index',
       component: Index,
-      // redirect: '/movie/findall',
-      children: [{
-        path: '/rights/manage',
-        name: 'manageRights',
-        component: manageRights
-      }, {
-        path: '/users/manage',
-        name: 'manageUsers',
-        component: manageUsers
-      }, {
-        path: '/role/manage',
-        name: 'manageRole',
-        component: manageRole
-      }, {
-        path: '/drug/manage',
-        name: 'manageDrug',
-        component: manageDrug
-      }, {
-        path: '/drug/brand',
-        name: 'manageBrand',
-        component: manageBrand
-      }, {
-        path: '/drug/manage/details',
-        name: 'manageDrugDetails',
-        component: manageDrugDetails
-      }, {
-        path: '/storehouse/purchase',
-        name: 'purchase',
-        component: purchase
-      },
-      {
-        path: '/store/manage',
-        name: 'manageStore',
-        component: manageStore
-      },
-      {
-        path: '/store/position',
-        name: 'managePosition',
-        component: managePosition
-      }, {
-        path: '/store/staff',
-        name: 'manageStaff',
-        component: manageStaff
-      }, {
-        path: '/store/batch',
-        name: 'manageStoreBatch',
-        component: manageStoreBatch
-      }, {
-        path: '/drug/type',
-        name: 'manageType',
-        component: manageType
-      }, {
-        path: '/storehouse/store_apply',
-        name: 'manageApply',
-        component: manageApply
-      }, {
-        path: '/delivery/store',
-        name: 'storeDelivery',
-        component: storeDelivery
-      }, {
-        path: '/store/offline',
-        name: 'offlineSales',
-        component: offlineSales
-      }, {
-        path: '/mode',
-        name: 'mode',
-        component: mode
-      }, {
-        path: '/store/offline/order/details',
-        name: 'offlineOrderDetails',
-        component: offlineOrderDetails
-      }, {
-        path: '/pay/test',
-        name: 'paytest',
-        component: paytest
-      }, {
-        path: '/pay/pay',
-        name: 'pay',
-        component: pay
-      }, {
-        path: '/online/store',
-        name: 'onlineStore',
-        component: onlineStore
-      }, {
-        path: '/online/search',
-        name: 'onlineSearch',
-        component: onlineSearch
-      }, {
-        path: '/online/index',
-        name: 'onlineIndex',
-        component: onlineIndex
-      }, {
-        path: '/online/shoppingcart',
-        name: 'shoppingCart',
-        component: shoppingCart
-      }, {
-        path: '/online/confirm',
-        name: 'confirm',
-        component: confirm
-      }, {
-        path: '/user/order',
-        name: 'userOrder',
-        component: userOrder
-      }, {
-        path: '/store/order',
-        name: 'storeOrder',
-        component: storeOrder
-      }
+      redirect: '/nothing',
+      children: [
+        {
+          path: '/nothing',
+          name: 'nothing',
+          component: nothing
+        }, {
+          path: '/rights/manage',
+          name: 'manageRights',
+          component: manageRights
+        }, {
+          path: '/users/manage',
+          name: 'manageUsers',
+          component: manageUsers
+        }, {
+          path: '/role/manage',
+          name: 'manageRole',
+          component: manageRole
+        }, {
+          path: '/drug/manage',
+          name: 'manageDrug',
+          component: manageDrug
+        }, {
+          path: '/drug/brand',
+          name: 'manageBrand',
+          component: manageBrand
+        }, {
+          path: '/drug/manage/details',
+          name: 'manageDrugDetails',
+          component: manageDrugDetails
+        }, {
+          path: '/storehouse/purchase',
+          name: 'purchase',
+          component: purchase
+        },
+        {
+          path: '/store/manage',
+          name: 'manageStore',
+          component: manageStore
+        },
+        {
+          path: '/store/position',
+          name: 'managePosition',
+          component: managePosition
+        }, {
+          path: '/store/staff',
+          name: 'manageStaff',
+          component: manageStaff
+        }, {
+          path: '/store/batch',
+          name: 'manageStoreBatch',
+          component: manageStoreBatch
+        }, {
+          path: '/drug/type',
+          name: 'manageType',
+          component: manageType
+        }, {
+          path: '/storehouse/store_apply',
+          name: 'manageApply',
+          component: manageApply
+        }, {
+          path: '/delivery/store',
+          name: 'storeDelivery',
+          component: storeDelivery
+        }, {
+          path: '/store/offline',
+          name: 'offlineSales',
+          component: offlineSales
+        }, {
+          path: '/mode',
+          name: 'mode',
+          component: mode
+        }, {
+          path: '/store/offline/order/details',
+          name: 'offlineOrderDetails',
+          component: offlineOrderDetails
+        }, {
+          path: '/pay/test',
+          name: 'paytest',
+          component: paytest
+        }, {
+          path: '/pay/pay',
+          name: 'pay',
+          component: pay
+        }, {
+          path: '/online/store',
+          name: 'onlineStore',
+          component: onlineStore
+        }, {
+          path: '/online/search',
+          name: 'onlineSearch',
+          component: onlineSearch
+        }, {
+          path: '/online/index',
+          name: 'onlineIndex',
+          component: onlineIndex
+        }, {
+          path: '/online/shoppingcart',
+          name: 'shoppingCart',
+          component: shoppingCart
+        }, {
+          path: '/online/confirm',
+          name: 'confirm',
+          component: confirm
+        }, {
+          path: '/user/order',
+          name: 'userOrder',
+          component: userOrder
+        }, {
+          path: '/store/order',
+          name: 'storeOrder',
+          component: storeOrder
+        }, {
+          path: '/service/user',
+          name: 'serviceUser',
+          component: serviceUser
+        }, {
+          path: '/service/detail',
+          name: 'serviceDetail',
+          component: serviceDetail
+        }, {
+          path: '/service/manage',
+          name: 'serviceManage',
+          component: serviceManage
+        }
 
       ]
     }, {

@@ -2,13 +2,12 @@
   <div>
     <div>
       <!-- <el-table  :data="storeList" style="width: 100%" v-if="isReloadData"> -->
-      <el-table :data="
-        storeList.filter(
-          (data) =>
-            !search ||
-            data.storeName.toLowerCase().includes(search.toLowerCase())
-        )
-      " fit stripe mix-height="100" style="width: 100%">
+      <el-table :data="storeList.filter(
+        (data) =>
+          !search ||
+          data.storeName.toLowerCase().includes(search.toLowerCase())
+      )
+        " fit stripe mix-height="100" style="width: 100%">
         <el-table-column label="店铺ID" min-width="50px" fixed="left">
           <template slot-scope="storeList">
             <span style="margin-left: 10px">{{ storeList.row.storeId }}</span>
@@ -67,9 +66,9 @@
           </template>
           <template slot-scope="storeList">
             <el-button size="mini" @click="handleEdit(storeList.$index, storeList.row)">编辑</el-button>
-            <el-button size="mini" type="danger" @click="handleDelete( storeList.row)">删除</el-button>
-            <el-button size="mini" @click="handleLookManager( storeList.row)">店长</el-button>
-            <el-button size="mini" @click="handleLookStaff( storeList.row)">店员</el-button>
+            <el-button size="mini" type="danger" @click="handleDelete(storeList.row)">删除</el-button>
+            <el-button size="mini" @click="handleLookManager(storeList.row)">店长</el-button>
+            <el-button size="mini" @click="handleLookStaff(storeList.row)">店员</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -152,6 +151,44 @@
 
       </el-dialog>
     </div> -->
+    <div>
+      <el-dialog :title="staffTitle" :visible.sync="showStaffs">
+        <el-table :data="staffsList" style="width: 100%">
+          <el-table-column label="头像">
+            <template slot-scope="scope">
+              <img :src="scope.row.userAvatarUrl"  style="width: 100px;"/>
+            </template>
+          </el-table-column>
+          <el-table-column label="姓名" width="180">
+            <template slot-scope="scope">
+              <el-popover trigger="hover" placement="top">
+                <p>姓名: {{ scope.row.userName }}</p>
+                <p>住址: {{ scope.row.userRealName }}</p>
+                <div slot="reference" class="name-wrapper">
+                  <el-tag size="medium">{{ scope.row.userRealName }}</el-tag>
+                </div>
+              </el-popover>
+            </template>
+          </el-table-column>
+          <el-table-column label="薪水" width="180">
+            <template slot-scope="scope">
+              <span style="margin-left: 10px">{{ scope.row.actualSalary }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="手机号">
+            <template slot-scope="scope">
+              <span > {{ scope.row.userPhone }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作">
+            <template slot-scope="scope">
+              <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+              <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-dialog>
+    </div>
   </div>
 </template>
 
@@ -167,7 +204,8 @@ export default {
       store: {},
       showUpd: false,
       staffsList: [],
-      staffTitle: '详情'
+      staffTitle: '详情',
+      showStaffs: false
     }
   },
   created () {
@@ -248,16 +286,28 @@ export default {
       console.log('加载店长', row.storeId)
       axios({
         method: 'get',
-        url: `/admin/staff/store/` + row.storeId
+        url: `/admin/staff/店长/` + row.storeId
       }).then(jsondata => {
-        console.log('获取店长结果:' + jsondata)
+        console.log('获取店长结果:', jsondata)
         if (jsondata.code === '200') {
           this.staffsList = jsondata.data
+          this.showStaffs = true
         }
       })
     },
     handleLookStaff (row) {
+      this.staffTitle = row.storeName + '店员'
       console.log('加载店员', row.storeId)
+      axios({
+        method: 'get',
+        url: `/admin/staff/店员/` + row.storeId
+      }).then(jsondata => {
+        console.log('获取店员结果:', jsondata)
+        if (jsondata.code === '200') {
+          this.staffsList = jsondata.data
+          this.showStaffs = true
+        }
+      })
     }
   }
 }

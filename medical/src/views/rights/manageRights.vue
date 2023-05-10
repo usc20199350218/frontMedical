@@ -1,12 +1,11 @@
 <template>
   <div class="manageRight">
-    <el-table :data="
-      rightList.filter(
-        (data) =>
-          !search ||
-          data.rightText.toLowerCase().includes(search.toLowerCase())
-      )
-    " fit stripe style="width: 100%">
+    <el-table :data="rightList.filter(
+      (data) =>
+        !search ||
+        data.rightText.toLowerCase().includes(search.toLowerCase())
+    )
+      " fit stripe style="width: 100%">
       <el-table-column label="rightId" prop="rightId"> </el-table-column>
       <el-table-column label="rightText" prop="rightText"> </el-table-column>
       <el-table-column label="rightType" prop="rightType"> </el-table-column>
@@ -105,10 +104,51 @@
         </div>
       </el-dialog>
     </div>
+
+    <div>
+      <el-dialog :title="showTitle" :visible.sync="showEdit">
+        <el-form :model="right" :rules="rules" ref="right" label-width="100px" class="demo-newRight">
+          <el-form-item label="菜单标题" prop="rightText">
+            <el-input v-model="right.rightText"></el-input>
+          </el-form-item>
+          <el-form-item label="菜单类型" prop="rightType">
+            <el-select v-model="right.rightType" placeholder="请选择菜单类型">
+              <el-option label="父菜单" :value="0"></el-option>
+              <el-option label="子菜单" :value="1"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item v-if="right.rightType == '1'" label="菜单路径" prop="rightText">
+            <el-input v-model="right.rightUrl"></el-input>
+          </el-form-item>
+
+          <el-form-item v-if="right.rightType == '1'" label="父菜单" prop="rightType">
+            <el-select v-model="right.rightParentId" placeholder="请选择父菜单">
+              <el-option v-for="rightParent in rightParentList" :key="rightParent.rightId" :label="rightParent.rightText"
+                :value="rightParent.rightId" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="是菜单" prop="delivery">
+            <el-switch v-model="right.rightMenu"></el-switch>
+          </el-form-item>
+          <el-form-item label="角色">
+            <el-checkbox-group v-model="right.roleId">
+              <el-checkbox-button v-for="role in roleList" :label="role.roleId" :key="role.roleId">
+                {{ role.roleName }}
+              </el-checkbox-button>
+            </el-checkbox-group>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="right = { roleId: [] }, showEdit = false, getAllRightList()">取 消</el-button>
+          <el-button type="primary" @click="submit('right')">确 定</el-button>
+        </div>
+      </el-dialog>
+    </div>
   </div>
 </template>
 
 <script>
+import Qs from 'qs'
 import axios from '../../utils/request'
 import Login from '../Login.vue'
 export default {
@@ -116,6 +156,10 @@ export default {
   data () {
     return {
       rightList: [],
+      showTitle: '详情',
+      showEdit: false,
+      right: { roleId: [] },
+
       rightParentList: [],
       search: '',
       dialogFormVisible: false,
@@ -144,9 +188,9 @@ export default {
         rightText: [
           { required: true, message: '请输入菜单标题', trigger: 'blur' },
           {
-            min: 2,
+            min: 1,
             max: 10,
-            message: '长度在 2 到 10 个字符',
+            message: '长度在 1 到 10 个字符',
             trigger: 'blur'
           }
         ],
@@ -174,6 +218,38 @@ export default {
     this.getAllRightList()
   },
   methods: {
+    submit (formName) {
+      console.log('right:', this.right)
+
+      if (this.right.rightType === '0') {
+        this.right.rightParentId = 0
+        console.log('这是父菜单，父菜单没有父菜单，已经归零')
+      }
+      this.$refs[formName].validate((valid) => {
+        // TODO 修改菜单
+        // 表单验证成功
+        if (valid) {
+          axios.post('/admin/right/save', Qs.stringify(this.right)).then((jsondata) => {
+            console.log('save:', jsondata)
+            if (jsondata.code === '200') {
+              this.showEdit = false
+              const h = this.$createElement
+              this.$notify({
+                title: '成功',
+                message: h('i', { style: 'color: teal' }, '提交成功')
+              })
+              this.right = {
+                roleId: []
+              }
+              this.getAllRightList()
+            }
+          })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
     beforeClose () { this.getAllRightList() },
     noti (action) {
       // 通知
@@ -276,8 +352,14 @@ export default {
     addShowTag () {
       // 获取父菜单列表（懒加载）
       this.getParentRightList()
+      this.getAllRoleList()
       // 展示添加弹窗
-      this.dialogFormVisible = true
+      // this.dialogFormVisible = true
+      this.right = {
+        roleId: []
+      }
+      this.showTitle = '新增'
+      this.showEdit = true
     },
     addroleRight () { },
     resetForm (formName) {
@@ -287,9 +369,9 @@ export default {
     getAllRoleList () {
       axios({
         method: 'get',
-        url: '/admin/role/'
+        url: '/admin/role'
       }).then((jsondata) => {
-        console.log('全部角色为：' + jsondata)
+        console.log('全部角色为：', jsondata)
         this.roleList = jsondata.data
       })
     },
@@ -299,26 +381,27 @@ export default {
         method: 'get',
         url: '/admin/right/parent'
       }).then((jsondata) => {
-        console.log('父菜单列表为：' + jsondata)
+        console.log('父菜单列表为：', jsondata)
         this.rightParentList = jsondata.data
       })
-      this.getAllRoleList()
     },
     handleEdit (index, row) {
-      // 编辑菜单
-
-      console.log('准备修改：' + row)
-
       // 获取父菜单列表（懒加载）
       this.getParentRightList()
       this.getAllRoleList()
-      this.changeRight = row
-      this.dialogFormVisibles = true
+
+      // this.changeRight = row
+      console.log('row:', row)
+      this.right = row
+      this.showTitle = '修改'
+
+      // this.dialogFormVisibles = true
+      this.showEdit = true
     },
     handleDelete (index, row) {
       // 删除指定菜单
       console.log(index, row)
-      console.log('获取到的rightId为：' + row.rightId)
+      console.log('获取到的rightId为:', row.rightId)
       axios({
         method: 'delete',
         url: `/admin/right/` + row.rightId
@@ -331,7 +414,7 @@ export default {
       // 获取全部菜单权限
       axios({
         method: 'get',
-        url: '/admin/right/'
+        url: '/admin/right'
       }).then((jsondata) => {
         console.log(jsondata)
         this.rightList = jsondata.data
