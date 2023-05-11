@@ -33,6 +33,8 @@ import nothing from '../views/nothing'
 import serviceUser from '../views/service/serviceUser'
 import serviceDetail from '../views/service/detail'
 import serviceManage from '../views/service/manage'
+import serviceChoose from '../views/service/choose'
+import newService from '../views/service/newService'
 Vue.use(Router)
 
 export default new Router({
@@ -170,6 +172,14 @@ export default new Router({
           path: '/service/manage',
           name: 'serviceManage',
           component: serviceManage
+        }, {
+          path: '/service/choose',
+          name: 'serviceChoose',
+          component: serviceChoose
+        }, {
+          path: '/service/add',
+          name: 'newService',
+          component: newService
         }
 
       ]

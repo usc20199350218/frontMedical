@@ -20,7 +20,6 @@ service.interceptors.request.use(
   config => {
     // do something before request is sent
     // 我们每往服务器发一个request  都会往请求头里面添加一个 token(令牌)
-    console.log('添加Token')
     if (store.state.user.token) {
       config.headers['X-Token'] = store.state.user.token
     }

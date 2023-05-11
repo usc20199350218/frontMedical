@@ -12,10 +12,10 @@
           <el-button @click="save()">保存</el-button>
         </el-col>
         <el-col :span="1.2">
-          <el-button v-if="serviceId" @click="back()">退出</el-button>
+          <el-button @click="postTest()">保存2</el-button>
         </el-col>
         <el-col :span="1.2">
-          <el-button v-if="editService" @click="newService()">新建</el-button>
+          <el-button v-if="serviceId" @click="back()">退出</el-button>
         </el-col>
       </el-row>
     </div>
@@ -60,6 +60,10 @@
         </el-col>
       </el-row>
     </div>
+    <hr/>
+    <div> {{ service }}</div>
+    <hr />
+    <div> {{ service.isNormal }}</div>
     <hr />
     <div>
       <!-- 明细 -->
@@ -83,7 +87,6 @@ import axios from '../../utils/request'
 export default {
   data () {
     return {
-      // 根据serviceId是否传入判断是新增还是查看
       serviceId: '',
       userId: '',
       user: {},
@@ -106,7 +109,7 @@ export default {
     this.userRealName = this.$route.query.userRealName
     this.service.userId = this.userId
     this.getUser()
-    console.log(this.serviceId)
+    console.log('serviceId:', this.serviceId)
     if (typeof this.serviceId !== 'undefined' && this.serviceId) {
       // 新建
       console.log('查看')
@@ -119,8 +122,20 @@ export default {
     }
   },
   methods: {
-    back () {
-      this.$router.push({ path: '/service/choose', query: { userId: this.userId, userRealName: this.userRealName } })
+    save () {
+      this.service.serviceList = this.serviceList
+      console.log('执行前service:', this.service)
+      axios.post('/api/service', this.service).then((jsondata) => {
+        console.log('jsondata:', jsondata)
+      })
+      console.log('执行后service:', this.service)
+    },
+    getBlank () {
+      axios.get('/api/service/blank').then((jsondata) => {
+        console.log('getBlank:', jsondata)
+        this.serviceList = jsondata.data
+        console.log('serviceList:', this.serviceList)
+      })
     },
     getServiceDate () {
       // 在Vue.js中获取当前日期
@@ -132,51 +147,6 @@ export default {
         currentDate.getDate().toString().padStart(2, '0')
       return formattedDate
     },
-    getBlank () {
-      axios.get('/api/service/blank').then((jsondata) => {
-        console.log('getBlank:', jsondata)
-        this.serviceList = jsondata.data
-        console.log('serviceList:', this.serviceList)
-      })
-    },
-    save () {
-      this.editService = true
-      this.service.serviceList = this.serviceList
-      console.log('this.service:', this.service)
-      axios.post('/api/service', this.service)
-        .then((jsondata) => {
-          console.log('推送结果:', jsondata)
-        })
-    },
-    getDetail () {
-      axios.get('/api/service/' + this.serviceId).then((jsondata) => {
-        console.log('初始化数据', jsondata)
-        this.service = jsondata.data
-        this.serviceList = jsondata.data.serviceList
-        console.log('serviceList:', this.serviceList)
-      })
-    },
-    // getdetail () {
-    //   axios.get('/api/service/last/' + this.userId, {
-    //     params: {
-    //       lastDate: this.examine.lastDate,
-    //       activeName: this.activeName
-    //     }
-    //   }).then((jsondata) => {
-    //     console.log('获取详情:', jsondata)
-    //     this.service = jsondata.data
-    //     this.myMap = jsondata.data.serviceMap
-    //   })
-    // },
-    editServiceF () {
-      this.editService = false
-    },
-    editUser () {
-      this.editPermissions = false
-    },
-    backChoose () {
-      this.$router.push('/service/user')
-    },
     getUser () {
       if (this.userId) {
         axios.get('/admin/user/' + this.userId).then((jsondata) => {
@@ -186,6 +156,7 @@ export default {
       }
     }
   }
+
 }
 </script>
 

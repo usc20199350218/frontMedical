@@ -22,17 +22,12 @@
                         <span style="margin-left: 10px">{{ serviceList.row.serviceEntryName }}</span>
                     </template>
                 </el-table-column>
-                <el-table-column label="默认值">
-                    <template slot-scope="serviceList">
-                        <span style="margin-left: 10px">{{ serviceList.row.defaults }}</span>
-                    </template>
-                </el-table-column>
                 <el-table-column label="说明">
                     <template slot-scope="serviceList">
                         <el-popover trigger="hover" placement="top">
                             <p>详情: {{ serviceList.row.remark }}</p>
                             <div slot="reference" class="name-wrapper">
-                                <el-tag size="medium">{{ serviceList.row.remark | slice(0, 10) }}</el-tag>
+                                <el-tag size="medium">{{ serviceList.row.remark | ellipsis }}</el-tag>
                             </div>
                         </el-popover>
                     </template>
@@ -59,13 +54,10 @@
                     <el-form-item label="说明">
                         <el-input v-model="services.remark"></el-input>
                     </el-form-item>
-                    <el-form-item label="默认值">
-                        <el-input v-model="services.defaults"></el-input>
-                    </el-form-item>
                 </el-form>
                 <span slot="footer" class="dialog-footer">
-                    <el-button @click="showEdit = false">取 消</el-button>
-                    <el-button type="primary" @click="addService()">确 定</el-button>
+                    <el-button @click="close()">取 消</el-button>
+                    <el-button type="primary" @click="saveService()">确 定</el-button>
                 </span>
             </el-dialog>
         </div>
@@ -74,8 +66,19 @@
 
 <script>
 import Qs from 'qs'
+// import slice from 'lodash'
 import axios from '../../utils/request'
 export default {
+  // 过滤
+  filters: {
+    ellipsis (value) {
+      if (!value) return ''
+      if (value.length > 10) {
+        return value.slice(0, 10) + '...'
+      }
+      return value
+    }
+  },
   data () {
     return {
       searchText: '',
@@ -91,18 +94,23 @@ export default {
     this.searchStart()
   },
   methods: {
-    addService () {
-      console.log('新增')
+    saveService () {
       axios.post('/admin/service_entry', Qs.stringify(this.services)).then((jsondata) => {
         console.log('新增', jsondata)
         if (jsondata.code === '200') {
           this.showEdit = false
           this.services = {}
           this.searchStart()
+          this.titText = '详情'
         }
       })
     },
+    close () {
+      this.services = {}
+      this.showEdit = false
+    },
     addServiceBtn () {
+      this.titText = '新增'
       this.services = {}
       this.showEdit = true
     },
@@ -115,6 +123,9 @@ export default {
     },
     changeService (row) {
       console.log('row:', row)
+      this.titText = '新增'
+      this.services = row
+      this.showEdit = true
     },
     searchStart () {
       console.log('searchStart')
