@@ -35,6 +35,8 @@ import serviceDetail from '../views/service/detail'
 import serviceManage from '../views/service/manage'
 import serviceChoose from '../views/service/choose'
 import newService from '../views/service/newService'
+import welcome from '../views/welcome'
+import manageAddress from '../views/address/manageAddress'
 Vue.use(Router)
 
 export default new Router({
@@ -48,7 +50,7 @@ export default new Router({
     {
       path: '/index',
       component: Index,
-      redirect: '/nothing',
+      redirect: '/welcome',
       children: [
         {
           path: '/nothing',
@@ -180,12 +182,23 @@ export default new Router({
           path: '/service/add',
           name: 'newService',
           component: newService
+        }, {
+          path: '/welcome',
+          name: 'welcome',
+          component: welcome
+        }, {
+          path: '/address/manage',
+          name: 'manageAddress',
+          component: manageAddress
         }
 
       ]
     }, {
       path: '/login',
       component: Login
+    }, {
+      path: '*',
+      redirect: '/nothing'
     }
   ]
 })

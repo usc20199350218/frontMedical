@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="condition" style="background-color: antiquewhite;">
+        <div class="condition"  >
             <el-row :height="20">
                 <el-col :span="1">
                     <label>品类选择</label>
@@ -37,7 +37,7 @@
                 </el-col>
             </el-row>
         </div>
-        <div class="content" style="background-color: azure;">
+        <div class="content"  >
             <div>
                 <el-table :data="drugDetailsList.filter(
                     (data) =>

@@ -1,5 +1,39 @@
 <template>
   <div>
+    <div>
+      <el-input placeholder="请输入内容" v-model="searchText" class="input-with-select">
+        <el-select v-model="userGender" slot="prepend" placeholder="请选择性别" style="width: 150px;" @change="getUsersList()">
+          <el-option v-for="item in ['男女', '男', '女', '未知']" :key="item" :label="item" :value="item">
+          </el-option>
+        </el-select>
+        <el-select v-model="userStatus" slot="prepend" placeholder="请选择状态" style="padding-left: 30px; width: 150px;"
+          @change="getUsersList()">
+          <el-option key="" value="">全部</el-option>
+          <el-option label="有效" :value="1"></el-option>
+          <el-option label="无效" :value="0"></el-option>
+        </el-select>
+        <el-select v-model="userVip" slot="prepend" placeholder="请选择vip" style="padding-left: 30px; width: 150px;"
+          @change="getUsersList()">
+          <el-option key="" value="">全部</el-option>
+          <el-option label="Vip" :value="1"></el-option>
+          <el-option label="无" :value="0"></el-option>
+        </el-select>
+        <el-select v-model="roleId" slot="prepend" placeholder="请选择角色" style="padding-left: 30px; width: 150px;"
+          @change="getUsersList()">
+          <el-option key="" value="">全部</el-option>
+          <el-option v-for="item in roleList" :key="item.roleId" :label="item.roleName" :value="item.roleId"></el-option>
+        </el-select>
+        <el-select v-model="searchMethod" slot="prepend" placeholder="请选择搜索方式" style="padding-left: 30px; width: 150px;"
+          @change="getUsersList()">
+          <el-option label="用户名称" value="userName"></el-option>
+          <el-option label="姓名" value="userRealName"></el-option>
+          <el-option label="手机号" value="userPhone"></el-option>
+        </el-select>
+        <el-button slot="append" icon="el-icon-search" @click="getUsersList()">搜索</el-button>
+        <el-button slot="append" icon="el-icon-switch-button" @click="clean()">重置</el-button>
+      </el-input>
+    </div>
+
     <!-- <el-table  :data="usersList" style="width: 100%" v-if="isReloadData"> -->
     <el-table :data="usersList.filter(
       (data) =>
@@ -10,6 +44,17 @@
       <el-table-column label="用户ID" min-width="80px" fixed="left">
         <template slot-scope="usersList">
           <span style="margin-left: 10px">{{ usersList.row.userId }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="头像" min-width="150px" fixed="left">
+        <template slot-scope="usersList">
+          <img v-if="usersList.row.userAvatarUrl != ''" :src="usersList.row.userAvatarUrl" width="100px" alt="头像" />
+          <span v-else>空</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="姓名" min-width="150px" fixed="left">
+        <template slot-scope="usersList">
+          <span style="margin-left: 10px">{{ usersList.row.userRealName }}</span>
         </template>
       </el-table-column>
       <el-table-column label="用户名" min-width="150px" fixed="left">
@@ -131,7 +176,7 @@
           <el-form-item label="性别">
             <!-- <el-col :span="5"> -->
             <el-col>
-              <el-select v-model="user.userGender" placeholder="请选择用户状态">
+              <el-select v-model="user.userGender" placeholder="请选择用户性别">
                 <el-option v-for="item in ['男', '女', '未知']" :key="item.value" :label="item" :value="item">
                 </el-option>
               </el-select>
@@ -150,7 +195,7 @@
           <el-form-item label="用户Vip">
             <!-- <el-col :span="5"> -->
             <el-col>
-              <el-select v-model="user.userVip" placeholder="请选择用户状态">
+              <el-select v-model="user.userVip" placeholder="请选择vip">
                 <el-option label="Vip" :value="1"></el-option>
                 <el-option label="无" :value="0"></el-option>
               </el-select>
@@ -216,7 +261,7 @@
           <el-form-item label="性别">
             <!-- <el-col :span="5"> -->
             <el-col>
-              <el-select v-model="user.userGender" placeholder="请选择用户状态">
+              <el-select v-model="user.userGender" placeholder="请选择用户性别">
                 <el-option v-for="item in ['男', '女', '未知']" :key="item.value" :label="item" :value="item">
                 </el-option>
               </el-select>
@@ -225,7 +270,7 @@
           <el-form-item label="用户状态">
             <!-- <el-col :span="5"> -->
             <el-col>
-              <el-select v-model="user.userStatus" placeholder="请选择用户状态">
+              <el-select v-model="user.userStatus" placeholder="请选择状态">
                 <el-option label="有效" :value="1"></el-option>
                 <el-option label="无效" :value="0"></el-option>
               </el-select>
@@ -235,7 +280,7 @@
           <el-form-item label="用户Vip">
             <!-- <el-col :span="5"> -->
             <el-col>
-              <el-select v-model="user.userVip" placeholder="请选择用户状态">
+              <el-select v-model="user.userVip" placeholder="请选择Vip">
                 <el-option label="Vip" :value="1"></el-option>
                 <el-option label="无" :value="0"></el-option>
               </el-select>
@@ -307,7 +352,7 @@
           </el-form-item>
           <el-form-item label="性别">
             <el-col>
-              <el-select v-model="user.userGender" placeholder="请选择用户状态">
+              <el-select v-model="user.userGender" placeholder="请选择用户性别">
                 <el-option v-for="item in ['男', '女', '未知']" :key="item.value" :label="item" :value="item">
                 </el-option>
               </el-select>
@@ -325,7 +370,7 @@
           <el-form-item label="用户Vip">
             <!-- <el-col :span="5"> -->
             <el-col>
-              <el-select v-model="user.userVip" placeholder="请选择用户状态">
+              <el-select v-model="user.userVip" placeholder="请选择vip">
                 <el-option label="Vip" :value="1"></el-option>
                 <el-option label="无" :value="0"></el-option>
               </el-select>
@@ -341,7 +386,7 @@
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="showEdit=false,getUsersList(),user={}">取 消</el-button>
+          <el-button @click="showEdit = false, getUsersList(), user = {}">取 消</el-button>
           <el-button type="primary" @click="save">确 定</el-button>
         </div>
       </el-dialog>
@@ -414,15 +459,31 @@ export default {
             }
           }
         ]
-      }
+      },
+      searchText: '',
+      searchMethod: '姓名',
+      roleId: '',
+      userVip: '',
+      userGender: '男女',
+      userStatus: ''
     }
   },
 
   created () {
     // 先获取全部用户
+    this.getRoleList()
     this.getUsersList()
   },
   methods: {
+    clean () {
+      this.searchText = ''
+      this.searchMethod = '姓名'
+      this.roleId = ''
+      this.userVip = ''
+      this.userGender = '男女'
+      this.userStatus = ''
+      this.getUsersList()
+    },
     save () {
       // 通过配置文件设置密码
       console.log('user:', this.user)
@@ -521,7 +582,7 @@ export default {
         url: '/admin/role/'
       })
         .then((jsondata) => {
-          console.log('获取到的全部角色为：' + jsondata.data)
+          console.log('获取到的全部角色为：', jsondata.data)
           this.roleList = jsondata.data
         })
         .then(console.error())
@@ -564,19 +625,28 @@ export default {
       // this.getUsersList()
     },
     getUsersList () {
-      console.log('pageInfo:>' + this.pageInfo)
+      console.log('pageInfo:>', this.pageInfo)
       // 获取用户分页列表
       axios({
         method: 'get',
-        url: '/admin/user/findpage',
-        params: { 'current': this.pageInfo.current, 'size': this.pageInfo.size }
+        // url: '/admin/user/findpage',
+        url: '/admin/user/page',
+        params: {
+          searchText: this.searchText,
+          searchMethod: this.searchMethod,
+          roleId: this.roleId,
+          userVip: this.userVip,
+          userGender: this.userGender,
+          userStatus: this.userStatus,
+          current: this.pageInfo.current,
+          size: this.pageInfo.size
+        }
       }).then((jsondata) => {
         this.usersList = jsondata.data.records
         console.log('userList:', jsondata.data.records)
         this.pageInfo = jsondata.data
         // console.log(jsondata.data[0].usersDetail)
       })
-      this.getRoleList()
     },
     handleEdit (index, row) {
       // console.log(index, row)
@@ -599,7 +669,7 @@ export default {
         url: `/admin/user/` + row.userId
       })
         .then((jsondata) => {
-          console.log('删除' + jsondata.data)
+          console.log('删除', jsondata.data)
           if (jsondata.code === '200') {
             this.noti('删除')
           }

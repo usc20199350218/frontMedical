@@ -51,8 +51,8 @@
         </el-table-column>
         <el-table-column label="类型">
           <template slot-scope="scope">
-            <span v-if="scope.row.orderType == 'OFFLINE'">线上</span>
-            <span v-else-if="scope.row.orderType == 'ONLINE'">线下</span>
+            <span v-if="scope.row.orderType == 'OFFLINE'">线下</span>
+            <span v-else-if="scope.row.orderType == 'ONLINE'">线上</span>
           </template>
         </el-table-column>
         <el-table-column label="支付方式">
@@ -77,6 +77,7 @@
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button @click="handleLook(scope.row)">详情</el-button>
+            <el-button v-if="scope.row.orderType == 'ONLINE'" @click="handleLookAll(scope.row)">收件人</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -116,6 +117,21 @@
             </template>
           </el-table-column>
         </el-table>
+      </el-dialog>
+    </div>
+    <div>
+      <el-dialog :title="showTitle" :visible.sync="showAll">
+        <el-form ref="form" :model="order" label-width="80px">
+          <el-form-item label="姓名">
+            <el-input v-model="order.userName" :disabled="true"></el-input>
+          </el-form-item>
+          <el-form-item label="手机号">
+            <el-input v-model="order.userPhone" :disabled="true"></el-input>
+          </el-form-item>
+          <el-form-item label="地址">
+            <el-input v-model="order.deliveryAddress" type="textarea" :disabled="true"></el-input>
+          </el-form-item>
+        </el-form>
       </el-dialog>
     </div>
   </div>
@@ -168,7 +184,19 @@ export default {
       pageInfo: { current: 0, size: 10 },
       orderDetailList: [],
       showTitle: '详情',
-      showDetail: false
+      showDetail: false,
+      order: {},
+      showAll: false,
+      form: {
+        name: '',
+        region: '',
+        date1: '',
+        date2: '',
+        delivery: false,
+        type: [],
+        resource: '',
+        desc: ''
+      }
 
     }
   },
@@ -181,6 +209,12 @@ export default {
     this.searchStart()
   },
   methods: {
+    handleLookAll (val) {
+      console.log('handleLookAll:', val)
+      this.showTitle = 'orderNum为' + val.orderNum + '的订单'
+      this.order = val
+      this.showAll = true
+    },
     handleLook (row) {
       this.showTitle = 'orderNum为' + row.orderNum + '的订单'
       console.log('查看订单详情', row)

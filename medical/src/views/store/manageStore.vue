@@ -13,6 +13,12 @@
             <span style="margin-left: 10px">{{ storeList.row.storeId }}</span>
           </template>
         </el-table-column>
+        <el-table-column label="店铺ID" min-width="50px" fixed="left">
+          <template slot-scope="storeList">
+            <!-- <span style="margin-left: 10px">{{ storeList.row.storeId }}</span> -->
+            <img :src="storeList.row.storePath" width="100px" alt="图片"/>
+          </template>
+        </el-table-column>
         <el-table-column label="店铺名称" width="180" fixed="left">
           <template slot-scope="storeList">
             <el-popover trigger="hover" placement="top">
@@ -156,7 +162,7 @@
         <el-table :data="staffsList" style="width: 100%">
           <el-table-column label="头像">
             <template slot-scope="scope">
-              <img :src="scope.row.userAvatarUrl"  style="width: 100px;"/>
+              <img :src="scope.row.userAvatarUrl" style="width: 100px;" />
             </template>
           </el-table-column>
           <el-table-column label="姓名" width="180">
@@ -177,7 +183,7 @@
           </el-table-column>
           <el-table-column label="手机号">
             <template slot-scope="scope">
-              <span > {{ scope.row.userPhone }}</span>
+              <span> {{ scope.row.userPhone }}</span>
             </template>
           </el-table-column>
           <el-table-column label="操作">

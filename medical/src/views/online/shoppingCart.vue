@@ -16,7 +16,7 @@
       </el-col>
     </el-row>
     <el-row style="height: 60vh;">
-      <el-col :span="12" style="background-color: aqua;">
+      <!-- <el-col :span="12" style="background-color: aqua;"> -->
         <el-table ref="multipleTable" :data="scDrugList" tooltip-effect="dark" @selection-change="handleSelectionChange">
           <el-table-column type="selection" width="55">
           </el-table-column>
@@ -39,17 +39,20 @@
             </template>
           </el-table-column>
         </el-table>
-      </el-col>
-      <el-col :span="12" style="background-color: blanchedalmond;">
+      <!-- </el-col> -->
+      <!-- <el-col :span="12"> -->
         <div>
-          <span>
-            {{ totalPrice }}
+          <span style="float: left;">
+            总金额
+            {{ totalPrice }} 元
           </span>
-        </div>
-        <div>
+
           <el-button @click="settlement()">结算</el-button>
         </div>
-      </el-col>
+        <div>
+          <!-- <el-button @click="settlement()">结算</el-button> -->
+        </div>
+      <!-- </el-col> -->
     </el-row>
 
     <div class="left">
@@ -77,10 +80,10 @@ export default {
       multipleSelection: []
     }
   },
-  created () {
+  async created () {
     this.temp = this.$route.query.storeId
 
-    this.getStoreList()
+    await this.getStoreList()
 
     // 判断是从那边打开
     if (typeof this.temp !== 'undefined' && this.temp) {

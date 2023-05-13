@@ -296,12 +296,14 @@ export default {
     },
     async getStoreList () {
       try {
-        await axios.get('/admin/store').then(jsondata => {
-          this.storeList = jsondata.data
-          this.activeStoreId = this.storeList[this.activeStoreNum].storeId
-          this.previousTab = this.activeStoreNum
-          console.log('获取店铺list:', jsondata)
-        })
+        // await axios.get('/admin/store')
+        await axios.get('/admin/store/' + this.userId)
+          .then(jsondata => {
+            this.storeList = jsondata.data
+            this.activeStoreId = this.storeList[this.activeStoreNum].storeId
+            this.previousTab = this.activeStoreNum
+            console.log('获取店铺list:', jsondata)
+          })
       } catch (error) {
         console.log(error)
       }
@@ -330,9 +332,9 @@ export default {
   width: 130px;
 }
 
-.input-with-select .el-input-group__prepend {
-  background-color: #fff;
-}
+/* .input-with-select .el-input-group__prepend {
+   background-color: #fff;
+} */
 
 .shop {
   flex: 1;
@@ -357,12 +359,12 @@ export default {
 
 .leftTop {
   flex: 19;
-  background-color: lightblue;
+  /* background-color: lightblue; */
 }
 
 .leftBottom {
   flex: 1;
-  background-color: chocolate;
+  /* background-color: chocolate; */
 }
 
 .order {
@@ -373,11 +375,11 @@ export default {
 
 .orderDetail {
   flex: 19;
-  background-color: lightgreen;
+  /* background-color: lightgreen; */
 }
 
 .orderOperate {
   flex: 1;
-  background-color: lightyellow;
+  /* background-color: lightyellow; */
 }
 </style>

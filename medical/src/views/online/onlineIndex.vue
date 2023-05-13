@@ -7,23 +7,24 @@
         </h1>
       </div>
       <el-row :height="20">
-        <el-col :span="1">
-          <label>品类选择</label>
-        </el-col>
-        <el-col :span="2">
-          <el-select v-model="typeId" placeholder="请选择" @change="searchStart()">
+      <!--  <el-col :span="1">
+           <label>品类选择</label>
+        </el-col> -->
+        <!-- <el-col :span="2">
+          <el-select v-model="typeId" placeholder="选择品类" @change="searchStart()">
+            <el-option key="" value="">全部</el-option>
             <el-option v-for="type in typeList" :key="type.typeId" :label="type.typeName" :value="type.typeId">
             </el-option>
           </el-select>
-        </el-col>
-        <el-col :span="1">
-          <el-button @click="cleanTypeId()">清理</el-button>
-        </el-col>
-        <el-col :span="1">&nbsp;</el-col>
-
-        <el-col :span="8">
+        </el-col> -->
+        <el-col :span="18">
           <el-input placeholder="请输入内容" v-model="searchText" class="input-with-select">
-            <el-select v-model="searchMethod" slot="prepend" placeholder="请选择" @change="searchStart()">
+            <el-select v-model="typeId" slot="prepend" placeholder="选择品类" @change="searchStart()" style=" width: 150px;">
+              <el-option key="" value="">全部</el-option>
+              <el-option v-for="type in typeList" :key="type.typeId" :label="type.typeName" :value="type.typeId">
+              </el-option>
+            </el-select>
+            <el-select v-model="searchMethod" slot="prepend" placeholder="请选择" @change="searchStart()" style="padding-left: 30px; width: 150px;">
               <el-option label="药品名称" value="1"></el-option>
               <el-option label="药品编号" value="2"></el-option>
             </el-select>
@@ -37,12 +38,13 @@
         <el-col :span="2">
           <el-button @click="backChoose()">选择店铺</el-button>
         </el-col>
-        <el-col :span="4">
-          <el-button icon="el-icon-shopping-cart-full" @click="toShoppingCart()">{{ shoppingCartNum }}</el-button>
+        <el-col :span="1">
+          <el-button style="float: right;" icon="el-icon-shopping-cart-full" @click="toShoppingCart()">{{ shoppingCartNum
+          }}</el-button>
         </el-col>
       </el-row>
     </div>
-    <hr/>
+    <hr />
     <div class="content">
       <div>
         <!-- <el-table :data="drugDetailsList.filter(
@@ -186,7 +188,7 @@ export default {
       console.log('list[0]', list[0])
       this.$router.push({
         path: '/online/confirm',
-        query: { drugDetailList: list, storeId: this.storeId }
+        query: { drugDetailList: list, storeId: this.storeId, storeName: this.storeName }
       })
     },
     addCrat (val) {

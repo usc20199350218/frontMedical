@@ -311,7 +311,8 @@ export default {
       showChooseStore: false,
       activeStoreNum: '0',
       activeStoreId: '0',
-      nowActiveStore: ''
+      nowActiveStore: '',
+      userId: mystore.state.user.userId
     }
   },
 
@@ -323,7 +324,7 @@ export default {
     // 1.创建之后获取店铺list
     async getStoreList () {
       try {
-        const response = await axios.get('/admin/store')
+        const response = await axios.get('/admin/store/' + this.userId)
         this.storeList = response.data
         if (this.storeList !== '') {
           console.log('获取店铺list:', this.storeList)

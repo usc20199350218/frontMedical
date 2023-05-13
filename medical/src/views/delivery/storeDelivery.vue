@@ -8,13 +8,12 @@
     </div>
     <div>
 
-      <el-table :data="
-        deliveryList.filter(
-          (data) =>
-            !search ||
-            data.storeName.toLowerCase().includes(search.toLowerCase())
-        )
-      " fit stripe mix-height="100" style="width: 100%">
+      <el-table :data="deliveryList.filter(
+        (data) =>
+          !search ||
+          data.storeName.toLowerCase().includes(search.toLowerCase())
+      )
+        " fit stripe mix-height="100" style="width: 100%">
         <el-table-column label="配送Id" min-width="40px" fixed="left">
           <template slot-scope="deliveryList">
             <span style="margin-left: 10px">{{ deliveryList.row.deliveryId }}</span>
@@ -97,7 +96,7 @@
             <!-- 取货 -->
             <el-button size="mini" v-if="deliveryList.row.deliveryStatus === 'PICKUP'"
               @click="handleClick(deliveryList.row, 'SHIP')">已取货</el-button>
-            <el-button size="mini" v-if="deliveryList.row.deliveryStatus === 'PICKUP'"  type="danger"
+            <el-button size="mini" v-if="deliveryList.row.deliveryStatus === 'PICKUP'" type="danger"
               @click="handleClick(deliveryList.row, 'CREATED')">退回</el-button>
             <!-- 配送 -->
             <el-button size="mini" v-if="deliveryList.row.deliveryStatus === 'SHIP'"

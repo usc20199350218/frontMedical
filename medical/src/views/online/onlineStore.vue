@@ -1,7 +1,7 @@
 <template>
   <div class="main">
-    <div style="background-color: antiquewhite;">
-      <span>请选择店铺</span>
+    <div  >
+      <h1>请选择店铺</h1>
       <br />
       <div>
         <div class="storeMode" v-for="store in storeList" :key="store.storeId">

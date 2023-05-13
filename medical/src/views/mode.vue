@@ -1,13 +1,53 @@
 <template>
   <div>
+
+    <!-- 假设有三个地址 -->
+    <div class="address-item">
+      <input type="radio" name="address" id="addr1" value="1" />
+      <label for="addr1">张三 | 13812345678 | 北京市海淀区xx街道xxx号</label>
+    </div>
+
+    <div class="address-item">
+      <input type="radio" name="address" id="addr2" value="2" />
+      <label for="addr2">李四 |13987654321| 上海市浦东新区xx路xxx号</label>
+    </div>
+
+    <div class="address-item">
+      <input type="radio" name="address" id="addr3" value="3" />
+      <label for="addr3">王五 |13711112222| 广州市天河区xx路xxx号 </label>
+    </div>
+
     <div>
       <div>
         <p>Count: {{ count }}</p>
         <button @click="increment">Increment</button>
       </div>
+      <div class="addressChoose">
+
+      </div>
+      <div class="address-selector">
+        <label>
+          <input type="radio" name="address" value="1">
+          <div class="address-info">
+            <div class="username">John Doe</div>
+            <div class="phone">555-555-5555</div>
+            <div class="address">123 Main St</div>
+          </div>
+        </label>
+        <label>
+          <input type="radio" name="address" value="2">
+          <div class="address-info">
+            <div class="username">Jane Smith</div>
+            <div class="phone">555-555-5555</div>
+            <div class="address">456 Oak St</div>
+          </div>
+        </label>
+        <!-- Add more addresses here -->
+      </div>
+
       <!-- <div>
         <img v-if="showImg" src="https://www.itheima.com/images/logo.png"> -->
-        <!-- <img v-if="showImg" src="http://localhost:8088/api/alipay/pay?money=${money}"> -->
+      <!-- <img v-if="showImg" src="http://localhost:8088/api/alipay/pay?money=${money}"> -->
       <!-- </div> -->
       <!-- <img :src="getImgUrl()" v-if="showImg" alt="fail"> -->
       <!-- <span>{{ val1 }}-{{ val2 }}-{{ val3 }}-{{ val4 }}-{{ list }} </span> -->
@@ -212,5 +252,79 @@ export default {
 .right {
   border: 1px solid yellow;
   flex: 1;
+}
+
+.address-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.address-selector label {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  border: 1px solid #ccc;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.address-selector label:hover {
+  background-color: #f5f5f5;
+}
+
+.address-selector input[type="radio"] {
+  display: none;
+}
+
+.address-selector input[type="radio"]:checked+.address-info {
+  font-weight: bold;
+}
+
+.address-selector .address-info {
+  flex: 1;
+}
+
+.address-selector .username {
+  font-weight: bold;
+}
+
+.address-selector .phone {
+  color: #999;
+}
+
+.address-selector .address {
+  color: #999;
+}
+
+.address-item {
+    margin-bottom:10px;
+}
+
+.input[type='radio']{
+    display:none; /* 隐藏单选按钮 */
+}
+
+.label{
+    display:block;
+    padding-left:30px; /* 给左侧留出空间以容纳自定义样式图标 */
+    position:relative;
+}
+
+/* 默认状态下复选框与选择内容不同颜色*/
+.label:before{
+     content:" ";
+     border-radius :50%;
+     border:solid #888 ;
+     width:14 px ;
+     height :14 px ;
+     left:-20 px ;         /* 将图标向左移动到选择内容的前面 */
+     top:2px ;
+     position:absolute;
+}
+
+/* 选中状态下复选框变成实心*/
+.input[type='radio']:checked + .label:before{
+    background-color:#0066CC;   /*颜色可以自定义修改，这里以蓝色为例子 */
 }
 </style>

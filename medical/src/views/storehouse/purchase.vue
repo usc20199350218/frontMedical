@@ -1,12 +1,35 @@
 <template>
   <div>
-    <el-table :data="
-      batchsList.filter(
-        (data) =>
-          !search ||
-          data.drugName.toLowerCase().includes(search.toLowerCase())
-      )
-    " fit stripe mix-height="100" style="width: 100%">
+    <el-input placeholder="请输入内容" v-model="searchText" class="input-with-select">
+      <el-select v-model="isRx" slot="prepend" placeholder="是否处方" style=" width: 150px;" @change="getBatchsList()">
+        <el-option key="" value="">全部</el-option>
+        <el-option label="非处方" value="0"></el-option>
+        <el-option label="处方" value="1"></el-option>
+      </el-select>
+      <el-select v-model="brandId" slot="prepend" placeholder="品牌" style="padding-left: 30px; width: 150px;"
+        @change="getBatchsList()">
+        <el-option key="" value="">全部</el-option>
+        <el-option v-for="item in brandList" :label="item.brandName" :value="item.brandId"
+          :key="item.brandId"></el-option>
+      </el-select>
+      <el-select v-model="typeId" slot="prepend" placeholder="分类" style="padding-left: 30px; width: 150px;"
+        @change="getBatchsList()">
+        <el-option key="" value="">全部</el-option>
+        <el-option v-for="item in typeList" :label="item.typeName" :value="item.typeId" :key="item.typeId"></el-option>
+      </el-select>
+      <el-select v-model="searchMethod" slot="prepend" placeholder="请选择方式" style="padding-left: 30px; width: 150px;"
+        @change="getBatchsList()">
+        <el-option label="药品名称" value="drugName"></el-option>
+        <el-option label="药品详情编号" value="drugDetailId"></el-option>
+      </el-select>
+      <el-button slot="append" icon="el-icon-search" @click="getBatchsList()"></el-button>
+    </el-input>
+    <el-table :data="batchsList.filter(
+      (data) =>
+        !search ||
+        data.drugName.toLowerCase().includes(search.toLowerCase())
+    )
+      " fit stripe mix-height="100" style="width: 100%">
       <el-table-column label="药品详情ID" min-width="80px" fixed="left">
         <template slot-scope="batchsList">
           <span style="margin-left: 10px">{{ batchsList.row.drugDetailId }}</span>
@@ -204,13 +227,12 @@
         </el-tabs>
         <!-- 关于为什么不放入其中的原因在于放入其中会有明显卡顿 -->
         <!-- 对应内容 -->
-        <el-table :data="
-          batchDetailsList.filter(
-            (data) =>
-              !searchNew ||
-              data.batchId == searchNew
-          )
-        " fit stripe mix-height="100" style="width: 100%">
+        <el-table :data="batchDetailsList.filter(
+          (data) =>
+            !searchNew ||
+            data.batchId == searchNew
+        )
+          " fit stripe mix-height="100" style="width: 100%">
           <el-table-column label="ID" width="70px" fixed="left">
             <template slot-scope="batchDetailsList">
               <span style="margin-left: 10px">{{ batchDetailsList.row.batchId }}</span>
@@ -375,7 +397,8 @@
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="getBatchDetails(activeDrugDetailId, nowActiveName),Receipt = false, batch = {}">取 消</el-button>
+          <el-button @click="getBatchDetails(activeDrugDetailId, nowActiveName), Receipt = false, batch = {}">取
+            消</el-button>
           <el-button type="primary" @click="updItem(), Receipt = false, batch = {}">确 定</el-button>
         </div>
       </el-dialog>
@@ -429,12 +452,19 @@ export default {
       batchName: '',
       drugName: '',
       drugDetailId: '',
-      nowActiveName: ''
+      nowActiveName: '',
+      searchText: '',
+      searchMethod: 'drugName',
+      brandId: '',
+      isRx: '',
+      typeId: '',
+      typeList: []
     }
   },
 
   created () {
-    // 先获取全部用户
+    this.getBrandList()
+    this.getTypeList()
     this.getBatchsList()
   },
   methods: {
@@ -559,6 +589,12 @@ export default {
         console.log('获取brandList:', this.brandList)
       })
     },
+    getTypeList () {
+      axios.get('/admin/type').then((jsondata) => {
+        console.log('getTypeList:', jsondata)
+        this.typeList = jsondata.data
+      })
+    },
     getDrugDetailList () {
       axios({
         method: 'get',
@@ -574,8 +610,17 @@ export default {
       axios({
         method: 'get',
         // url: `/admin/batch/page/` + this.batchStatus,
-        url: '/admin/batch/page/',
-        params: { 'current': this.pageInfo.current, 'size': this.pageInfo.size }
+        // url: '/admin/batch/page/',
+        url: '/admin/batch/search/page',
+        params: {
+          brandId: this.brandId,
+          isRx: this.isRx,
+          typeId: this.typeId,
+          searchMethod: this.searchMethod,
+          searchText: this.searchText,
+          current: this.pageInfo.current,
+          size: this.pageInfo.size
+        }
       }).then((jsondata) => {
         if (jsondata.data !== '') {
           this.batchsList = jsondata.data.records

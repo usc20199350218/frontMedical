@@ -65,7 +65,7 @@
           </div>
         </el-col>
         <el-col :span="4">
-          <div class="grid-content bg-purple6" style="background-color: antiquewhite;">
+          <div class="grid-content bg-purple6">
 
             <div class="grid-content bg-purple">
               <div class="userTit">
@@ -500,7 +500,7 @@ export default {
 
 .tit {
   flex: 1;
-  background-color: aliceblue;
+  /* background-color: aliceblue; */
   text-align: center;
 }
 
@@ -514,7 +514,7 @@ export default {
 
 .activity {
   flex: 7;
-  background-color: antiquewhite;
+  /* background-color: antiquewhite; */
 }
 
 .pay {
@@ -524,12 +524,12 @@ export default {
 }
 
 .payChoose {
-  background-color: aqua;
+  /* background-color: aqua; */
   flex: 1;
 }
 
 .payBtn {
   flex: 1;
-  background-color: blueviolet;
+  /* background-color: blueviolet; */
 }
 </style>
