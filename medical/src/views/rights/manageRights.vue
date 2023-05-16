@@ -400,13 +400,17 @@ export default {
     },
     handleDelete (index, row) {
       // 删除指定菜单
-      console.log(index, row)
-      console.log('获取到的rightId为:', row.rightId)
       axios({
         method: 'delete',
         url: `/admin/right/` + row.rightId
       }).then((jsondata) => {
         console.log(jsondata)
+        if (jsondata.code === '200') {
+          this.$message({
+            message: '删除成功',
+            type: 'success'
+          })
+        }
       })
       this.getAllRightList()
     },

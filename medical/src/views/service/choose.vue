@@ -1,10 +1,8 @@
 <template>
   <div>
     <div>
-      <el-row>
-        <el-col :span="1"><el-button @click="back()">返回</el-button></el-col>
-        <el-col :span="3"><span style="">{{ userRealName }}的记录</span></el-col>
-      </el-row>
+      <el-button @click="back()" style="float: left;">返回</el-button>
+      <span>{{ userRealName }}的记录</span>
     </div>
     <div>
       <el-table :data="serviceList" style="width: 100%">
@@ -15,13 +13,13 @@
         </el-table-column>
         <el-table-column label="状况">
           <template slot-scope="serviceList">
-            <span v-if="serviceList.row.isNormal == '1'">正常</span>
-            <span v-else>异常</span>
+            <span v-if="serviceList.row.isNormal == '1'" style="color: green;">正常</span>
+            <span v-else style="color: red;">异常</span>
           </template>
         </el-table-column>
         <el-table-column label="最新">
           <template slot-scope="serviceList">
-            <span v-if="serviceList.row.isLast === '1'">最新</span>
+            <span v-if="serviceList.row.isLast === '1'"  style="color: blue;">最新</span>
             <span v-else>旧数据</span>
           </template>
         </el-table-column>
@@ -75,8 +73,10 @@ export default {
     },
     enter (val) {
       console.log('查看', val.serviceId)
-      this.$router.push({ path: '/service/detail',
-        query: { userId: val.userId, serviceId: val.serviceId, userRealName: this.userRealName } })
+      this.$router.push({
+        path: '/service/detail',
+        query: { userId: val.userId, serviceId: val.serviceId, userRealName: this.userRealName }
+      })
     },
     back () {
       this.$router.push('/service/user')

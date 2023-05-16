@@ -6,6 +6,7 @@ import Login from '../views/Login'
 import manageRights from '../views/rights/manageRights'
 import manageUsers from '../views/users/manageUser'
 import manageRole from '../views/roles/manageRole'
+import EditRole from '../views/roles/EditRole'
 import manageDrug from '../views/drug/manageDrug'
 import manageBrand from '../views/drug/manageBrand'
 import manageDrugDetails from '../views/drug/manageDrugDetails'
@@ -37,6 +38,7 @@ import serviceChoose from '../views/service/choose'
 import newService from '../views/service/newService'
 import welcome from '../views/welcome'
 import manageAddress from '../views/address/manageAddress'
+import chat from '../views/users/chat'
 Vue.use(Router)
 
 export default new Router({
@@ -69,6 +71,12 @@ export default new Router({
           name: 'manageRole',
           component: manageRole
         }, {
+          path: '/role/edit',
+          name: 'EditRole',
+          component: EditRole
+        },
+
+        {
           path: '/drug/manage',
           name: 'manageDrug',
           component: manageDrug
@@ -190,8 +198,11 @@ export default new Router({
           path: '/address/manage',
           name: 'manageAddress',
           component: manageAddress
+        }, {
+          path: '/chat',
+          name: 'chat',
+          component: chat
         }
-
       ]
     }, {
       path: '/login',

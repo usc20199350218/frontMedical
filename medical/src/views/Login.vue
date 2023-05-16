@@ -51,8 +51,8 @@
         <el-image :src="src"></el-image>
       </div>
     </div>
-    <el-drawer title="注册" :visible.sync="dialog" direction="ltr" custom-class="demo-drawer"
-      ref="drawer" :rules="rules" label-width="70px">
+    <el-drawer title="注册" :visible.sync="dialog" direction="ltr" custom-class="demo-drawer" ref="drawer" :rules="rules"
+      label-width="70px">
       <!-- <el-form
           :label-position="labelPosition"
           label-width="70px"
@@ -76,8 +76,14 @@
           </el-form-item>
           <el-form-item label="确认密码" :label-width="formLabelWidth" prop="userPassword">
             <el-col :span="17">
-              <el-input placeholder="请输入密码" v-model="registerUserInfo.userPassword2" show-password maxlength="20"
+              <el-input placeholder="请再次输入密码" v-model="registerUserInfo.userPassword2" show-password maxlength="20"
                 show-word-limit>
+              </el-input>
+            </el-col>
+          </el-form-item>
+          <el-form-item label="手机号" :label-width="formLabelWidth" prop="userPhone">
+            <el-col :span="17">
+              <el-input placeholder="请输入手机号" v-model="registerUserInfo.userPhone" maxlength="11" show-word-limit>
               </el-input>
             </el-col>
           </el-form-item>
@@ -171,7 +177,7 @@ export default {
     registerUserClick () {
       console.log('registerUserInfo:', this.registerUserInfo)
       let registerUser =
-        { userName: this.registerUserInfo.userName, userPassword: this.registerUserInfo.userPassword }
+        { userName: this.registerUserInfo.userName, userPhone: this.registerUserInfo.userPhone, userPassword: this.registerUserInfo.userPassword }
       console.log('registerUser', registerUser)
       if (this.registerUserInfo.userPassword === this.registerUserInfo.userPassword2) {
         console.log('密码匹配')

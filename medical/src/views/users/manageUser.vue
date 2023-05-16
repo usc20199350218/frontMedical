@@ -34,7 +34,6 @@
       </el-input>
     </div>
 
-    <!-- <el-table  :data="usersList" style="width: 100%" v-if="isReloadData"> -->
     <el-table :data="usersList.filter(
       (data) =>
         !search ||
@@ -86,7 +85,6 @@
       </el-table-column>
       <el-table-column label="用户Vip" width="80px">
         <template slot-scope="usersList">
-          <!-- <span style="margin-left: 10px">{{ usersList.row.userVip }}</span> -->
           <span v-if="usersList.row.userVip == 1">是</span>
           <span v-if="usersList.row.userVip == 0">否</span>
         </template>
@@ -108,7 +106,7 @@
           }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="left" width="220px" fixed="right">
+      <el-table-column align="left" min-width="320px" fixed="right">
         <template slot="header" slot-scope="usersList">
           <el-col :span="14">
             <el-input v-model="search" size="mini" v-if="usersList" placeholder="输入关键字搜索" />
@@ -117,6 +115,7 @@
             @click="addShowdialog">添加</el-button>
         </template>
         <template slot-scope="usersList">
+          <el-button size="mini" @click="handleReset(usersList.$index, usersList.row)">重置密码</el-button>
           <el-button size="mini" @click="handleEdit(usersList.$index, usersList.row)">编辑</el-button>
           <el-button v-if="usersList.row.userStatus === 1" size="mini" type="warning"
             @click="handleOffLine(usersList.$index, usersList.row)">封禁</el-button>
@@ -127,7 +126,7 @@
       </el-table-column>
     </el-table>
 
-    <div>
+    <!-- <div>
       <el-dialog title="新用户" :visible.sync="dialogFormVisible">
         <el-form ref="form" :model="user" label-width="80px" size="mini">
           <el-form-item label="用户名">
@@ -174,7 +173,6 @@
             </el-date-picker>
           </el-form-item>
           <el-form-item label="性别">
-            <!-- <el-col :span="5"> -->
             <el-col>
               <el-select v-model="user.userGender" placeholder="请选择用户性别">
                 <el-option v-for="item in ['男', '女', '未知']" :key="item.value" :label="item" :value="item">
@@ -183,7 +181,6 @@
             </el-col>
           </el-form-item>
           <el-form-item label="用户状态">
-            <!-- <el-col :span="5"> -->
             <el-col>
               <el-select v-model="user.userStatus" placeholder="请选择用户状态">
                 <el-option label="有效" :value="1"></el-option>
@@ -193,7 +190,6 @@
           </el-form-item>
 
           <el-form-item label="用户Vip">
-            <!-- <el-col :span="5"> -->
             <el-col>
               <el-select v-model="user.userVip" placeholder="请选择vip">
                 <el-option label="Vip" :value="1"></el-option>
@@ -215,9 +211,9 @@
           <el-button type="primary" @click="addItem">确 定</el-button>
         </div>
       </el-dialog>
-    </div>
+    </div> -->
 
-    <div>
+    <!-- <div>
       <el-dialog title="修改数据" :visible.sync="dialogFormVisibles">
         <el-form ref="form" :model="user" label-width="80px" size="mini">
           <el-form-item label="用户名">
@@ -259,7 +255,6 @@
             </el-date-picker>
           </el-form-item>
           <el-form-item label="性别">
-            <!-- <el-col :span="5"> -->
             <el-col>
               <el-select v-model="user.userGender" placeholder="请选择用户性别">
                 <el-option v-for="item in ['男', '女', '未知']" :key="item.value" :label="item" :value="item">
@@ -268,7 +263,6 @@
             </el-col>
           </el-form-item>
           <el-form-item label="用户状态">
-            <!-- <el-col :span="5"> -->
             <el-col>
               <el-select v-model="user.userStatus" placeholder="请选择状态">
                 <el-option label="有效" :value="1"></el-option>
@@ -278,7 +272,6 @@
           </el-form-item>
 
           <el-form-item label="用户Vip">
-            <!-- <el-col :span="5"> -->
             <el-col>
               <el-select v-model="user.userVip" placeholder="请选择Vip">
                 <el-option label="Vip" :value="1"></el-option>
@@ -300,7 +293,7 @@
           <el-button type="primary" @click="updItem">确 定</el-button>
         </div>
       </el-dialog>
-    </div>
+    </div> -->
 
     <div class="block">
       <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
@@ -313,76 +306,79 @@
       <el-dialog :title="showTitle" :visible.sync="showEdit">
         <el-form ref="form" :model="user" label-width="80px" size="mini">
           <el-form-item label="用户名">
-            <el-col>
-              <el-input type="text" maxlength="20" placeholder="请输入用户名" show-word-limit
-                v-model="user.userName"></el-input></el-col>
+            <!-- <el-col> -->
+            <el-input type="text" maxlength="20" placeholder="请输入用户名" show-word-limit v-model="user.userName"></el-input>
+            <!-- </el-col> -->
           </el-form-item>
           <el-form-item label="手机号">
-            <el-col>
-              <el-input type="text" maxlength="11" placeholder="请输入手机号" show-word-limit
-                v-model="user.userPhone"></el-input></el-col>
+            <!-- <el-col> -->
+            <el-input type="text" maxlength="11" placeholder="请输入手机号" show-word-limit
+              v-model="user.userPhone"></el-input>
+            <!-- </el-col> -->
           </el-form-item>
           <el-form-item label="昵称">
-            <el-col>
-              <el-input type="text" maxlength="20" placeholder="请输入昵称" show-word-limit
-                v-model="user.userNickName"></el-input></el-col>
+            <!-- <el-col> -->
+            <el-input type="text" maxlength="20" placeholder="请输入昵称" show-word-limit
+              v-model="user.userNickName"></el-input>
+            <!-- </el-col> -->
           </el-form-item>
           <el-form-item label="真实姓名">
-            <el-col>
-              <el-input type="text" maxlength="20" placeholder="请输入真实姓名" show-word-limit
-                v-model="user.userRealName"></el-input></el-col>
+            <!-- <el-col> -->
+            <el-input type="text" maxlength="20" placeholder="请输入真实姓名" show-word-limit
+              v-model="user.userRealName"></el-input>
+            <!-- </el-col> -->
           </el-form-item>
           <el-form-item label="头像上传">
-            <el-col>
-              <el-upload class="upload-demo" action="http://localhost:8088/api/upload?module=userpath"
-                :on-preview="handlePreview" :on-remove="handleRemove" :file="fileList" :on-success="filesuccess"
-                list-type="picture">
-                <el-button size="small" type="primary">点击上传</el-button>
-                <div slot="tip" class="el-upload__tip">
-                  只能上传jpg/png文件且不超过500kb
-                </div>
-              </el-upload>
-            </el-col>
+            <!-- <el-col> -->
+            <el-upload class="upload-demo" action="http://localhost:8088/api/upload?module=userpath"
+              :on-preview="handlePreview" :on-remove="handleRemove" :file="fileList" :on-success="filesuccess"
+              list-type="picture">
+              <el-button size="small" type="primary">点击上传</el-button>
+              <div slot="tip" class="el-upload__tip">
+                只能上传jpg/png文件且不超过500kb
+              </div>
+            </el-upload>
+            <!-- </el-col> -->
             <el-input type="text" placeholder="头像路径，copy" v-model="user.userAvatarUrl"></el-input>
           </el-form-item>
-          <el-form-item label="生日" align="left">
-            <el-date-picker v-model="user.userBirthday" type="date" placeholder="创建日期" align="right" style="width: 30%"
-              value-format="yyyy-MM-dd" :picker-options="pickerOptions">
+          <el-form-item label="生日">
+            <el-date-picker v-model="user.userBirthday" type="date" placeholder="创建日期" value-format="yyyy-MM-dd"
+              :picker-options="pickerOptions">
             </el-date-picker>
           </el-form-item>
           <el-form-item label="性别">
-            <el-col>
-              <el-select v-model="user.userGender" placeholder="请选择用户性别">
-                <el-option v-for="item in ['男', '女', '未知']" :key="item.value" :label="item" :value="item">
-                </el-option>
-              </el-select>
-            </el-col>
+            <!-- <el-col> -->
+            <el-select v-model="user.userGender" placeholder="请选择用户性别">
+              <el-option v-for="item in ['男', '女', '未知']" :key="item.value" :label="item" :value="item">
+              </el-option>
+            </el-select>
+            <!-- </el-col> -->
           </el-form-item>
           <el-form-item label="用户状态">
-            <el-col>
-              <el-select v-model="user.userStatus" placeholder="请选择用户状态">
-                <el-option label="有效" :value="1"></el-option>
-                <el-option label="无效" :value="0"></el-option>
-              </el-select>
-            </el-col>
+            <!-- <el-col> -->
+            <el-select v-model="user.userStatus" placeholder="请选择用户状态">
+              <el-option label="有效" :value="1"></el-option>
+              <el-option label="无效" :value="0"></el-option>
+            </el-select>
+            <!-- </el-col> -->
           </el-form-item>
 
           <el-form-item label="用户Vip">
             <!-- <el-col :span="5"> -->
-            <el-col>
-              <el-select v-model="user.userVip" placeholder="请选择vip">
-                <el-option label="Vip" :value="1"></el-option>
-                <el-option label="无" :value="0"></el-option>
-              </el-select>
-            </el-col>
+            <!-- <el-col> -->
+            <el-select v-model="user.userVip" placeholder="请选择vip">
+              <el-option label="Vip" :value="1"></el-option>
+              <el-option label="无" :value="0"></el-option>
+            </el-select>
+            <!-- </el-col> -->
           </el-form-item>
           <el-form-item label="用户类型">
-            <el-col>
-              <el-select v-model="user.roleId" placeholder="请选择">
-                <el-option v-for="role in roleList" :key="role.roleId" :label="role.roleName" :value="role.roleId">
-                </el-option>
-              </el-select>
-            </el-col>
+            <!-- <el-col> -->
+            <el-select v-model="user.roleId" placeholder="请选择">
+              <el-option v-for="role in roleList" :key="role.roleId" :label="role.roleName" :value="role.roleId">
+              </el-option>
+            </el-select>
+            <!-- </el-col> -->
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">

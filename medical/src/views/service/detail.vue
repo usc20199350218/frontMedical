@@ -6,10 +6,10 @@
           <el-button @click="backChoose()">选择用户</el-button>
         </el-col>
         <el-col :span="1.2">
-          <el-button @click="editServiceF()">编辑</el-button>
+          <el-button @click="editServiceF()" v-if="editService">编辑</el-button>
         </el-col>
         <el-col :span="1.2">
-          <el-button @click="save()">保存</el-button>
+          <el-button @click="save()" v-if="!editService">保存</el-button>
         </el-col>
         <el-col :span="1.2">
           <el-button v-if="serviceId" @click="back()">退出</el-button>
@@ -44,7 +44,7 @@
           <hr />
           <el-row :span="21">
             <el-col :span="5">
-              <label>体检：<el-input v-model="service.serviceDate" style="width: 200px;" :disabled="editPermissions" />
+              <label>随访：<el-input v-model="service.serviceDate" style="width: 200px;" :disabled="editPermissions" />
               </label>
             </el-col>
             <el-col :span="5">
@@ -64,7 +64,7 @@
     <div>
       <!-- 明细 -->
       <el-table :data="serviceList" style="width: 100%">
-        <el-table-column prop="serviceEntryName" label="记录" width="180">
+        <el-table-column prop="serviceEntryName" label="随访项" width="180">
         </el-table-column>
         <el-table-column prop="remark" label="备注" width="180">
         </el-table-column>
@@ -146,6 +146,12 @@ export default {
       axios.post('/api/service', this.service)
         .then((jsondata) => {
           console.log('推送结果:', jsondata)
+          if (jsondata.code === '200') {
+            this.$message({
+              message: '提交成功',
+              type: 'success'
+            })
+          }
         })
     },
     getDetail () {

@@ -12,12 +12,12 @@
         </div>
         <div>
             <el-table :data="serviceList" style="width: 100%">
-                <el-table-column label="服务Id">
+                <el-table-column label="随访项Id">
                     <template slot-scope="serviceList">
                         <span style="margin-left: 10px">{{ serviceList.row.serviceEntryId }}</span>
                     </template>
                 </el-table-column>
-                <el-table-column label="服务名称">
+                <el-table-column label="随访项名称">
                     <template slot-scope="serviceList">
                         <span style="margin-left: 10px">{{ serviceList.row.serviceEntryName }}</span>
                     </template>
@@ -35,6 +35,7 @@
                 <el-table-column label="操作">
                     <template slot-scope="serviceList">
                         <el-button size="mini" @click="changeService(serviceList.row)">修改</el-button>
+                        <el-button size="mini" type="danger" @click="delService(serviceList.row)">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -120,6 +121,12 @@ export default {
           done()
         })
         .catch(_ => {})
+    },
+    delService (row) {
+      axios.delete('/admin/service_entry/' + row.serviceEntryId).then((jsondata) => {
+        console.log('删除', jsondata)
+        this.searchStart()
+      })
     },
     changeService (row) {
       console.log('row:', row)

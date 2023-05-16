@@ -70,8 +70,8 @@
         </el-table-column>
         <el-table-column label="类型">
           <template slot-scope="scope">
-            <span v-if="scope.row.orderType == 'OFFLINE'">线上</span>
-            <span v-else-if="scope.row.orderType == 'ONLINE'">线下</span>
+            <span v-if="scope.row.orderType == 'OFFLINE'">线下</span>
+            <span v-else-if="scope.row.orderType == 'ONLINE'">在线</span>
           </template>
         </el-table-column>
         <el-table-column label="支付方式">
