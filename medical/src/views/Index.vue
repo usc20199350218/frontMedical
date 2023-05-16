@@ -1,8 +1,8 @@
 <template>
   <div class="index" style="overflow-y: hidden">
-    <el-container style="height: 100%" direction="vertical">
+    <el-container direction="vertical" style="height: 100%">
       <el-header>
-        <img src="https://www.itheima.com/images/logo.png" style="float: left;" @click="getMenus" />
+        <img src="https://www.itheima.com/images/logo.png" style="float: left;" @click="getMenus"/>
         <div style="float: right;">
           <el-avatar :size="50" :src="circleUrl"></el-avatar>
           <span>{{ userName }}</span>
@@ -32,7 +32,7 @@
         </el-row> -->
       </el-header>
       <el-container class="down">
-        <el-aside width="250px" height=" 100%"  @open="handleOpen" @close="handleClose" :collapse="isCollapse">
+        <el-aside :collapse="isCollapse" height=" 100%" width="250px" @close="handleClose" @open="handleOpen">
           <!--<div class="myMenu">
                <el-menu
                 :router="true"
@@ -110,14 +110,14 @@
           <!-- 新菜单，基本能运行 -->
           <el-menu :router="true" :unique-opened="true" active-class="active" background-color="#ffffff">
             <!-- 父菜单 -->
-            <el-submenu :index="menu.rightId + ''" v-for="menu in menusList" :key="menu.rightId">
+            <el-submenu v-for="menu in menusList" :key="menu.rightId" :index="menu.rightId + ''">
               <template slot="title">
                 <i class="el-icon-message"></i>
                 {{ menu.rightText }}
               </template>
               <!-- 子菜单 -->
               <el-menu-item v-for="menu2 in menu.menuDTO" :key="menu2.rightId" :index="menu2.rightUrl"
-                active-class="active">
+                            active-class="active">
                 <!-- <router-link :to="menu2.rightUrl" active-class="active">
                     {{ menu2.rightText }}
                   </router-link> -->
@@ -145,6 +145,7 @@
 import Qs from 'qs'
 import mystore from '../store'
 import axios from '../utils/request'
+
 export default {
   data () {
     return {
@@ -169,7 +170,7 @@ export default {
   methods: {
     quit () {
       this.$store.commit('setUser', '')
-      this.$router.push({ path: '/login' })
+      this.$router.push({path: '/login'})
     },
     handleOpen (key, keyPath) {
       console.log(key, keyPath)
@@ -197,11 +198,11 @@ export default {
 </script>
 
 <style>
-.el-menu-item>router-link-active {
+.el-menu-item > router-link-active {
   font-weight: bold;
 }
 
-.el-menu-item>router-link-active span::before {
+.el-menu-item > router-link-active span::before {
   content: "";
   width: 100%;
   height: 1px;
@@ -245,7 +246,7 @@ body,
 
 }
 
-body>.el-container {
+body > .el-container {
   margin-bottom: 60px;
   /* margin-bottom: 40px; */
   /*  */

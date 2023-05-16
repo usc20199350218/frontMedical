@@ -33,15 +33,15 @@
                     !search ||
                     data.drugName.toLowerCase().includes(search.toLowerCase())
                 )
-                  " fit stripe mix-height="100" style="width: 100%">
+                  " fit mix-height="100" stripe style="width: 100%">
                   <el-table-column label="图片" min-width="125px">
                     <template slot-scope="drugDetailList">
-                      <img :src="drugDetailList.row.val.drugDetailPath" width="100px" alt="图片">
+                      <img :src="drugDetailList.row.val.drugDetailPath" alt="图片" width="100px">
                     </template>
                   </el-table-column>
                   <el-table-column label="品名" min-width="150px">
                     <template slot-scope="drugDetailList">
-                      <el-popover trigger="hover" placement="top">
+                      <el-popover placement="top" trigger="hover">
                         <p>编码: {{ drugDetailList.row.val.drugNumber }}</p>
                         <span style="margin-left: 10px">{{ drugDetailList.row.val.createTime
                         }}</span>
@@ -74,9 +74,9 @@
                                                 drugDetailList.row.val.number
                                             }}</span>
                                             <span v-if="drugDetailList.row.val.number == ''">0</span> -->
-                      <el-input-number v-model="drugDetailList.row.val.number" controls-position="right"
-                        @change="handleChange" :min="1" style="width: 85px;" :max="50"
-                        :disabled="startPay"></el-input-number>
+                      <el-input-number v-model="drugDetailList.row.val.number" :disabled="startPay"
+                                       :max="50" :min="1" controls-position="right" style="width: 85px;"
+                                       @change="handleChange"></el-input-number>
                     </template>
                   </el-table-column>
                   <!-- <el-table-column align="left" width="220px" fixed="right">
@@ -114,7 +114,7 @@
                   {{ totalPrice }}
                 </span>元
               </el-col>
-              <el-col :span="4" :offset="8">
+              <el-col :offset="8" :span="4">
                 <div>
                   <el-button @click="back()">返回</el-button>
                   <el-button @click="settlement()">提交订单</el-button>
@@ -141,7 +141,7 @@
 
     </div>
     <div>
-      <el-dialog title="选择地址" :visible.sync="showAddressList"  width="50%" :before-close="handleCloseAddressList">
+      <el-dialog :before-close="handleCloseAddressList" :visible.sync="showAddressList" title="选择地址" width="50%">
         <el-table :data="addressList" style="width: 100%">
           <el-table-column label="姓名" width="180">
             <template slot-scope="scope">
@@ -173,6 +173,7 @@
 import Qs from 'qs'
 import mystore from '../../store'
 import axios from '../../utils/request'
+
 export default {
   data () {
     return {
@@ -220,7 +221,8 @@ export default {
         .then(_ => {
           done()
         })
-        .catch(_ => { })
+        .catch(_ => {
+        })
     },
     getAddressList () {
       axios.get('/api/address/' + this.userId).then((jsondata) => {
@@ -241,7 +243,7 @@ export default {
             // this.$router.push('/online/index')
             this.$router.push({
               path: '/online/index',
-              query: { storeId: this.storeId, storeName: this.storeName }
+              query: {storeId: this.storeId, storeName: this.storeName}
             })
           }
         })

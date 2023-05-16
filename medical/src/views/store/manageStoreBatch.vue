@@ -15,13 +15,13 @@
             !search ||
             data.drugName.toLowerCase().includes(search.toLowerCase())
         )
-      " fit stripe mix-height="100" style="width: 100%">
-        <el-table-column label="详情ID" min-width="80px" fixed="left">
+      " fit mix-height="100" stripe style="width: 100%">
+        <el-table-column fixed="left" label="详情ID" min-width="80px">
           <template slot-scope="storeBatchList">
             <span style="margin-left: 10px">{{ storeBatchList.row.drugDetailId }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="品名" min-width="150px" fixed="left">
+        <el-table-column fixed="left" label="品名" min-width="150px">
           <template slot-scope="storeBatchList">
             <span style="margin-left: 10px">{{ storeBatchList.row.drugName }}</span>
           </template>
@@ -82,19 +82,22 @@
             <span style="margin-left: 10px">{{ storeBatchList.row.totalAll }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="left" width="300px" fixed="right">
+        <el-table-column align="left" fixed="right" width="300px">
           <template slot="header" slot-scope="storeBatchList">
             <el-col :span="14">
-              <el-input v-model="search" size="mini" v-if="storeBatchList" placeholder="输入关键字搜索" />
+              <el-input v-if="storeBatchList" v-model="search" placeholder="输入关键字搜索" size="mini"/>
             </el-col>
-            <el-button type="primary" size="mini" icon="el-icon-circle-plus-outline" round
-              @click="addShowdialog()">添加</el-button>
+            <el-button icon="el-icon-circle-plus-outline" round size="mini" type="primary"
+                       @click="addShowdialog()">添加
+            </el-button>
           </template>
           <template slot-scope="storeBatchList">
             <el-button size="mini" type="primary"
-              @click="handleLookUser(storeBatchList.$index, storeBatchList.row)">联系人</el-button>
+                       @click="handleLookUser(storeBatchList.$index, storeBatchList.row)">联系人
+            </el-button>
             <el-button size="mini" type="primary"
-              @click="handleLook(storeBatchList.$index, storeBatchList.row)">查看</el-button>
+                       @click="handleLook(storeBatchList.$index, storeBatchList.row)">查看
+            </el-button>
             <el-button size="mini" type="danger" @click="handleDelete(storeBatchList.row)">删除</el-button>
           </template>
         </el-table-column>
@@ -105,20 +108,20 @@
     <!-- 不设置删除按钮，只设置禁用 / 取消禁用 -->
     <div>
       <!-- 对于新建批次,店铺id已经选择了在发送请求前添加上去就行,此时只需要确认_药品详情id_数量即可 -->
-      <el-dialog title="新建批次" :visible.sync="showAdd">
+      <el-dialog :visible.sync="showAdd" title="新建批次">
         <el-form ref="form" :model="storeBatch" label-width="100px" size="mini">
-          <el-form-item label="药品" min-width="150px" fixed="left">
+          <el-form-item fixed="left" label="药品" min-width="150px">
             <el-select v-model="storeBatch.drugDetailId" filterable placeholder="请选择药品">
-              <el-option v-for="item in drugDetailList" :key="item.drugDetailId" :value="item.drugDetailId"
-                :label="item.drugName">
+              <el-option v-for="item in drugDetailList" :key="item.drugDetailId" :label="item.drugName"
+                         :value="item.drugDetailId">
                 {{ item.drugDetailId }}-{{ item.drugName }}-{{ item.drugSpecification }}
               </el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="数量（盒）">
             <el-col>
-              <el-input type="text" maxlength="20" placeholder="请输入数量（盒）" show-word-limit
-                v-model="storeBatch.storeBatchPurchaseQuantity">
+              <el-input v-model="storeBatch.storeBatchPurchaseQuantity" maxlength="20" placeholder="请输入数量（盒）" show-word-limit
+                        type="text">
               </el-input>
             </el-col>
           </el-form-item>
@@ -131,8 +134,8 @@
     </div>
 
     <div>
-      <el-dialog :title="drugName + ' 库存情况'" :visible.sync="dialogFormVisibleDetails" :max-width=this.maxWidth
-        :close-on-click-modal="false">
+      <el-dialog :close-on-click-modal="false" :max-width=this.maxWidth :title="drugName + ' 库存情况'"
+                 :visible.sync="dialogFormVisibleDetails">
         <!-- 标签页标签头 -->
         <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
           <el-tab-pane v-for="(itemStatus, index ) in batchStatusList" :key="index" :label="itemStatus">
@@ -146,15 +149,15 @@
               !searchNew ||
               data.batchId == searchNew
           )
-        " fit stripe mix-height="100" style="width: 100%">
-          <el-table-column label="批次ID" width="70px" fixed="left">
+        " fit mix-height="100" stripe style="width: 100%">
+          <el-table-column fixed="left" label="批次ID" width="70px">
             <template slot-scope="storeBatchDetailsList">
               <span style="margin-left: 10px">{{ storeBatchDetailsList.row.storeBatchId }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="批次编号" max-width="130px" fixed="left">
+          <el-table-column fixed="left" label="批次编号" max-width="130px">
             <template slot-scope="storeBatchDetailsList">
-              <el-popover trigger="hover" placement="top">
+              <el-popover placement="top" trigger="hover">
                 <p>编号: {{ storeBatchDetailsList.row.batchNumber }}</p>
                 <p>备注: {{ storeBatchDetailsList.row.remark }}</p>
                 <div slot="reference" class="name-wrapper">
@@ -185,38 +188,39 @@
               <span style="margin-left: 10px">{{ storeBatchDetailsList.row.batchValidityPeriod }}</span>
             </template>
           </el-table-column>
-          <el-table-column align="left" width="270px" fixed="right">
+          <el-table-column align="left" fixed="right" width="270px">
             <template slot="header" slot-scope="storeBatchDetailsList">
               <el-col :span="14">
-                <el-input v-model="searchNew" size="mini" v-if="storeBatchDetailsList" placeholder="输入关键字搜索" />
+                <el-input v-if="storeBatchDetailsList" v-model="searchNew" placeholder="输入关键字搜索" size="mini"/>
               </el-col>
 
-              <el-button type="primary" size="mini" icon="el-icon-circle-plus-outline" round
-                @click="addShowdialog">添加</el-button>
+              <el-button icon="el-icon-circle-plus-outline" round size="mini" type="primary"
+                         @click="addShowdialog">添加
+              </el-button>
             </template>
             <!-- 关于店铺批次详情状态的操作，可以发起申请，由仓库通过，然后我们等待配送，到达之后清点上架，清理过期，禁用药品 -->
             <!-- 对于修改的问题，因为提交之后仓库随时会同意，所有我不在这里设置修改，只能是重新发起并联系仓库退回申请 -->
             <template slot-scope="storeBatchDetailsList">
               <!-- 上架变为正常 -->
-              <el-button size="mini" type="warning"
-                v-if="storeBatchDetailsList.row.storeBatchStatus === 'NORMAL_PURCHASE'"
-                @click="batchStatusChange(storeBatchDetailsList.$index, storeBatchDetailsList.row, 'SOLD')">
+              <el-button v-if="storeBatchDetailsList.row.storeBatchStatus === 'NORMAL_PURCHASE'" size="mini"
+                         type="warning"
+                         @click="batchStatusChange(storeBatchDetailsList.$index, storeBatchDetailsList.row, 'SOLD')">
                 上架
               </el-button>
               <!-- 禁止，需要弹窗填写利用 -->
-              <el-button size="mini" type="danger" v-if="storeBatchDetailsList.row.storeBatchStatus === 'SOLD'"
-                @click="batchStatusChange(storeBatchDetailsList.$index, storeBatchDetailsList.row, 'FORBIDDEN')">
+              <el-button v-if="storeBatchDetailsList.row.storeBatchStatus === 'SOLD'" size="mini" type="danger"
+                         @click="batchStatusChange(storeBatchDetailsList.$index, storeBatchDetailsList.row, 'FORBIDDEN')">
                 禁止
               </el-button>
               <!-- 销毁，数量变为零，需要弹窗 -->
-              <el-button size="mini" type="danger" v-if="storeBatchDetailsList.row.storeBatchStatus === 'EXPIRED'"
-                @click="batchStatusChange(storeBatchDetailsList.$index, storeBatchDetailsList.row, 'EXPIRED_PROCESSED')">
+              <el-button v-if="storeBatchDetailsList.row.storeBatchStatus === 'EXPIRED'" size="mini" type="danger"
+                         @click="batchStatusChange(storeBatchDetailsList.$index, storeBatchDetailsList.row, 'EXPIRED_PROCESSED')">
                 销毁
               </el-button>
               <!-- 恢复变为正常 -->
-              <el-button size="mini" type="primary" v-if="storeBatchDetailsList.row.storeBatchStatus === 'FORBIDDEN'
-                && storeBatchDetailsList.row.storeBatchExistingQuantity !== 0"
-                @click="batchStatusChange(storeBatchDetailsList.$index, storeBatchDetailsList.row, 'SOLD_AGAIN')">
+              <el-button v-if="storeBatchDetailsList.row.storeBatchStatus === 'FORBIDDEN'
+                && storeBatchDetailsList.row.storeBatchExistingQuantity !== 0" size="mini" type="primary"
+                         @click="batchStatusChange(storeBatchDetailsList.$index, storeBatchDetailsList.row, 'SOLD_AGAIN')">
                 恢复
               </el-button>
             </template>
@@ -225,24 +229,25 @@
       </el-dialog>
     </div>
     <div class="block">
-      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
-        :current-page="pageInfo.current" :page-sizes="[5, 10, 20, 30, 100, 1000, 10000]" :page-size="pageInfo.size"
-        layout="total, sizes, prev, pager, next, jumper" :total="pageInfo.total">
+      <el-pagination :current-page="pageInfo.current" :page-size="pageInfo.size"
+                     :page-sizes="[5, 10, 20, 30, 100, 1000, 10000]" :total="pageInfo.total"
+                     layout="total, sizes, prev, pager, next, jumper"
+                     @size-change="handleSizeChange" @current-change="handleCurrentChange">
       </el-pagination>
     </div>
     <div>
-      <el-dialog title="联系人" :visible.sync="showContactPerson">
+      <el-dialog :visible.sync="showContactPerson" title="联系人">
         <span>{{ roleId }}</span>
         <span>{{ contactPerson }}</span>
       </el-dialog>
     </div>
     <div>
-      <el-dialog title="添加备注" :visible.sync="remarkShow">
+      <el-dialog :visible.sync="remarkShow" title="添加备注">
         <el-form ref="form" :model="storeBatch" label-width="100px" size="mini">
           <el-form-item label="备注">
             <el-col>
-              <el-input type="text" maxlength="999" placeholder="备注" show-word-limit
-                v-model="storeBatch.remark"></el-input>
+              <el-input v-model="storeBatch.remark" maxlength="999" placeholder="备注" show-word-limit
+                        type="text"></el-input>
             </el-col>
           </el-form-item>
         </el-form>
@@ -257,22 +262,23 @@
   </div>
 </template>
 
-  <!-- 对于取消的按钮设计，全部改为val=false即可，不需要刷新 -->
-  <!-- todo: 将所有的取消改为dialogFormVisible = false ，get***（）样式 -->
-  <!-- todo: 将所有成功之后调用关闭的直接改，然后调用noti方法 -->
-  <!-- TODO: 对于提交、更新按钮，设置为updItem(),val=false样式，精准关闭，这样不用再进行判断，直接关，而之前的取消设置刷新方法，太多余了 -->
-  <!-- 关于取消是否需要刷新，应该是在涉及状态修改的按钮对应的窗体下的取消设置刷新，因为状态已经在前端进行了修改，而实际数据是取消了修改，所有应该是要刷新 -->
+<!-- 对于取消的按钮设计，全部改为val=false即可，不需要刷新 -->
+<!-- todo: 将所有的取消改为dialogFormVisible = false ，get***（）样式 -->
+<!-- todo: 将所有成功之后调用关闭的直接改，然后调用noti方法 -->
+<!-- TODO: 对于提交、更新按钮，设置为updItem(),val=false样式，精准关闭，这样不用再进行判断，直接关，而之前的取消设置刷新方法，太多余了 -->
+<!-- 关于取消是否需要刷新，应该是在涉及状态修改的按钮对应的窗体下的取消设置刷新，因为状态已经在前端进行了修改，而实际数据是取消了修改，所有应该是要刷新 -->
 <script>
 import Qs from 'qs'
 import mystore from '../../store'
 import axios from '../../utils/request'
+
 export default {
   data () {
     return {
       // 分页信息
-      pageInfo: { current: 0, size: 5 },
+      pageInfo: {current: 0, size: 5},
       // 详情分页信息，废弃，——数据量不大
-      pageInfoNew: { current: 0, size: 5 },
+      pageInfoNew: {current: 0, size: 5},
       search: '',
       showAdd: false,
       dialogFormVisibles: false,
@@ -342,7 +348,7 @@ export default {
       // 获取库存分页列表
       try {
         const response = await axios.get(`/admin/store_batch/page/` + this.activeStoreId, {
-          params: { 'current': this.pageInfo.current, 'size': this.pageInfo.size }
+          params: {'current': this.pageInfo.current, 'size': this.pageInfo.size}
         })
         if (response.data.records !== '') {
           this.storeBatchList = response.data.records
@@ -421,7 +427,7 @@ export default {
       const h = this.$createElement
       this.$notify({
         title: '操作成功',
-        message: h('i', { style: 'color: teal' }, action + '成功')
+        message: h('i', {style: 'color: teal'}, action + '成功')
       })
       this.getStoreBatchList()
     },
@@ -468,7 +474,7 @@ export default {
       axios({
         method: 'get',
         url: `/admin/store_batch/detail/` + activeDrugDetailId,
-        params: { 'active': nowActiveName, 'store': nowActiveStore }
+        params: {'active': nowActiveName, 'store': nowActiveStore}
       }).then(jsondata => {
         this.storeBatchDetailsList = jsondata.data
         console.log('storeBatchDetailsList:', this.storeBatchDetailsList)
@@ -502,14 +508,12 @@ export default {
     closedialog (val) {
       this.value[val] = !this.value[val]
       console.log(val, 'val:', this[val])
-      this.storeBatch = {
-
-      }
+      this.storeBatch = {}
     },
 
     drugStateChaged (item) {
       console.log('change', item)
-      let changeData = { drugDetailsStatus: item.drugDetailsStatus, drugDetailsId: item.drugDetailsId }
+      let changeData = {drugDetailsStatus: item.drugDetailsStatus, drugDetailsId: item.drugDetailsId}
       axios({
         method: 'put',
         url: '/admin/drugdetail/status',
@@ -558,7 +562,7 @@ export default {
       axios({
         method: 'get',
         url: `/admin/store_batch/detail/` + drugDetailId,
-        params: { 'active': active, 'storeId': this.activeStoreId }
+        params: {'active': active, 'storeId': this.activeStoreId}
       }).then(jsondata => {
         console.log('详情:', jsondata)
         this.storeBatchDetailsList = jsondata.data
@@ -625,5 +629,5 @@ export default {
 }
 </script>
 
-  <!-- todo 优化关闭窗口 -->
+<!-- todo 优化关闭窗口 -->
 <style></style>

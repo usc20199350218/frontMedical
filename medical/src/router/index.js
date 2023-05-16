@@ -39,6 +39,7 @@ import newService from '../views/service/newService'
 import welcome from '../views/welcome'
 import manageAddress from '../views/address/manageAddress'
 import chat from '../views/users/chat'
+
 Vue.use(Router)
 
 export default new Router({

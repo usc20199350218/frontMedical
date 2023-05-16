@@ -14,7 +14,7 @@
           <span>职位:</span>
           <el-select v-model="positionId" placeholder="请选择" @change="getStaffList()">
             <el-option v-for="item in positionList" :key="item.positionId" :label="item.positionName"
-              :value="item.positionId">
+                       :value="item.positionId">
             </el-option>
           </el-select>
         </span>
@@ -25,15 +25,15 @@
           (data) =>
             !search ||
             data.staffName.toLowerCase().includes(search.toLowerCase())
-        )" fit stripe mix-height="100" style="width: 100%">
-        <el-table-column label="职员ID" min-width="80px" fixed="left">
+        )" fit mix-height="100" stripe style="width: 100%">
+        <el-table-column fixed="left" label="职员ID" min-width="80px">
           <template slot-scope="staffList">
             <span style="margin-left: 10px">{{ staffList.row.staffId }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="姓名" min-width="80px" fixed="left">
+        <el-table-column fixed="left" label="姓名" min-width="80px">
           <template slot-scope="staffList">
-            <el-popover trigger="hover" placement="top">
+            <el-popover placement="top" trigger="hover">
               <p>用户名：{{ staffList.row.userName }}</p>
               <p>薪水: {{ staffList.row.actualSalary }}</p>
               <div slot="reference" class="name-wrapper">
@@ -42,51 +42,52 @@
             </el-popover>
           </template>
         </el-table-column>
-        <el-table-column label="店铺" min-width="80px" fixed="left">
+        <el-table-column fixed="left" label="店铺" min-width="80px">
           <template slot-scope="staffList">
             <span style="margin-left: 10px">{{ staffList.row.storeName }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="职位" min-width="80px" fixed="left">
+        <el-table-column fixed="left" label="职位" min-width="80px">
           <template slot-scope="staffList">
             <span style="margin-left: 10px">{{ staffList.row.positionName }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="电话" min-width="80px" fixed="left">
+        <el-table-column fixed="left" label="电话" min-width="80px">
           <template slot-scope="staffList">
             <span style="margin-left: 10px">{{ staffList.row.userPhone }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="职员状态" width="85px" fixed="left">
+        <el-table-column fixed="left" label="职员状态" width="85px">
           <template slot-scope="staffList">
             <el-switch v-model="staffList.row.status" :active-value="1" :inactive-value="0" active-color="#13ce66"
-              inactive-color="#ff4949" @change="stateChaged(staffList.row)">
+                       inactive-color="#ff4949" @change="stateChaged(staffList.row)">
             </el-switch>
           </template>
         </el-table-column>
-        <el-table-column label="性别" min-width="80px" fixed="left">
+        <el-table-column fixed="left" label="性别" min-width="80px">
           <template slot-scope="staffList">
             <span style="margin-left: 10px">{{ staffList.row.userGender }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="创建时间" min-width="90px" fixed="left">
+        <el-table-column fixed="left" label="创建时间" min-width="90px">
           <template slot-scope="staffList">
             <span style="margin-left: 10px">{{ staffList.row.createTime }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="更新时间" min-width="90px" fixed="left">
+        <el-table-column fixed="left" label="更新时间" min-width="90px">
           <template slot-scope="staffList">
             <span style="margin-left: 10px">{{ staffList.row.modifiedTime }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column align="left" width="220px" fixed="right">
+        <el-table-column align="left" fixed="right" width="220px">
           <template slot="header" slot-scope="staffList">
             <el-col :span="14">
-              <el-input v-model="search" size="mini" v-if="staffList" placeholder="输入关键字搜索" />
+              <el-input v-if="staffList" v-model="search" placeholder="输入关键字搜索" size="mini"/>
             </el-col>
-            <el-button type="primary" size="mini" icon="el-icon-circle-plus-outline" round
-              @click="handleAdd()">添加</el-button>
+            <el-button icon="el-icon-circle-plus-outline" round size="mini" type="primary"
+                       @click="handleAdd()">添加
+            </el-button>
           </template>
           <template slot-scope="staffList">
             <el-button size="mini" @click="handleEdit(staffList.row)">编辑</el-button>
@@ -95,14 +96,15 @@
         </el-table-column>
       </el-table>
       <div class="block">
-        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
-          :current-page="pageInfo.current" :page-sizes="[5, 10, 20, 30, 100, 1000, 10000]" :page-size="pageInfo.size"
-          layout="total, sizes, prev, pager, next, jumper" :total="pageInfo.total">
+        <el-pagination :current-page="pageInfo.current" :page-size="pageInfo.size"
+                       :page-sizes="[5, 10, 20, 30, 100, 1000, 10000]" :total="pageInfo.total"
+                       layout="total, sizes, prev, pager, next, jumper"
+                       @size-change="handleSizeChange" @current-change="handleCurrentChange">
         </el-pagination>
       </div>
     </div>
     <div>
-      <el-dialog title="新增职员" :visible.sync="showAdd">
+      <el-dialog :visible.sync="showAdd" title="新增职员">
         <el-form ref="form" :model="staff" label-width="80px" size="mini">
           <el-form-item label="店铺">
             <el-select v-model="staff.storeId" placeholder="请选择" @change="getStaffList()">
@@ -114,7 +116,7 @@
             <el-col :span="10">
               <el-select v-model="staff.positionId" placeholder="请选择" @change="getStaffList()">
                 <el-option v-for="item in positionList" :key="item.positionId" :label="item.positionName"
-                  :value="item.positionId">
+                           :value="item.positionId">
                 </el-option>
               </el-select>
             </el-col>
@@ -130,7 +132,7 @@
           </el-form-item>
           <el-form-item label="工资">
             <el-col :span="10">
-              <el-input type="text" maxlength="10" show-word-limit v-model="staff.actualSalary">
+              <el-input v-model="staff.actualSalary" maxlength="10" show-word-limit type="text">
               </el-input>
             </el-col>
           </el-form-item>
@@ -142,7 +144,7 @@
       </el-dialog>
     </div>
     <div>
-      <el-dialog title="编辑职员" :visible.sync="showUpd">
+      <el-dialog :visible.sync="showUpd" title="编辑职员">
         <el-form ref="form" :model="staff" label-width="80px" size="mini">
           <el-form-item label="店铺">
             <el-select v-model="staff.storeId" placeholder="请选择" @change="getStaffList()">
@@ -154,7 +156,7 @@
             <el-col :span="10">
               <el-select v-model="staff.positionId" placeholder="请选择" @change="getStaffList()">
                 <el-option v-for="item in positionList" :key="item.positionId" :label="item.positionName"
-                  :value="item.positionId">
+                           :value="item.positionId">
                 </el-option>
               </el-select>
             </el-col>
@@ -170,7 +172,7 @@
           </el-form-item>
           <el-form-item label="工资">
             <el-col :span="10">
-              <el-input type="text" maxlength="10" show-word-limit v-model="staff.actualSalary">
+              <el-input v-model="staff.actualSalary" maxlength="10" show-word-limit type="text">
               </el-input>
             </el-col>
           </el-form-item>
@@ -187,6 +189,7 @@
 <script>
 import Qs from 'qs'
 import axios from '../../utils/request'
+
 export default {
   data () {
     return {
@@ -195,7 +198,7 @@ export default {
       storeId: '',
       positionId: '',
       staff: {},
-      pageInfo: { current: 0, size: 5 },
+      pageInfo: {current: 0, size: 5},
       storeList: [],
       positionList: [],
       showAdd: false,
@@ -213,7 +216,7 @@ export default {
       const h = this.$createElement
       this.$notify({
         title: '成功',
-        message: h('i', { style: 'color: teal' }, action + '成功')
+        message: h('i', {style: 'color: teal'}, action + '成功')
       })
     },
     getStaffList () {
@@ -339,7 +342,7 @@ export default {
 </script>
 
 <style>
-span+span {
+span + span {
   margin-left: 100px;
 }
 </style>

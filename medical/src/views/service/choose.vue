@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <el-button @click="back()" style="float: left;">返回</el-button>
+      <el-button style="float: left;" @click="back()">返回</el-button>
       <span>{{ userRealName }}的记录</span>
     </div>
     <div>
@@ -19,7 +19,7 @@
         </el-table-column>
         <el-table-column label="最新">
           <template slot-scope="serviceList">
-            <span v-if="serviceList.row.isLast === '1'"  style="color: blue;">最新</span>
+            <span v-if="serviceList.row.isLast === '1'" style="color: blue;">最新</span>
             <span v-else>旧数据</span>
           </template>
         </el-table-column>
@@ -37,9 +37,10 @@
         </el-table-column>
       </el-table>
       <div class="block">
-        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
-          :current-page="pageInfo.current" :page-sizes="[5, 10, 20, 30, 100, 1000, 10000]" :page-size="pageInfo.size"
-          layout="total, sizes, prev, pager, next, jumper" :total="pageInfo.total">
+        <el-pagination :current-page="pageInfo.current" :page-size="pageInfo.size"
+                       :page-sizes="[5, 10, 20, 30, 100, 1000, 10000]" :total="pageInfo.total"
+                       layout="total, sizes, prev, pager, next, jumper"
+                       @size-change="handleSizeChange" @current-change="handleCurrentChange">
         </el-pagination>
       </div>
     </div>
@@ -48,12 +49,13 @@
 
 <script>
 import axios from '../../utils/request'
+
 export default {
   data () {
     return {
       userId: '',
       userRealName: '',
-      pageInfo: { current: 0, size: 5 },
+      pageInfo: {current: 0, size: 5},
       serviceList: []
     }
   },
@@ -75,7 +77,7 @@ export default {
       console.log('查看', val.serviceId)
       this.$router.push({
         path: '/service/detail',
-        query: { userId: val.userId, serviceId: val.serviceId, userRealName: this.userRealName }
+        query: {userId: val.userId, serviceId: val.serviceId, userRealName: this.userRealName}
       })
     },
     back () {

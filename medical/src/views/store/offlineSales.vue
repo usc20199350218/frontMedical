@@ -10,8 +10,8 @@
       <div class="chooseDrug">
         <div class="leftTop">
           <div style="margin-top: 15px;">
-            <el-input placeholder="请输入内容" v-model="inputText" class="input-with-select">
-              <el-select v-model="select" slot="prepend" placeholder="请选择">
+            <el-input v-model="inputText" class="input-with-select" placeholder="请输入内容">
+              <el-select slot="prepend" v-model="select" placeholder="请选择">
                 <el-option label="药品名称" value="drugName"></el-option>
                 <el-option label="编号" value="drugNumber"></el-option>
               </el-select>
@@ -39,7 +39,7 @@
 
               <el-table-column align="right">
                 <template slot="header" slot-scope="scope">
-                  <el-input v-model="search" size="mini" v-if="scope" placeholder="输入关键字搜索" />
+                  <el-input v-if="scope" v-model="search" placeholder="输入关键字搜索" size="mini"/>
                 </template>
                 <template slot-scope="scope">
                   <el-button size="mini" @click="handleAdd(scope.$index, scope.row)">添加</el-button>
@@ -50,18 +50,19 @@
         </div>
         <div class="leftBottom">
           <div class="block">
-            <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
-              :current-page="pageInfo.current" :page-sizes="[5, 10, 20, 30, 100, 1000, 10000]" :page-size="pageInfo.size"
-              layout="total, sizes, prev, pager, next, jumper" :total="pageInfo.total">
+            <el-pagination :current-page="pageInfo.current" :page-size="pageInfo.size"
+                           :page-sizes="[5, 10, 20, 30, 100, 1000, 10000]" :total="pageInfo.total"
+                           layout="total, sizes, prev, pager, next, jumper"
+                           @size-change="handleSizeChange" @current-change="handleCurrentChange">
             </el-pagination>
           </div>
         </div>
       </div>
       <div class="order">
         <div class="orderDetail">
-          <el-table :ref="orderList"
-            :data="orderList.filter(data => !search || data.drugName.toLowerCase().includes(search.toLowerCase()))"
-            style="width: 100%" :key="menuKey">
+          <el-table :key="menuKey"
+                    :ref="orderList"
+                    :data="orderList.filter(data => !search || data.drugName.toLowerCase().includes(search.toLowerCase()))" style="width: 100%">
             <el-table-column label="店NO" prop="storeBatchId" width="60px">
             </el-table-column>
             <el-table-column label="名称" prop="drugName">
@@ -79,13 +80,13 @@
             <!-- <el-input-number v-model="num" @change="handleChange" :min="1" :max="10" label="描述文字"></el-input-number> -->
             <el-table-column align="right">
               <template slot="header" slot-scope="scope">
-                <el-input v-model="search" size="mini" v-if="scope" placeholder="输入关键字搜索" />
+                <el-input v-if="scope" v-model="search" placeholder="输入关键字搜索" size="mini"/>
               </template>
               <template slot-scope="scope">
-                <el-button size="mini" @click="handleOrderAdd(scope.$index, scope.row)"
-                  icon="el-icon-circle-plus-outline" />
-                <el-button size="mini" @click="handleOrderRemove(scope.$index, scope.row)"
-                  icon="el-icon-remove-outline" />
+                <el-button icon="el-icon-circle-plus-outline" size="mini"
+                           @click="handleOrderAdd(scope.$index, scope.row)"/>
+                <el-button icon="el-icon-remove-outline" size="mini"
+                           @click="handleOrderRemove(scope.$index, scope.row)"/>
               </template>
             </el-table-column>
           </el-table>
@@ -105,10 +106,11 @@
 import Qs from 'qs'
 import mystore from '../../store'
 import axios from '../../utils/request'
+
 export default {
   data () {
     return {
-      pageInfo: { current: 0, size: 10 },
+      pageInfo: {current: 0, size: 10},
       activeStoreId: '',
       activeStoreNum: 0,
       storeList: [],

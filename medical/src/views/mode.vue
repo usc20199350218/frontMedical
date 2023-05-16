@@ -3,17 +3,17 @@
 
     <!-- 假设有三个地址 -->
     <div class="address-item">
-      <input type="radio" name="address" id="addr1" value="1" />
+      <input id="addr1" name="address" type="radio" value="1"/>
       <label for="addr1">张三 | 13812345678 | 北京市海淀区xx街道xxx号</label>
     </div>
 
     <div class="address-item">
-      <input type="radio" name="address" id="addr2" value="2" />
+      <input id="addr2" name="address" type="radio" value="2"/>
       <label for="addr2">李四 |13987654321| 上海市浦东新区xx路xxx号</label>
     </div>
 
     <div class="address-item">
-      <input type="radio" name="address" id="addr3" value="3" />
+      <input id="addr3" name="address" type="radio" value="3"/>
       <label for="addr3">王五 |13711112222| 广州市天河区xx路xxx号 </label>
     </div>
 
@@ -27,7 +27,7 @@
       </div>
       <div class="address-selector">
         <label>
-          <input type="radio" name="address" value="1">
+          <input name="address" type="radio" value="1">
           <div class="address-info">
             <div class="username">John Doe</div>
             <div class="phone">555-555-5555</div>
@@ -35,7 +35,7 @@
           </div>
         </label>
         <label>
-          <input type="radio" name="address" value="2">
+          <input name="address" type="radio" value="2">
           <div class="address-info">
             <div class="username">Jane Smith</div>
             <div class="phone">555-555-5555</div>
@@ -101,6 +101,7 @@
 import Qs from 'qs'
 // import mystore from '../store'
 import axios from '../utils/request'
+
 export default {
   data () {
     return {
@@ -146,7 +147,9 @@ export default {
     increment () {
       // this.$store.dispatch('asyncAddShoppingCarts', 1)
     },
-    getImgUrl () { return 'http://localhost:8088/api/alipay/pay?money=' + this.img },
+    getImgUrl () {
+      return 'http://localhost:8088/api/alipay/pay?money=' + this.img
+    },
     showImgF () {
       this.showImg = !this.showImg
     },
@@ -277,7 +280,7 @@ export default {
   display: none;
 }
 
-.address-selector input[type="radio"]:checked+.address-info {
+.address-selector input[type="radio"]:checked + .address-info {
   font-weight: bold;
 }
 
@@ -298,33 +301,33 @@ export default {
 }
 
 .address-item {
-    margin-bottom:10px;
+  margin-bottom: 10px;
 }
 
-.input[type='radio']{
-    display:none; /* 隐藏单选按钮 */
+.input[type='radio'] {
+  display: none; /* 隐藏单选按钮 */
 }
 
-.label{
-    display:block;
-    padding-left:30px; /* 给左侧留出空间以容纳自定义样式图标 */
-    position:relative;
+.label {
+  display: block;
+  padding-left: 30px; /* 给左侧留出空间以容纳自定义样式图标 */
+  position: relative;
 }
 
 /* 默认状态下复选框与选择内容不同颜色*/
-.label:before{
-     content:" ";
-     border-radius :50%;
-     border:solid #888 ;
-     width:14 px ;
-     height :14 px ;
-     left:-20 px ;         /* 将图标向左移动到选择内容的前面 */
-     top:2px ;
-     position:absolute;
+.label:before {
+  content: " ";
+  border-radius: 50%;
+  border: solid #888;
+  width: 14px;
+  height: 14px;
+  left: -20px; /* 将图标向左移动到选择内容的前面 */
+  top: 2px;
+  position: absolute;
 }
 
 /* 选中状态下复选框变成实心*/
-.input[type='radio']:checked + .label:before{
-    background-color:#0066CC;   /*颜色可以自定义修改，这里以蓝色为例子 */
+.input[type='radio']:checked + .label:before {
+  background-color: #0066CC; /*颜色可以自定义修改，这里以蓝色为例子 */
 }
 </style>

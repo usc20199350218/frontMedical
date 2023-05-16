@@ -6,20 +6,21 @@
         data.rightText.toLowerCase().includes(search.toLowerCase())
     )
       " fit stripe style="width: 100%">
-      <el-table-column label="rightId" prop="rightId"> </el-table-column>
-      <el-table-column label="rightText" prop="rightText"> </el-table-column>
-      <el-table-column label="rightType" prop="rightType"> </el-table-column>
-      <el-table-column label="rightUrl" prop="rightUrl"> </el-table-column>
+      <el-table-column label="rightId" prop="rightId"></el-table-column>
+      <el-table-column label="rightText" prop="rightText"></el-table-column>
+      <el-table-column label="rightType" prop="rightType"></el-table-column>
+      <el-table-column label="rightUrl" prop="rightUrl"></el-table-column>
       <el-table-column label="rightParentId" prop="rightParentId">
       </el-table-column>
       <el-table-column align="left">
         <template slot="header" slot-scope="rightList">
           <el-col :span="14">
-            <el-input v-model="search" size="mini" v-if="rightList" placeholder="输入关键字搜索" />
+            <el-input v-if="rightList" v-model="search" placeholder="输入关键字搜索" size="mini"/>
           </el-col>
 
-          <el-button type="primary" size="mini" icon="el-icon-circle-plus-outline" round
-            @click="addShowTag">添加</el-button>
+          <el-button icon="el-icon-circle-plus-outline" round size="mini" type="primary"
+                     @click="addShowTag">添加
+          </el-button>
         </template>
         <template slot-scope="scope">
           <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">Edit</el-button>
@@ -28,15 +29,15 @@
       </el-table-column>
     </el-table>
     <div>
-      <el-dialog title="新权限" :visible.sync="dialogFormVisible">
-        <el-form :model="newRight" :rules="rules" ref="newRight" label-width="100px" class="demo-newRight">
+      <el-dialog :visible.sync="dialogFormVisible" title="新权限">
+        <el-form ref="newRight" :model="newRight" :rules="rules" class="demo-newRight" label-width="100px">
           <el-form-item label="菜单标题" prop="rightText">
             <el-input v-model="newRight.rightText"></el-input>
           </el-form-item>
           <el-form-item label="菜单类型" prop="rightType">
             <el-select v-model="newRight.rightType" placeholder="请选择菜单类型">
-              <el-option label="父菜单" :value="0"></el-option>
-              <el-option label="子菜单" :value="1"></el-option>
+              <el-option :value="0" label="父菜单"></el-option>
+              <el-option :value="1" label="子菜单"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item v-if="newRight.rightType == '1'" label="菜单路径" prop="rightText">
@@ -45,8 +46,9 @@
 
           <el-form-item v-if="newRight.rightType == '1'" label="父菜单" prop="rightType">
             <el-select v-model="newRight.rightParentId" placeholder="请选择父菜单">
-              <el-option v-for="rightParent in rightParentList" :key="rightParent.rightId" :label="rightParent.rightText"
-                :value="rightParent.rightId" />
+              <el-option v-for="rightParent in rightParentList" :key="rightParent.rightId"
+                         :label="rightParent.rightText"
+                         :value="rightParent.rightId"/>
             </el-select>
           </el-form-item>
           <el-form-item label="是菜单" prop="delivery">
@@ -54,8 +56,9 @@
           </el-form-item>
           <el-form-item label="角色">
             <el-checkbox-group v-model="newRight.roleId">
-              <el-checkbox-button v-for="role in roleList" :label="role.roleId" :key="role.roleId">{{
-                role.roleName }}</el-checkbox-button>
+              <el-checkbox-button v-for="role in roleList" :key="role.roleId" :label="role.roleId">{{
+                role.roleName }}
+              </el-checkbox-button>
             </el-checkbox-group>
           </el-form-item>
         </el-form>
@@ -66,15 +69,15 @@
       </el-dialog>
     </div>
     <div>
-      <el-dialog title="修改权限" :visible.sync="dialogFormVisibles">
-        <el-form :model="changeRight" :rules="rules" ref="newRight" label-width="100px" class="demo-newRight">
+      <el-dialog :visible.sync="dialogFormVisibles" title="修改权限">
+        <el-form ref="newRight" :model="changeRight" :rules="rules" class="demo-newRight" label-width="100px">
           <el-form-item label="菜单标题" prop="rightText">
             <el-input v-model="changeRight.rightText"></el-input>
           </el-form-item>
           <el-form-item label="菜单类型" prop="rightType">
             <el-select v-model="changeRight.rightType" placeholder="请选择菜单类型">
-              <el-option label="父菜单" :value="0"></el-option>
-              <el-option label="子菜单" :value="1"></el-option>
+              <el-option :value="0" label="父菜单"></el-option>
+              <el-option :value="1" label="子菜单"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item v-if="changeRight.rightType == '1'" label="菜单路径" prop="rightText">
@@ -83,8 +86,9 @@
 
           <el-form-item v-if="changeRight.rightType == '1'" label="父菜单" prop="rightType">
             <el-select v-model="changeRight.rightParentId" placeholder="请选择父菜单">
-              <el-option v-for="rightParent in rightParentList" :key="rightParent.rightId" :label="rightParent.rightText"
-                :value="rightParent.rightId" />
+              <el-option v-for="rightParent in rightParentList" :key="rightParent.rightId"
+                         :label="rightParent.rightText"
+                         :value="rightParent.rightId"/>
             </el-select>
           </el-form-item>
           <el-form-item label="是菜单" prop="delivery">
@@ -92,7 +96,7 @@
           </el-form-item>
           <el-form-item label="角色">
             <el-checkbox-group v-model="changeRight.roleId">
-              <el-checkbox-button v-for="role in roleList" :label="role.roleId" :key="role.roleId">
+              <el-checkbox-button v-for="role in roleList" :key="role.roleId" :label="role.roleId">
                 {{ role.roleName }}
               </el-checkbox-button>
             </el-checkbox-group>
@@ -107,14 +111,14 @@
 
     <div>
       <el-dialog :title="showTitle" :visible.sync="showEdit">
-        <el-form :model="right" :rules="rules" ref="right" label-width="100px" class="demo-newRight">
+        <el-form ref="right" :model="right" :rules="rules" class="demo-newRight" label-width="100px">
           <el-form-item label="菜单标题" prop="rightText">
             <el-input v-model="right.rightText"></el-input>
           </el-form-item>
           <el-form-item label="菜单类型" prop="rightType">
             <el-select v-model="right.rightType" placeholder="请选择菜单类型">
-              <el-option label="父菜单" :value="0"></el-option>
-              <el-option label="子菜单" :value="1"></el-option>
+              <el-option :value="0" label="父菜单"></el-option>
+              <el-option :value="1" label="子菜单"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item v-if="right.rightType == '1'" label="菜单路径" prop="rightText">
@@ -123,8 +127,9 @@
 
           <el-form-item v-if="right.rightType == '1'" label="父菜单" prop="rightType">
             <el-select v-model="right.rightParentId" placeholder="请选择父菜单">
-              <el-option v-for="rightParent in rightParentList" :key="rightParent.rightId" :label="rightParent.rightText"
-                :value="rightParent.rightId" />
+              <el-option v-for="rightParent in rightParentList" :key="rightParent.rightId"
+                         :label="rightParent.rightText"
+                         :value="rightParent.rightId"/>
             </el-select>
           </el-form-item>
           <el-form-item label="是菜单" prop="delivery">
@@ -132,7 +137,7 @@
           </el-form-item>
           <el-form-item label="角色">
             <el-checkbox-group v-model="right.roleId">
-              <el-checkbox-button v-for="role in roleList" :label="role.roleId" :key="role.roleId">
+              <el-checkbox-button v-for="role in roleList" :key="role.roleId" :label="role.roleId">
                 {{ role.roleName }}
               </el-checkbox-button>
             </el-checkbox-group>
@@ -151,14 +156,15 @@
 import Qs from 'qs'
 import axios from '../../utils/request'
 import Login from '../Login.vue'
+
 export default {
-  components: { Login },
+  components: {Login},
   data () {
     return {
       rightList: [],
       showTitle: '详情',
       showEdit: false,
-      right: { roleId: [] },
+      right: {roleId: []},
 
       rightParentList: [],
       search: '',
@@ -186,7 +192,7 @@ export default {
       },
       rules: {
         rightText: [
-          { required: true, message: '请输入菜单标题', trigger: 'blur' },
+          {required: true, message: '请输入菜单标题', trigger: 'blur'},
           {
             min: 1,
             max: 10,
@@ -195,7 +201,7 @@ export default {
           }
         ],
         rightType: [
-          { required: true, message: '请选择菜单类型', trigger: 'change' }
+          {required: true, message: '请选择菜单类型', trigger: 'change'}
         ],
         rightUrl: [
           {
@@ -236,7 +242,7 @@ export default {
               const h = this.$createElement
               this.$notify({
                 title: '成功',
-                message: h('i', { style: 'color: teal' }, '提交成功')
+                message: h('i', {style: 'color: teal'}, '提交成功')
               })
               this.right = {
                 roleId: []
@@ -250,13 +256,15 @@ export default {
         }
       })
     },
-    beforeClose () { this.getAllRightList() },
+    beforeClose () {
+      this.getAllRightList()
+    },
     noti (action) {
       // 通知
       const h = this.$createElement
       this.$notify({
         title: '成功',
-        message: h('i', { style: 'color: teal' }, action + '成功')
+        message: h('i', {style: 'color: teal'}, action + '成功')
       })
       this.getAllRightList()
     },
@@ -361,7 +369,8 @@ export default {
       this.showTitle = '新增'
       this.showEdit = true
     },
-    addroleRight () { },
+    addroleRight () {
+    },
     resetForm (formName) {
       // 重置
       this.$refs[formName].resetFields()

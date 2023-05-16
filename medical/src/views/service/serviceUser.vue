@@ -9,12 +9,12 @@
         然后关联一张明细条目表，提供依据，
         之后是另外一张明细详情表，map的风格(记录明细详情id、明细条目id、服务id、用户id、是否最新、更新时间、详情) -->
     <div>
-      <el-input placeholder="请输入内容" v-model="userValue" class="input-with-select">
-        <el-select v-model="userField" slot="prepend" placeholder="请选择" style="width: 150px;">
+      <el-input v-model="userValue" class="input-with-select" placeholder="请输入内容">
+        <el-select slot="prepend" v-model="userField" placeholder="请选择" style="width: 150px;">
           <el-option label="用户真实姓名" value="realName"></el-option>
           <el-option label="用户电话" value="phone"></el-option>
         </el-select>
-        <el-button slot="append" icon="el-icon-search" @click="searchUser()"> 搜索 </el-button>
+        <el-button slot="append" icon="el-icon-search" @click="searchUser()"> 搜索</el-button>
       </el-input>
     </div>
     <div>
@@ -26,7 +26,7 @@
         </el-table-column>
         <el-table-column label="姓名">
           <template slot-scope="userList">
-            <el-popover trigger="hover" placement="top">
+            <el-popover placement="top" trigger="hover">
               <p>姓名: {{ userList.row.userRealName }}</p>
               <p>生日: {{ userList.row.userBirthday }}</p>
               <p>昵称: {{ userList.row.userNickName }}</p>
@@ -62,9 +62,10 @@
         </el-table-column>
       </el-table>
       <div class="block">
-        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
-          :current-page="pageInfo.current" :page-sizes="[5, 10, 20, 30, 100, 1000, 10000]" :page-size="pageInfo.size"
-          layout="total, sizes, prev, pager, next, jumper" :total="pageInfo.total">
+        <el-pagination :current-page="pageInfo.current" :page-size="pageInfo.size"
+                       :page-sizes="[5, 10, 20, 30, 100, 1000, 10000]" :total="pageInfo.total"
+                       layout="total, sizes, prev, pager, next, jumper"
+                       @size-change="handleSizeChange" @current-change="handleCurrentChange">
         </el-pagination>
       </div>
     </div>
@@ -73,6 +74,7 @@
 
 <script>
 import axios from '../../utils/request'
+
 export default {
   data () {
     return {
@@ -82,7 +84,7 @@ export default {
       userLabel: '',
       userList: [],
       search: '',
-      pageInfo: { current: 0, size: 5 }
+      pageInfo: {current: 0, size: 5}
     }
   },
   created () {
@@ -91,11 +93,11 @@ export default {
   methods: {
     enterList (val) {
       console.log('查看历史数据', val)
-      this.$router.push({ path: '/service/choose', query: { userId: val.userId, userRealName: val.userRealName } })
+      this.$router.push({path: '/service/choose', query: {userId: val.userId, userRealName: val.userRealName}})
     },
     enter (val) {
       console.log('新增', val)
-      this.$router.push({ path: '/service/detail', query: { userId: val.userId } })
+      this.$router.push({path: '/service/detail', query: {userId: val.userId}})
     },
     searchUser () {
       axios({

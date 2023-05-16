@@ -1,14 +1,12 @@
 <template>
-    <div>
-        <!-- <img src="../images/nothing" /> -->
-        <img src="../images/nothing.jpg" />
-    </div>
+  <div>
+    <!-- <img src="../images/nothing" /> -->
+    <img src="../images/nothing.jpg"/>
+  </div>
 </template>
 
 <script>
-export default {
-
-}
+export default {}
 </script>
 
 <style></style>

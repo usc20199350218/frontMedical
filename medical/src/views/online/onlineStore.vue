@@ -1,17 +1,17 @@
 <template>
   <div class="main">
-    <div  >
+    <div>
       <h1>请选择店铺</h1>
-      <br />
+      <br/>
       <div>
-        <div class="storeMode" v-for="store in storeList" :key="store.storeId">
+        <div v-for="store in storeList" :key="store.storeId" class="storeMode">
           <el-card shadow="hover">
-            <img :src="store.storePath" class="image" />
+            <img :src="store.storePath" class="image"/>
             <div style="padding: 14px">
               <span class="storeName">{{ store.storeName }}</span>
-              <hr />
+              <hr/>
               <span class="decss">{{ store.businessHours }}</span>
-              <hr />
+              <hr/>
               <div class="bottom clearfix">
                 <el-link type="danger" @click="enter(store)">进店</el-link>
               </div>
@@ -143,13 +143,14 @@
 
 <script>
 import axios from '../../utils/request'
+
 export default {
   data () {
     return {
       search: '',
       showStore: true,
       storeList: [],
-      pageInfo: { current: 0, size: 5 }
+      pageInfo: {current: 0, size: 5}
     }
   },
   created () {
@@ -185,7 +186,7 @@ export default {
       this.storeName = store.storeName
       this.$router.push({
         path: '/online/index',
-        query: { storeId: this.storeId, storeName: this.storeName }
+        query: {storeId: this.storeId, storeName: this.storeName}
       })
     }
   }

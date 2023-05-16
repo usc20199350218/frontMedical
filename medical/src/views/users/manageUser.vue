@@ -1,30 +1,34 @@
 <template>
   <div>
     <div>
-      <el-input placeholder="请输入内容" v-model="searchText" class="input-with-select">
-        <el-select v-model="userGender" slot="prepend" placeholder="请选择性别" style="width: 150px;" @change="getUsersList()">
+      <el-input v-model="searchText" class="input-with-select" placeholder="请输入内容">
+        <el-select slot="prepend" v-model="userGender" placeholder="请选择性别" style="width: 150px;"
+                   @change="getUsersList()">
           <el-option v-for="item in ['男女', '男', '女', '未知']" :key="item" :label="item" :value="item">
           </el-option>
         </el-select>
-        <el-select v-model="userStatus" slot="prepend" placeholder="请选择状态" style="padding-left: 30px; width: 150px;"
-          @change="getUsersList()">
+        <el-select slot="prepend" v-model="userStatus" placeholder="请选择状态"
+                   style="padding-left: 30px; width: 150px;"
+                   @change="getUsersList()">
           <el-option key="" value="">全部</el-option>
-          <el-option label="有效" :value="1"></el-option>
-          <el-option label="无效" :value="0"></el-option>
+          <el-option :value="1" label="有效"></el-option>
+          <el-option :value="0" label="无效"></el-option>
         </el-select>
-        <el-select v-model="userVip" slot="prepend" placeholder="请选择vip" style="padding-left: 30px; width: 150px;"
-          @change="getUsersList()">
+        <el-select slot="prepend" v-model="userVip" placeholder="请选择vip" style="padding-left: 30px; width: 150px;"
+                   @change="getUsersList()">
           <el-option key="" value="">全部</el-option>
-          <el-option label="Vip" :value="1"></el-option>
-          <el-option label="无" :value="0"></el-option>
+          <el-option :value="1" label="Vip"></el-option>
+          <el-option :value="0" label="无"></el-option>
         </el-select>
-        <el-select v-model="roleId" slot="prepend" placeholder="请选择角色" style="padding-left: 30px; width: 150px;"
-          @change="getUsersList()">
+        <el-select slot="prepend" v-model="roleId" placeholder="请选择角色" style="padding-left: 30px; width: 150px;"
+                   @change="getUsersList()">
           <el-option key="" value="">全部</el-option>
-          <el-option v-for="item in roleList" :key="item.roleId" :label="item.roleName" :value="item.roleId"></el-option>
+          <el-option v-for="item in roleList" :key="item.roleId" :label="item.roleName"
+                     :value="item.roleId"></el-option>
         </el-select>
-        <el-select v-model="searchMethod" slot="prepend" placeholder="请选择搜索方式" style="padding-left: 30px; width: 150px;"
-          @change="getUsersList()">
+        <el-select slot="prepend" v-model="searchMethod" placeholder="请选择搜索方式"
+                   style="padding-left: 30px; width: 150px;"
+                   @change="getUsersList()">
           <el-option label="用户名称" value="userName"></el-option>
           <el-option label="姓名" value="userRealName"></el-option>
           <el-option label="手机号" value="userPhone"></el-option>
@@ -39,24 +43,24 @@
         !search ||
         data.userName.toLowerCase().includes(search.toLowerCase())
     )
-      " fit stripe mix-height="100" style="width: 100%">
-      <el-table-column label="用户ID" min-width="80px" fixed="left">
+      " fit mix-height="100" stripe style="width: 100%">
+      <el-table-column fixed="left" label="用户ID" min-width="80px">
         <template slot-scope="usersList">
           <span style="margin-left: 10px">{{ usersList.row.userId }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="头像" min-width="150px" fixed="left">
+      <el-table-column fixed="left" label="头像" min-width="150px">
         <template slot-scope="usersList">
-          <img v-if="usersList.row.userAvatarUrl != ''" :src="usersList.row.userAvatarUrl" width="100px" alt="头像" />
+          <img v-if="usersList.row.userAvatarUrl != ''" :src="usersList.row.userAvatarUrl" alt="头像" width="100px"/>
           <span v-else>空</span>
         </template>
       </el-table-column>
-      <el-table-column label="姓名" min-width="150px" fixed="left">
+      <el-table-column fixed="left" label="姓名" min-width="150px">
         <template slot-scope="usersList">
           <span style="margin-left: 10px">{{ usersList.row.userRealName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="用户名" min-width="150px" fixed="left">
+      <el-table-column fixed="left" label="用户名" min-width="150px">
         <template slot-scope="usersList">
           <span style="margin-left: 10px">{{ usersList.row.userName }}</span>
         </template>
@@ -79,7 +83,7 @@
       <el-table-column label="用户状态" width="85px">
         <template slot-scope="usersList">
           <el-switch v-model="usersList.row.userStatus" :active-value="1" :inactive-value="0" active-color="#13ce66"
-            inactive-color="#ff4949" @change="usersStateChaged(usersList.row)">
+                     inactive-color="#ff4949" @change="usersStateChaged(usersList.row)">
           </el-switch>
         </template>
       </el-table-column>
@@ -106,21 +110,24 @@
           }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="left" min-width="320px" fixed="right">
+      <el-table-column align="left" fixed="right" min-width="320px">
         <template slot="header" slot-scope="usersList">
           <el-col :span="14">
-            <el-input v-model="search" size="mini" v-if="usersList" placeholder="输入关键字搜索" />
+            <el-input v-if="usersList" v-model="search" placeholder="输入关键字搜索" size="mini"/>
           </el-col>
-          <el-button type="primary" size="mini" icon="el-icon-circle-plus-outline" round
-            @click="addShowdialog">添加</el-button>
+          <el-button icon="el-icon-circle-plus-outline" round size="mini" type="primary"
+                     @click="addShowdialog">添加
+          </el-button>
         </template>
         <template slot-scope="usersList">
           <el-button size="mini" @click="handleReset(usersList.$index, usersList.row)">重置密码</el-button>
           <el-button size="mini" @click="handleEdit(usersList.$index, usersList.row)">编辑</el-button>
           <el-button v-if="usersList.row.userStatus === 1" size="mini" type="warning"
-            @click="handleOffLine(usersList.$index, usersList.row)">封禁</el-button>
+                     @click="handleOffLine(usersList.$index, usersList.row)">封禁
+          </el-button>
           <el-button v-if="usersList.row.userStatus === 0" size="mini" type="primary"
-            @click="handleOnLine(usersList.$index, usersList.row)">解禁</el-button>
+                     @click="handleOnLine(usersList.$index, usersList.row)">解禁
+          </el-button>
           <el-button size="mini" type="danger" @click="handleDelete(usersList.$index, usersList.row)">删除</el-button>
         </template>
       </el-table-column>
@@ -296,9 +303,10 @@
     </div> -->
 
     <div class="block">
-      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
-        :current-page="pageInfo.current" :page-sizes="[5, 10, 20, 30, 100, 1000, 10000]" :page-size="pageInfo.size"
-        layout="total, sizes, prev, pager, next, jumper" :total="pageInfo.total">
+      <el-pagination :current-page="pageInfo.current" :page-size="pageInfo.size"
+                     :page-sizes="[5, 10, 20, 30, 100, 1000, 10000]" :total="pageInfo.total"
+                     layout="total, sizes, prev, pager, next, jumper"
+                     @size-change="handleSizeChange" @current-change="handleCurrentChange">
       </el-pagination>
     </div>
 
@@ -307,43 +315,44 @@
         <el-form ref="form" :model="user" label-width="80px" size="mini">
           <el-form-item label="用户名">
             <!-- <el-col> -->
-            <el-input type="text" maxlength="20" placeholder="请输入用户名" show-word-limit v-model="user.userName"></el-input>
+            <el-input v-model="user.userName" maxlength="20" placeholder="请输入用户名" show-word-limit
+                      type="text"></el-input>
             <!-- </el-col> -->
           </el-form-item>
           <el-form-item label="手机号">
             <!-- <el-col> -->
-            <el-input type="text" maxlength="11" placeholder="请输入手机号" show-word-limit
-              v-model="user.userPhone"></el-input>
+            <el-input v-model="user.userPhone" maxlength="11" placeholder="请输入手机号" show-word-limit
+                      type="text"></el-input>
             <!-- </el-col> -->
           </el-form-item>
           <el-form-item label="昵称">
             <!-- <el-col> -->
-            <el-input type="text" maxlength="20" placeholder="请输入昵称" show-word-limit
-              v-model="user.userNickName"></el-input>
+            <el-input v-model="user.userNickName" maxlength="20" placeholder="请输入昵称" show-word-limit
+                      type="text"></el-input>
             <!-- </el-col> -->
           </el-form-item>
           <el-form-item label="真实姓名">
             <!-- <el-col> -->
-            <el-input type="text" maxlength="20" placeholder="请输入真实姓名" show-word-limit
-              v-model="user.userRealName"></el-input>
+            <el-input v-model="user.userRealName" maxlength="20" placeholder="请输入真实姓名" show-word-limit
+                      type="text"></el-input>
             <!-- </el-col> -->
           </el-form-item>
           <el-form-item label="头像上传">
             <!-- <el-col> -->
-            <el-upload class="upload-demo" action="http://localhost:8088/api/upload?module=userpath"
-              :on-preview="handlePreview" :on-remove="handleRemove" :file="fileList" :on-success="filesuccess"
-              list-type="picture">
+            <el-upload :file="fileList" :on-preview="handlePreview"
+                       :on-remove="handleRemove" :on-success="filesuccess" action="http://localhost:8088/api/upload?module=userpath" class="upload-demo"
+                       list-type="picture">
               <el-button size="small" type="primary">点击上传</el-button>
               <div slot="tip" class="el-upload__tip">
                 只能上传jpg/png文件且不超过500kb
               </div>
             </el-upload>
             <!-- </el-col> -->
-            <el-input type="text" placeholder="头像路径，copy" v-model="user.userAvatarUrl"></el-input>
+            <el-input v-model="user.userAvatarUrl" placeholder="头像路径，copy" type="text"></el-input>
           </el-form-item>
           <el-form-item label="生日">
-            <el-date-picker v-model="user.userBirthday" type="date" placeholder="创建日期" value-format="yyyy-MM-dd"
-              :picker-options="pickerOptions">
+            <el-date-picker v-model="user.userBirthday" :picker-options="pickerOptions" placeholder="创建日期" type="date"
+                            value-format="yyyy-MM-dd">
             </el-date-picker>
           </el-form-item>
           <el-form-item label="性别">
@@ -357,8 +366,8 @@
           <el-form-item label="用户状态">
             <!-- <el-col> -->
             <el-select v-model="user.userStatus" placeholder="请选择用户状态">
-              <el-option label="有效" :value="1"></el-option>
-              <el-option label="无效" :value="0"></el-option>
+              <el-option :value="1" label="有效"></el-option>
+              <el-option :value="0" label="无效"></el-option>
             </el-select>
             <!-- </el-col> -->
           </el-form-item>
@@ -367,8 +376,8 @@
             <!-- <el-col :span="5"> -->
             <!-- <el-col> -->
             <el-select v-model="user.userVip" placeholder="请选择vip">
-              <el-option label="Vip" :value="1"></el-option>
-              <el-option label="无" :value="0"></el-option>
+              <el-option :value="1" label="Vip"></el-option>
+              <el-option :value="0" label="无"></el-option>
             </el-select>
             <!-- </el-col> -->
           </el-form-item>
@@ -393,12 +402,13 @@
 <script>
 import Qs from 'qs'
 import axios from '../../utils/request'
+
 export default {
   data () {
     return {
       showTitle: '详情',
       showEdit: false,
-      pageInfo: { current: 0, size: 5 },
+      pageInfo: {current: 0, size: 5},
       currentPage: 4,
       search: '',
       isReloadData: true,
@@ -615,7 +625,7 @@ export default {
       const h = this.$createElement
       this.$notify({
         title: '操作成功',
-        message: h('i', { style: 'color: teal' }, action + '成功')
+        message: h('i', {style: 'color: teal'}, action + '成功')
       })
       // location.reload()
       // this.getUsersList()

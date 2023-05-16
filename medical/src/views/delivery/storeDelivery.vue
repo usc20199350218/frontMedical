@@ -13,15 +13,15 @@
           !search ||
           data.storeName.toLowerCase().includes(search.toLowerCase())
       )
-        " fit stripe mix-height="100" style="width: 100%">
-        <el-table-column label="配送Id" min-width="40px" fixed="left">
+        " fit mix-height="100" stripe style="width: 100%">
+        <el-table-column fixed="left" label="配送Id" min-width="40px">
           <template slot-scope="deliveryList">
             <span style="margin-left: 10px">{{ deliveryList.row.deliveryId }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="品名" min-width="80px" fixed="left">
+        <el-table-column fixed="left" label="品名" min-width="80px">
           <template slot-scope="deliveryList">
-            <el-popover trigger="hover" placement="top">
+            <el-popover placement="top" trigger="hover">
               <p>生产日期: {{ deliveryList.row.batchProductionDate }}</p>
               <p>保质期: {{ deliveryList.row.batchValidityPeriod }}</p>
               <div slot="reference" class="name-wrapper">
@@ -30,40 +30,40 @@
             </el-popover>
           </template>
         </el-table-column>
-        <el-table-column label="品牌" min-width="80px" fixed="left">
+        <el-table-column fixed="left" label="品牌" min-width="80px">
           <template slot-scope="deliveryList">
             <span style="margin-left: 10px">{{ deliveryList.row.brandName }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="处方" min-width="80px" fixed="left">
+        <el-table-column fixed="left" label="处方" min-width="80px">
           <template slot-scope="deliveryList">
             <span v-if="deliveryList.row.isRx == '0'">非处方药</span>
             <span v-if="deliveryList.row.isRx == '1'">处方药</span>
           </template>
         </el-table-column>
-        <el-table-column label="规格" min-width="80px" fixed="left">
+        <el-table-column fixed="left" label="规格" min-width="80px">
           <template slot-scope="deliveryList">
             <span style="margin-left: 10px">{{ deliveryList.row.drugSpecification }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="批次编号" min-width="80px" fixed="left">
+        <el-table-column fixed="left" label="批次编号" min-width="80px">
           <template slot-scope="deliveryList">
             <span style="margin-left: 10px">{{ deliveryList.row.batchNumber }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="店内批次" min-width="80px" fixed="left">
+        <el-table-column fixed="left" label="店内批次" min-width="80px">
           <template slot-scope="deliveryList">
             <span style="margin-left: 10px">{{ deliveryList.row.batchNumber }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="数量" min-width="80px" fixed="left">
+        <el-table-column fixed="left" label="数量" min-width="80px">
           <template slot-scope="deliveryList">
             <span style="margin-left: 10px">{{ deliveryList.row.deliveryNum }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="店铺" min-width="80px" fixed="left">
+        <el-table-column fixed="left" label="店铺" min-width="80px">
           <template slot-scope="deliveryList">
-            <el-popover trigger="hover" placement="top">
+            <el-popover placement="top" trigger="hover">
               <!-- businessDistrict  area-->
               <p>区域: {{ deliveryList.row.area }}</p>
               <p>商圈: {{ deliveryList.row.businessDistrict }}</p>
@@ -75,40 +75,46 @@
             </el-popover>
           </template>
         </el-table-column>
-        <el-table-column label="电话" min-width="80px" fixed="left">
+        <el-table-column fixed="left" label="电话" min-width="80px">
           <template slot-scope="deliveryList">
             <span style="margin-left: 10px">{{ deliveryList.row.contactPhone }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column align="left" width="220px" fixed="right">
+        <el-table-column align="left" fixed="right" width="220px">
           <template slot="header" slot-scope="deliveryList">
             <el-col :span="14">
-              <el-input v-model="search" size="mini" v-if="deliveryList" placeholder="输入关键字搜索" />
+              <el-input v-if="deliveryList" v-model="search" placeholder="输入关键字搜索" size="mini"/>
             </el-col>
-            <el-button type="primary" size="mini" icon="el-icon-circle-plus-outline" round
-              @click="position = {}">添加</el-button>
+            <el-button icon="el-icon-circle-plus-outline" round size="mini" type="primary"
+                       @click="position = {}">添加
+            </el-button>
           </template>
           <template slot-scope="deliveryList">
             <!-- 抢单 -->
-            <el-button size="mini" v-if="deliveryList.row.deliveryStatus === 'CREATED'" type="primary"
-              @click="handleClick(deliveryList.row, 'PICKUP')">抢单</el-button>
+            <el-button v-if="deliveryList.row.deliveryStatus === 'CREATED'" size="mini" type="primary"
+                       @click="handleClick(deliveryList.row, 'PICKUP')">抢单
+            </el-button>
             <!-- 取货 -->
-            <el-button size="mini" v-if="deliveryList.row.deliveryStatus === 'PICKUP'"
-              @click="handleClick(deliveryList.row, 'SHIP')">已取货</el-button>
-            <el-button size="mini" v-if="deliveryList.row.deliveryStatus === 'PICKUP'" type="danger"
-              @click="handleClick(deliveryList.row, 'CREATED')">退回</el-button>
+            <el-button v-if="deliveryList.row.deliveryStatus === 'PICKUP'" size="mini"
+                       @click="handleClick(deliveryList.row, 'SHIP')">已取货
+            </el-button>
+            <el-button v-if="deliveryList.row.deliveryStatus === 'PICKUP'" size="mini" type="danger"
+                       @click="handleClick(deliveryList.row, 'CREATED')">退回
+            </el-button>
             <!-- 配送 -->
-            <el-button size="mini" v-if="deliveryList.row.deliveryStatus === 'SHIP'"
-              @click="handleClick(deliveryList.row, 'ARRIVE')">到达</el-button>
+            <el-button v-if="deliveryList.row.deliveryStatus === 'SHIP'" size="mini"
+                       @click="handleClick(deliveryList.row, 'ARRIVE')">到达
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
     </div>
     <div class="block">
-      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
-        :current-page="pageInfo.current" :page-sizes="[5, 10, 20, 30, 100, 1000, 10000]" :page-size="pageInfo.size"
-        layout="total, sizes, prev, pager, next, jumper" :total="pageInfo.total">
+      <el-pagination :current-page="pageInfo.current" :page-size="pageInfo.size"
+                     :page-sizes="[5, 10, 20, 30, 100, 1000, 10000]" :total="pageInfo.total"
+                     layout="total, sizes, prev, pager, next, jumper"
+                     @size-change="handleSizeChange" @current-change="handleCurrentChange">
       </el-pagination>
     </div>
   </div>
@@ -118,10 +124,11 @@
 // import Qs from 'qs'
 import mystore from '../../store'
 import axios from '../../utils/request'
+
 export default {
   data () {
     return {
-      pageInfo: { current: 0, size: 5 },
+      pageInfo: {current: 0, size: 5},
       search: '',
       deliveryList: [],
       deliveryStatusList: [],
@@ -148,7 +155,7 @@ export default {
       const h = this.$createElement
       this.$notify({
         title: '成功',
-        message: h('i', { style: 'color: teal' }, action + '成功')
+        message: h('i', {style: 'color: teal'}, action + '成功')
       })
     },
     handleSizeChange (val) {
@@ -187,7 +194,14 @@ export default {
         console.log('此时查询的activeStatus为:', this.activeStatus)
         this.activeStoreName = this.deliveryStatusList[this.activeStoreNum].storeName
         const jsondata = await axios.get('/admin/delivery/list',
-          { params: { 'userId': this.userId, 'status': this.activeStatus, 'current': this.pageInfo.current, 'size': this.pageInfo.size } })
+          {
+            params: {
+              'userId': this.userId,
+              'status': this.activeStatus,
+              'current': this.pageInfo.current,
+              'size': this.pageInfo.size
+            }
+          })
         console.log('jsondata:', jsondata)
         this.deliveryList = jsondata.data.records
         this.pageInfo = jsondata.data
@@ -275,7 +289,7 @@ export default {
       axios({
         method: 'put',
         url: '/admin/store_batch/apply/change',
-        params: { 'storeBatchId': row.storeBatchId, 'storeBatchStatus': status }
+        params: {'storeBatchId': row.storeBatchId, 'storeBatchStatus': status}
       })
         .then(jsondata => {
           console.log(jsondata)

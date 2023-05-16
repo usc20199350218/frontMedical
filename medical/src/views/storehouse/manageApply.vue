@@ -13,61 +13,62 @@
             !search ||
             data.positionName.toLowerCase().includes(search.toLowerCase())
         )
-        " fit stripe mix-height="100" style="width: 100%">
-        <el-table-column label="药品详情ID" min-width="80px" fixed="left">
+        " fit mix-height="100" stripe style="width: 100%">
+        <el-table-column fixed="left" label="药品详情ID" min-width="80px">
           <template slot-scope="applyBatchList">
             <span style="margin-left: 10px">{{ applyBatchList.row.drugDetailId }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="品名" min-width="80px" fixed="left">
+        <el-table-column fixed="left" label="品名" min-width="80px">
           <template slot-scope="applyBatchList">
             <span style="margin-left: 10px">{{ applyBatchList.row.drugName }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="品牌" min-width="80px" fixed="left">
+        <el-table-column fixed="left" label="品牌" min-width="80px">
           <template slot-scope="applyBatchList">
             <span style="margin-left: 10px">{{ applyBatchList.row.brandName }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="处方" min-width="80px" fixed="left">
+        <el-table-column fixed="left" label="处方" min-width="80px">
           <template slot-scope="applyBatchList">
             <span v-if="applyBatchList.row.isRx == '0'">非处方药</span>
             <span v-if="applyBatchList.row.isRx == '1'">处方药</span>
           </template>
         </el-table-column>
-        <el-table-column label="品类" min-width="80px" fixed="left">
+        <el-table-column fixed="left" label="品类" min-width="80px">
           <template slot-scope="applyBatchList">
             <span style="margin-left: 10px">{{ applyBatchList.row.typeName }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="规格" min-width="80px" fixed="left">
+        <el-table-column fixed="left" label="规格" min-width="80px">
           <template slot-scope="applyBatchList">
             <span style="margin-left: 10px">{{ applyBatchList.row.drugSpecification }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="申请数量" min-width="80px" fixed="left">
+        <el-table-column fixed="left" label="申请数量" min-width="80px">
           <template slot-scope="applyBatchList">
             <span style="margin-left: 10px">{{ applyBatchList.row.totalCreated }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="可用数量" min-width="80px" fixed="left">
+        <el-table-column fixed="left" label="可用数量" min-width="80px">
           <template slot-scope="applyBatchList">
             <span style="margin-left: 10px">{{ applyBatchList.row.totalSold }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="预计结余" min-width="80px" fixed="left">
+        <el-table-column fixed="left" label="预计结余" min-width="80px">
           <template slot-scope="applyBatchList">
             <span style="margin-left: 10px">{{ applyBatchList.row.totalBalance }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column align="left" width="220px" fixed="right">
+        <el-table-column align="left" fixed="right" width="220px">
           <template slot="header" slot-scope="applyBatchList">
             <el-col :span="14">
-              <el-input v-model="search" size="mini" v-if="applyBatchList" placeholder="输入关键字搜索" />
+              <el-input v-if="applyBatchList" v-model="search" placeholder="输入关键字搜索" size="mini"/>
             </el-col>
-            <el-button type="primary" size="mini" icon="el-icon-circle-plus-outline" round
-              @click="position = {}">添加</el-button>
+            <el-button icon="el-icon-circle-plus-outline" round size="mini" type="primary"
+                       @click="position = {}">添加
+            </el-button>
           </template>
           <template slot-scope="applyBatchList">
             <el-button size="mini" @click="handleClick(applyBatchList.row, 'pass')">通过</el-button>
@@ -79,11 +80,11 @@
     </div>
 
     <div>
-      <el-dialog title="添加备注" :visible.sync="remarkShow">
+      <el-dialog :visible.sync="remarkShow" title="添加备注">
         <el-form ref="form" label-width="100px" size="mini">
           <el-form-item label="备注">
             <el-col>
-              <el-input type="text" maxlength="999" placeholder="备注" show-word-limit v-model="remarkText"></el-input>
+              <el-input v-model="remarkText" maxlength="999" placeholder="备注" show-word-limit type="text"></el-input>
             </el-col>
           </el-form-item>
         </el-form>
@@ -100,34 +101,35 @@
               !searchNew ||
               data.batchId == searchNew
           )
-          " fit stripe mix-height="100" style="width: 100%">
-          <el-table-column label="店内批次Id" min-width="80px" fixed="left">
+          " fit mix-height="100" stripe style="width: 100%">
+          <el-table-column fixed="left" label="店内批次Id" min-width="80px">
             <template slot-scope="storeBatchDetailList">
               <span style="margin-left: 10px">{{ storeBatchDetailList.row.storeBatchId }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="申请数量" min-width="80px" fixed="left">
+          <el-table-column fixed="left" label="申请数量" min-width="80px">
             <template slot-scope="storeBatchDetailList">
               <span style="margin-left: 10px">{{ storeBatchDetailList.row.totalCreated }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="可用数量" min-width="80px" fixed="left">
+          <el-table-column fixed="left" label="可用数量" min-width="80px">
             <template slot-scope="storeBatchDetailList">
               <span style="margin-left: 10px">{{ storeBatchDetailList.row.totalSold }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="预计结余" min-width="80px" fixed="left">
+          <el-table-column fixed="left" label="预计结余" min-width="80px">
             <template slot-scope="storeBatchDetailList">
               <span style="margin-left: 10px">{{ storeBatchDetailList.row.totalBalance }}</span>
             </template>
           </el-table-column>
-          <el-table-column align="left" width="220px" fixed="right">
+          <el-table-column align="left" fixed="right" width="220px">
             <template slot="header" slot-scope="applyBatchList">
               <el-col :span="14">
-                <el-input v-model="search" size="mini" v-if="applyBatchList" placeholder="输入关键字搜索" />
+                <el-input v-if="applyBatchList" v-model="search" placeholder="输入关键字搜索" size="mini"/>
               </el-col>
-              <el-button type="primary" size="mini" icon="el-icon-circle-plus-outline" round
-                @click="position = {}">添加</el-button>
+              <el-button icon="el-icon-circle-plus-outline" round size="mini" type="primary"
+                         @click="position = {}">添加
+              </el-button>
             </template>
             <template slot-scope="applyBatchList">
               <el-button size="mini" @click="detailClick(applyBatchList.row, 'pass')">通过</el-button>
@@ -143,6 +145,7 @@
 <script>
 // import Qs from 'qs'
 import axios from '../../utils/request'
+
 export default {
   data () {
     return {
@@ -170,7 +173,7 @@ export default {
       const h = this.$createElement
       this.$notify({
         title: '成功',
-        message: h('i', { style: 'color: teal' }, action + '成功')
+        message: h('i', {style: 'color: teal'}, action + '成功')
       })
     },
     // async getStoreList () {
@@ -243,7 +246,11 @@ export default {
         this.remarkShow = true
       } else {
         this.activeDrugDetailId = row.drugDetailId
-        axios.put('/admin/store_batch/fast', { 'applyIdList': row.applyIdList, 'status': status, 'drugDetailId': this.activeDrugDetailId })
+        axios.put('/admin/store_batch/fast', {
+          'applyIdList': row.applyIdList,
+          'status': status,
+          'drugDetailId': this.activeDrugDetailId
+        })
       }
       // 刷新
       this.getApplyBatchList()
@@ -299,7 +306,7 @@ export default {
       axios({
         method: 'put',
         url: '/admin/store_batch/apply/change',
-        params: { 'storeBatchId': row.storeBatchId, 'storeBatchStatus': status }
+        params: {'storeBatchId': row.storeBatchId, 'storeBatchStatus': status}
       })
         .then(jsondata => {
           console.log(jsondata)

@@ -7,9 +7,9 @@
         </h1>
       </div>
       <el-row :height="20">
-      <!--  <el-col :span="1">
-           <label>品类选择</label>
-        </el-col> -->
+        <!--  <el-col :span="1">
+             <label>品类选择</label>
+          </el-col> -->
         <!-- <el-col :span="2">
           <el-select v-model="typeId" placeholder="选择品类" @change="searchStart()">
             <el-option key="" value="">全部</el-option>
@@ -18,13 +18,15 @@
           </el-select>
         </el-col> -->
         <el-col :span="18">
-          <el-input placeholder="请输入内容" v-model="searchText" class="input-with-select">
-            <el-select v-model="typeId" slot="prepend" placeholder="选择品类" @change="searchStart()" style=" width: 150px;">
+          <el-input v-model="searchText" class="input-with-select" placeholder="请输入内容">
+            <el-select slot="prepend" v-model="typeId" placeholder="选择品类" style=" width: 150px;"
+                       @change="searchStart()">
               <el-option key="" value="">全部</el-option>
               <el-option v-for="type in typeList" :key="type.typeId" :label="type.typeName" :value="type.typeId">
               </el-option>
             </el-select>
-            <el-select v-model="searchMethod" slot="prepend" placeholder="请选择" @change="searchStart()" style="padding-left: 30px; width: 150px;">
+            <el-select slot="prepend" v-model="searchMethod" placeholder="请选择" style="padding-left: 30px; width: 150px;"
+                       @change="searchStart()">
               <el-option label="药品名称" value="1"></el-option>
               <el-option label="药品编号" value="2"></el-option>
             </el-select>
@@ -39,12 +41,14 @@
           <el-button @click="backChoose()">选择店铺</el-button>
         </el-col>
         <el-col :span="1">
-          <el-button style="float: right;" icon="el-icon-shopping-cart-full" @click="toShoppingCart()">{{ shoppingCartNum
-          }}</el-button>
+          <el-button icon="el-icon-shopping-cart-full" style="float: right;" @click="toShoppingCart()">{{
+            shoppingCartNum
+            }}
+          </el-button>
         </el-col>
       </el-row>
     </div>
-    <hr />
+    <hr/>
     <div class="content">
       <div>
         <!-- <el-table :data="drugDetailsList.filter(
@@ -115,14 +119,14 @@
                   </el-table-column>
               </el-table> -->
         <div>
-          <div class="storeMode" v-for="drugDetail in drugDetailsList" :key="drugDetail.storeId">
+          <div v-for="drugDetail in drugDetailsList" :key="drugDetail.storeId" class="storeMode">
             <el-card shadow="hover">
-              <img :src="drugDetail.drugDetailPath" class="image" />
+              <img :src="drugDetail.drugDetailPath" class="image"/>
               <div style="padding: 14px">
                 <span class="storeName">{{ drugDetail.drugName }}</span>
-                <hr />
+                <hr/>
                 <span class="decss">{{ drugDetail.drugSpecification }}</span>
-                <hr />
+                <hr/>
                 <div class="bottom clearfix">
                   <el-link type="danger" @click="addCrat(drugDetail.drugId)">加入购物车</el-link>
                   |
@@ -134,9 +138,10 @@
         </div>
       </div>
       <div class="block" style="clear: both;">
-        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
-          :current-page="pageInfo.current" :page-sizes="[10, 20, 30, 100, 1000, 10000]" :page-size="pageInfo.size"
-          layout="total, sizes, prev, pager, next, jumper" :total="pageInfo.total">
+        <el-pagination :current-page="pageInfo.current" :page-size="pageInfo.size"
+                       :page-sizes="[10, 20, 30, 100, 1000, 10000]" :total="pageInfo.total"
+                       layout="total, sizes, prev, pager, next, jumper"
+                       @size-change="handleSizeChange" @current-change="handleCurrentChange">
         </el-pagination>
       </div>
     </div>
@@ -147,13 +152,14 @@
 import Qs from 'qs'
 import mystore from '../../store'
 import axios from '../../utils/request'
+
 export default {
   data () {
     return {
       userId: mystore.state.user.userId,
       storeId: '',
       drugDetailsList: [],
-      pageInfo: { current: 0, size: 20 },
+      pageInfo: {current: 0, size: 20},
       typeId: '',
       typeList: [],
       searchMethod: '药品名称',
@@ -175,20 +181,20 @@ export default {
     toShoppingCart () {
       this.$router.push({
         path: '/online/shoppingcart',
-        query: { storeId: this.storeId, storeName: this.storeName }
+        query: {storeId: this.storeId, storeName: this.storeName}
       })
     },
     settlement (val) {
       console.log('结算', val, this.userId)
 
       const list = [
-        { val }
+        {val}
       ]
       list[0].val.number = 1
       console.log('list[0]', list[0])
       this.$router.push({
         path: '/online/confirm',
-        query: { drugDetailList: list, storeId: this.storeId, storeName: this.storeName }
+        query: {drugDetailList: list, storeId: this.storeId, storeName: this.storeName}
       })
     },
     addCrat (val) {

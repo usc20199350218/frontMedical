@@ -2,28 +2,28 @@
   <div>
     <el-button style="float: left;" @click="handleAdd()">新增</el-button>
     <el-table :data="addressList" style="width: 100%">
-      <el-table-column prop="userName" label="姓名">
+      <el-table-column label="姓名" prop="userName">
       </el-table-column>
-      <el-table-column prop="addressContent" label="地址">
+      <el-table-column label="地址" prop="addressContent">
       </el-table-column>
       <el-table-column label="默认">
         <template slot-scope="addressList">
           <el-switch v-model="addressList.row.isDefault" :active-value="1" :inactive-value="0" active-color="#13ce66"
-            inactive-color="#ff4949" @change="isDefaultChaged(addressList.row)">
+                     inactive-color="#ff4949" @change="isDefaultChaged(addressList.row)">
           </el-switch>
         </template>
       </el-table-column>
-      <el-table-column prop="userPhone" label="手机号">
+      <el-table-column label="手机号" prop="userPhone">
       </el-table-column>
       <el-table-column fixed="right" label="操作">
         <template slot-scope="scope">
-          <el-button type="text" size="small" @click="handleEdit(scope.row)">编辑</el-button>
-          <el-button type="text" size="small" @click="handleDel(scope.row)">删除</el-button>
+          <el-button size="small" type="text" @click="handleEdit(scope.row)">编辑</el-button>
+          <el-button size="small" type="text" @click="handleDel(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
     <div>
-      <el-dialog :title="showTitle" :visible.sync="showEdit" width="30%" :before-close="handleClose">
+      <el-dialog :before-close="handleClose" :title="showTitle" :visible.sync="showEdit" width="30%">
         <el-form ref="form" :model="address" label-width="80px">
           <el-form-item label="姓名">
             <el-input v-model="address.userName">
@@ -38,8 +38,8 @@
             </el-input>
           </el-form-item>
           <el-form-item label="是否默认">
-            <el-switch v-model="address.isDefault" active-color="#13ce66" inactive-color="#ff4949" :active-value="1"
-              :inactive-value="0">
+            <el-switch v-model="address.isDefault" :active-value="1" :inactive-value="0" active-color="#13ce66"
+                       inactive-color="#ff4949">
             </el-switch>
           </el-form-item>
         </el-form>
@@ -56,6 +56,7 @@
 import Qs from 'qs'
 import mystore from '../../store'
 import axios from '../../utils/request'
+
 export default {
   // 只能查看自己的地址
   data () {
@@ -127,7 +128,8 @@ export default {
           done()
           this.address = {}
         })
-        .catch(_ => { })
+        .catch(_ => {
+        })
     }
 
   }

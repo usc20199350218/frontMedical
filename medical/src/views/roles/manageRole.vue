@@ -5,18 +5,19 @@
         (data) =>
           !search || data.roleName.toLowerCase().includes(search.toLowerCase())
       )
-    " fit stripe style="width: 100%" :tree-props="{ children: 'children', hasChildren: 'hasChildren' }">
-      <el-table-column label="角色Id" prop="roleId"> </el-table-column>
-      <el-table-column label="角色名" prop="roleName"> </el-table-column>
-      <el-table-column label="创建时间" prop="createTime"> </el-table-column>
-      <el-table-column label="更新时间" prop="modifiedTime"> </el-table-column>
+    " :tree-props="{ children: 'children', hasChildren: 'hasChildren' }" fit stripe style="width: 100%">
+      <el-table-column label="角色Id" prop="roleId"></el-table-column>
+      <el-table-column label="角色名" prop="roleName"></el-table-column>
+      <el-table-column label="创建时间" prop="createTime"></el-table-column>
+      <el-table-column label="更新时间" prop="modifiedTime"></el-table-column>
       <el-table-column align="left">
         <template slot="header" slot-scope="roleList">
           <el-col :span="14">
-            <el-input v-model="search" size="mini" v-if="roleList" placeholder="输入关键字搜索" />
+            <el-input v-if="roleList" v-model="search" placeholder="输入关键字搜索" size="mini"/>
           </el-col>
-          <el-button type="primary" size="mini" icon="el-icon-circle-plus-outline" round
-            @click="addShowdialog">添加</el-button>
+          <el-button icon="el-icon-circle-plus-outline" round size="mini" type="primary"
+                     @click="addShowdialog">添加
+          </el-button>
         </template>
         <template slot-scope="scope">
           <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">Edit</el-button>
@@ -26,22 +27,22 @@
     </el-table>
 
     <div>
-      <el-dialog title="新数据" :visible.sync="dialogFormVisible">
+      <el-dialog :visible.sync="dialogFormVisible" title="新数据">
         <el-form ref="form" label-width="80px" size="mini">
           <el-form-item label="角色名">
-            <el-input type="text" maxlength="20" placeholder="请输入角色名" show-word-limit v-model="roleName">
+            <el-input v-model="roleName" maxlength="20" placeholder="请输入角色名" show-word-limit type="text">
             </el-input>
           </el-form-item>
           <el-form-item label="赋权">
             <el-tree
               ref="action_tree"
               :data="rightList"
-              show-checkbox
+              :default-checked-keys=this.default_checked_keys
+              :default-expanded-keys=default_checked_keys
+              :props=defaultProps
               default-expand-all
               node-key="rightId"
-              :default-expanded-keys=default_checked_keys
-              :default-checked-keys=this.default_checked_keys
-              :props=defaultProps >
+              show-checkbox>
             </el-tree>
           </el-form-item>
         </el-form>
@@ -53,16 +54,17 @@
     </div>
 
     <div>
-      <el-dialog title="修改数据" :visible.sync="dialogFormVisibles">
+      <el-dialog :visible.sync="dialogFormVisibles" title="修改数据">
         <el-form ref="form" :model="role" label-width="80px" size="mini">
           <el-form-item label="角色名称">
             <el-col :span="10">
-              <el-input type="text" maxlength="20" show-word-limit v-model="role.roleName"></el-input></el-col>
+              <el-input v-model="role.roleName" maxlength="20" show-word-limit type="text"></el-input>
+            </el-col>
           </el-form-item>
           <el-form-item label="菜单权限">
-            <el-tree ref="action_tree" :data="rightList" show-checkbox default-expand-all node-key="rightId"
-              :default-expanded-keys="default_checked_keys" :default-checked-keys="this.default_checked_keys"
-              :props="defaultProps">
+            <el-tree ref="action_tree" :data="rightList" :default-checked-keys="this.default_checked_keys" :default-expanded-keys="default_checked_keys" :props="defaultProps"
+                     default-expand-all node-key="rightId"
+                     show-checkbox>
             </el-tree>
           </el-form-item>
         </el-form>
@@ -78,6 +80,7 @@
 <script>
 import Qs from 'qs'
 import axios from '../../utils/request'
+
 export default {
   data () {
     return {
@@ -220,7 +223,7 @@ export default {
       const h = this.$createElement
       this.$notify({
         title: '成功',
-        message: h('i', { style: 'color: teal' }, action + '成功')
+        message: h('i', {style: 'color: teal'}, action + '成功')
       })
     },
     getRoleList () {
@@ -241,7 +244,7 @@ export default {
       let objData = JSON.stringify(row)
       this.$router.push({
         path: '/role/edit',
-        query: { allData: encodeURIComponent(objData) }
+        query: {allData: encodeURIComponent(objData)}
       })
       // this.role = row
       // console.log(row)

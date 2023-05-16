@@ -5,15 +5,15 @@
         !search ||
         data.drugName.toLowerCase().includes(search.toLowerCase())
     )
-      " fit stripe mix-height="100" style="width: 100%">
-      <el-table-column label="ID" min-width="80px" fixed="left">
+      " fit mix-height="100" stripe style="width: 100%">
+      <el-table-column fixed="left" label="ID" min-width="80px">
         <template slot-scope="drugDetailsList">
           <span style="margin-left: 10px">{{ drugDetailsList.row.drugDetailId }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="品名" min-width="150px" fixed="left">
+      <el-table-column fixed="left" label="品名" min-width="150px">
         <template slot-scope="drugDetailsList">
-          <el-popover trigger="hover" placement="top">
+          <el-popover placement="top" trigger="hover">
             <p>编码: {{ drugDetailsList.row.drugNumber }}</p>
             <span style="margin-left: 10px">{{ drugDetailsList.row.createTime }}</span>
             <div slot="reference" class="name-wrapper">
@@ -40,7 +40,7 @@
       <el-table-column label="图片" min-width="125px">
         <template slot-scope="drugDetailsList">
           <!-- <span style="margin-left: 10px">{{ drugDetailsList.row.drugDetailPath }}</span> -->
-          <img :src="drugDetailsList.row.drugDetailPath" width="100px" alt="图片">
+          <img :src="drugDetailsList.row.drugDetailPath" alt="图片" width="100px">
         </template>
       </el-table-column>
       <el-table-column label="单价" min-width="60px">
@@ -62,7 +62,7 @@
       <el-table-column label="状态" width="85px">
         <template slot-scope="drugDetailsList">
           <el-switch v-model="drugDetailsList.row.drugDetailsStatus" :active-value="1" :inactive-value="0"
-            active-color="#13ce66" inactive-color="#ff4949" @change="drugStateChaged(drugDetailsList.row)">
+                     active-color="#13ce66" inactive-color="#ff4949" @change="drugStateChaged(drugDetailsList.row)">
           </el-switch>
         </template>
       </el-table-column>
@@ -73,43 +73,46 @@
           }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="left" width="220px" fixed="right">
+      <el-table-column align="left" fixed="right" width="220px">
         <template slot="header" slot-scope="drugDetailsList">
           <el-col :span="14">
-            <el-input v-model="search" size="mini" v-if="drugDetailsList" placeholder="输入关键字搜索" />
+            <el-input v-if="drugDetailsList" v-model="search" placeholder="输入关键字搜索" size="mini"/>
           </el-col>
-          <el-button type="primary" size="mini" icon="el-icon-circle-plus-outline" round
-            @click="addShowdialog">添加</el-button>
+          <el-button icon="el-icon-circle-plus-outline" round size="mini" type="primary"
+                     @click="addShowdialog">添加
+          </el-button>
         </template>
         <template slot-scope="drugDetailsList">
           <el-button size="mini" @click="handleEdit(drugDetailsList.$index, drugDetailsList.row)">编辑</el-button>
           <el-button size="mini" type="danger"
-            @click="handleDelete(drugDetailsList.$index, drugDetailsList.row)">删除</el-button>
+                     @click="handleDelete(drugDetailsList.$index, drugDetailsList.row)">删除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
 
     <div>
-      <el-dialog title="新数据" :visible.sync="dialogFormVisible">
+      <el-dialog :visible.sync="dialogFormVisible" title="新数据">
         <el-form ref="form" :model="drugDetail" label-width="100px" size="mini">
-          <el-form-item label="药品" min-width="150px" fixed="left">
+          <el-form-item fixed="left" label="药品" min-width="150px">
             <el-select v-model="drugDetail.drugId" filterable placeholder="请选择药品">
-              <el-option v-for="item in drugsList" :key="item.drugId" :value="item.drugId" :label="item.drugName">
+              <el-option v-for="item in drugsList" :key="item.drugId" :label="item.drugName" :value="item.drugId">
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="品牌" min-width="150px" fixed="left">
+          <el-form-item fixed="left" label="品牌" min-width="150px">
             <el-select v-model="drugDetail.brandId" filterable placeholder="请选择品牌">
-              <el-option v-for="item in brandsList" :key="item.brandId" :value="item.brandId" :label="item.brandName">
+              <el-option v-for="item in brandsList" :key="item.brandId" :label="item.brandName" :value="item.brandId">
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="图片上传" align="left">
+          <el-form-item align="left" label="图片上传">
             <el-col>
               运行正常
-              <el-upload class="upload-demo" action="http://localhost:8088/api/upload?module=drugpath"
-                :on-preview="handlePreview" :on-remove="handleRemove" :file="fileList" :on-success="filesuccess"
-                list-type="picture" :limit="1">
+              <el-upload :file="fileList" :limit="1"
+                         :on-preview="handlePreview" :on-remove="handleRemove" :on-success="filesuccess"
+                         action="http://localhost:8088/api/upload?module=drugpath"
+                         class="upload-demo" list-type="picture">
                 <el-button size="small" type="primary">点击上传</el-button>
                 <div slot="tip" class="el-upload__tip">
                   只能上传jpg/png文件且不超过500kb
@@ -117,37 +120,42 @@
               </el-upload>
             </el-col>
             <el-col>
-              <el-input type="text" placeholder="电影路径，直接输路径，cpoy用" v-model="drugDetail.drugDetailPath">
-              </el-input></el-col>
+              <el-input v-model="drugDetail.drugDetailPath" placeholder="电影路径，直接输路径，cpoy用" type="text">
+              </el-input>
+            </el-col>
           </el-form-item>
           <el-form-item label="状态">
             <el-col>
               <el-select v-model="drugDetail.drugDetailsStatus" placeholder="请选择状态">
-                <el-option label="有效" :value="1"></el-option>
-                <el-option label="无效" :value="0"></el-option>
+                <el-option :value="1" label="有效"></el-option>
+                <el-option :value="0" label="无效"></el-option>
               </el-select>
             </el-col>
           </el-form-item>
           <el-form-item label="规格">
             <el-col>
-              <el-input type="text" maxlength="20" placeholder="请输入品名" show-word-limit
-                v-model="drugDetail.drugSpecification"></el-input></el-col>
+              <el-input v-model="drugDetail.drugSpecification" maxlength="20" placeholder="请输入品名" show-word-limit
+                        type="text"></el-input>
+            </el-col>
           </el-form-item>
           <el-form-item label="编码">
             <el-col>
-              <el-input type="text" maxlength="20" placeholder="请输入编码" show-word-limit v-model="drugDetail.drugNumber">
+              <el-input v-model="drugDetail.drugNumber" maxlength="20" placeholder="请输入编码" show-word-limit
+                        type="text">
               </el-input>
             </el-col>
           </el-form-item>
           <el-form-item label="单价">
             <el-col>
-              <el-input type="text" maxlength="20" placeholder="请输入单价" show-word-limit
-                v-model="drugDetail.drugUnitPrice"></el-input></el-col>
+              <el-input v-model="drugDetail.drugUnitPrice" maxlength="20" placeholder="请输入单价" show-word-limit
+                        type="text"></el-input>
+            </el-col>
           </el-form-item>
           <el-form-item label="零售价">
             <el-col>
-              <el-input type="text" maxlength="20" placeholder="请输入零售价" show-word-limit
-                v-model="drugDetail.drugRetailPrice"></el-input></el-col>
+              <el-input v-model="drugDetail.drugRetailPrice" maxlength="20" placeholder="请输入零售价" show-word-limit
+                        type="text"></el-input>
+            </el-col>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -158,26 +166,27 @@
     </div>
 
     <div>
-      <el-dialog title="修改数据" :visible.sync="dialogFormVisibles">
+      <el-dialog :visible.sync="dialogFormVisibles" title="修改数据">
         <el-form ref="form" :model="drugDetail" label-width="100px" size="mini">
-          <el-form-item label="药品" min-width="150px" fixed="left">
+          <el-form-item fixed="left" label="药品" min-width="150px">
             <el-select v-model="drugDetail.drugId" filterable placeholder="请选择药品">
-              <el-option v-for="item in drugsList" :key="item.drugId" :value="item.drugId" :label="item.drugName">
+              <el-option v-for="item in drugsList" :key="item.drugId" :label="item.drugName" :value="item.drugId">
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="品牌" min-width="150px" fixed="left">
+          <el-form-item fixed="left" label="品牌" min-width="150px">
             <el-select v-model="drugDetail.brandId" filterable placeholder="请选择品牌">
-              <el-option v-for="item in brandsList" :key="item.brandId" :value="item.brandId" :label="item.brandName">
+              <el-option v-for="item in brandsList" :key="item.brandId" :label="item.brandName" :value="item.brandId">
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="图片上传" align="left">
+          <el-form-item align="left" label="图片上传">
             <el-col>
               运行正常
-              <el-upload class="upload-demo" action="http://localhost:8088/api/upload?module=drugpath"
-                :on-preview="handlePreview" :on-remove="handleRemove" :file="fileList" :on-success="filesuccess"
-                list-type="picture" :limit="1">
+              <el-upload :file="fileList" :limit="1"
+                         :on-preview="handlePreview" :on-remove="handleRemove" :on-success="filesuccess"
+                         action="http://localhost:8088/api/upload?module=drugpath"
+                         class="upload-demo" list-type="picture">
                 <el-button size="small" type="primary">点击上传</el-button>
                 <div slot="tip" class="el-upload__tip">
                   只能上传jpg/png文件且不超过500kb
@@ -185,21 +194,23 @@
               </el-upload>
             </el-col>
             <el-col>
-              <el-input type="text" placeholder="图片路径，直接输路径，cpoy用" v-model="drugDetail.drugDetailPath">
-              </el-input></el-col>
+              <el-input v-model="drugDetail.drugDetailPath" placeholder="图片路径，直接输路径，cpoy用" type="text">
+              </el-input>
+            </el-col>
           </el-form-item>
           <el-form-item label="状态">
             <el-col>
               <el-select v-model="drugDetail.drugDetailsStatus" placeholder="请选择状态">
-                <el-option label="有效" :value="1"></el-option>
-                <el-option label="无效" :value="0"></el-option>
+                <el-option :value="1" label="有效"></el-option>
+                <el-option :value="0" label="无效"></el-option>
               </el-select>
             </el-col>
           </el-form-item>
           <el-form-item label="规格">
             <el-col>
-              <el-input type="text" maxlength="20" placeholder="请输入品名" show-word-limit
-                v-model="drugDetail.drugSpecification"></el-input></el-col>
+              <el-input v-model="drugDetail.drugSpecification" maxlength="20" placeholder="请输入品名" show-word-limit
+                        type="text"></el-input>
+            </el-col>
           </el-form-item>
 
           <!-- <el-form-item label="保质期（月）">
@@ -209,19 +220,22 @@
           </el-form-item> -->
           <el-form-item label="编码">
             <el-col>
-              <el-input type="text" maxlength="20" placeholder="请输入编码" show-word-limit v-model="drugDetail.drugNumber">
+              <el-input v-model="drugDetail.drugNumber" maxlength="20" placeholder="请输入编码" show-word-limit
+                        type="text">
               </el-input>
             </el-col>
           </el-form-item>
           <el-form-item label="单价">
             <el-col>
-              <el-input type="text" maxlength="20" placeholder="请输入单价" show-word-limit
-                v-model="drugDetail.drugUnitPrice"></el-input></el-col>
+              <el-input v-model="drugDetail.drugUnitPrice" maxlength="20" placeholder="请输入单价" show-word-limit
+                        type="text"></el-input>
+            </el-col>
           </el-form-item>
           <el-form-item label="零售价">
             <el-col>
-              <el-input type="text" maxlength="20" placeholder="请输入零售价" show-word-limit
-                v-model="drugDetail.drugRetailPrice"></el-input></el-col>
+              <el-input v-model="drugDetail.drugRetailPrice" maxlength="20" placeholder="请输入零售价" show-word-limit
+                        type="text"></el-input>
+            </el-col>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -232,9 +246,10 @@
     </div>
 
     <div class="block">
-      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
-        :current-page="pageInfo.current" :page-sizes="[5, 10, 20, 30, 100, 1000, 10000]" :page-size="pageInfo.size"
-        layout="total, sizes, prev, pager, next, jumper" :total="pageInfo.total">
+      <el-pagination :current-page="pageInfo.current" :page-size="pageInfo.size"
+                     :page-sizes="[5, 10, 20, 30, 100, 1000, 10000]" :total="pageInfo.total"
+                     layout="total, sizes, prev, pager, next, jumper"
+                     @size-change="handleSizeChange" @current-change="handleCurrentChange">
       </el-pagination>
     </div>
   </div>
@@ -243,10 +258,11 @@
 <script>
 import Qs from 'qs'
 import axios from '../../utils/request'
+
 export default {
   data () {
     return {
-      pageInfo: { current: 0, size: 10 },
+      pageInfo: {current: 0, size: 10},
       search: '',
       dialogFormVisible: false,
       dialogFormVisibles: false,
@@ -360,7 +376,7 @@ export default {
     },
     drugStateChaged (item) {
       console.log('change', item)
-      let changeData = { drugDetailsStatus: item.drugDetailsStatus, drugDetailId: item.drugDetailId }
+      let changeData = {drugDetailsStatus: item.drugDetailsStatus, drugDetailId: item.drugDetailId}
       axios({
         method: 'put',
         url: '/admin/drugdetail/status',
@@ -378,7 +394,7 @@ export default {
       const h = this.$createElement
       this.$notify({
         title: '操作成功',
-        message: h('i', { style: 'color: teal' }, action + '成功')
+        message: h('i', {style: 'color: teal'}, action + '成功')
       })
       this.getDrugDetailsList()
     },
@@ -388,7 +404,7 @@ export default {
       axios({
         method: 'get',
         url: '/admin/drugdetail/page',
-        params: { 'current': this.pageInfo.current, 'size': this.pageInfo.size }
+        params: {'current': this.pageInfo.current, 'size': this.pageInfo.size}
       }).then((jsondata) => {
         this.drugDetailsList = jsondata.data.records
         console.log('drugDetailsList:', jsondata.data.records)
@@ -422,7 +438,7 @@ export default {
       axios({
         method: 'put',
         url: '/admin/drugdetail/offline',
-        params: { drugId: row.drugId }
+        params: {drugId: row.drugId}
       })
         .then((jsondata) => {
           console.log(jsondata)
@@ -437,7 +453,7 @@ export default {
       axios({
         method: 'put',
         url: '/admin/drugdetail/online',
-        data: Qs.stringify({ drugId: row.drugId })
+        data: Qs.stringify({drugId: row.drugId})
       })
         .then((jsondata) => {
           console.log(jsondata)

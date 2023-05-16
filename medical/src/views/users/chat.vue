@@ -6,12 +6,12 @@
           <div style="padding-bottom: 10px; border-bottom: 1px solid #ccc">
             在线用户<span style="font-size: 12px">（点击聊天气泡开始聊天）</span>
           </div>
-          <div style="padding: 10px 0" v-for="user in users" :key="user.username">
+          <div v-for="user in users" :key="user.username" style="padding: 10px 0">
             <span>{{ user.username }}</span>
             <i class="el-icon-chat-dot-round" style="margin-left: 10px; font-size: 16px; cursor: pointer"
-              @click="chatUser = user.username"></i>
-            <span style="font-size: 12px;color: limegreen; margin-left: 5px"
-              v-if="user.username === chatUser">chatting...</span>
+               @click="chatUser = user.username"></i>
+            <span v-if="user.username === chatUser"
+                  style="font-size: 12px;color: limegreen; margin-left: 5px">chatting...</span>
           </div>
         </el-card>
       </el-col>
@@ -26,7 +26,7 @@
             <textarea v-model="text" style="height: 160px; width: 100%; padding: 20px; border: none; border-top: 1px solid #ccc;
                border-bottom: 1px solid #ccc; outline: none"></textarea>
             <div style="text-align: right; padding-right: 10px">
-              <el-button type="primary" size="mini" @click="send">发送</el-button>
+              <el-button size="mini" type="primary" @click="send">发送</el-button>
             </div>
           </div>
         </div>
@@ -57,11 +57,11 @@ export default {
   methods: {
     send () {
       if (!this.chatUser) {
-        this.$message({ type: 'warning', message: '请选择聊天对象' })
+        this.$message({type: 'warning', message: '请选择聊天对象'})
         return
       }
       if (!this.text) {
-        this.$message({ type: 'warning', message: '请输入内容' })
+        this.$message({type: 'warning', message: '请输入内容'})
       } else {
         if (typeof (WebSocket) === 'undefined') {
           console.log('您的浏览器不支持WebSocket')
@@ -69,9 +69,9 @@ export default {
           console.log('您的浏览器支持WebSocket')
           // 组装待发送的消息 json
           // {"from": "zhang", "to": "admin", "text": "聊天文本"}
-          let message = { from: this.user.username, to: this.chatUser, text: this.text }
+          let message = {from: this.user.username, to: this.chatUser, text: this.text}
           socket.send(JSON.stringify(message)) // 将组装好的json发送给服务端，由服务端进行转发
-          this.messages.push({ user: this.user.username, text: this.text })
+          this.messages.push({user: this.user.username, text: this.text})
           // 构建消息内容，本人消息
           this.createContent(null, this.user.username, this.text)
           this.text = ''

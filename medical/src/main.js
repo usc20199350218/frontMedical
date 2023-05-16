@@ -23,6 +23,7 @@ import Vuex from 'vuex'
 import store from '@/store'
 import ElementUI from 'element-ui' // 加入
 import 'element-ui/lib/theme-chalk/index.css'// 加入
+
 Vue.use(ElementUI)
 Vue.use(Vuex)
 Vue.config.productionTip = false
@@ -32,6 +33,6 @@ new Vue({
   el: '#app',
   router,
   store,
-  components: { App },
+  components: {App},
   template: '<App/>'
 })

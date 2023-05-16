@@ -1,9 +1,9 @@
 <template>
   <div class="loginMax">
     <div class="login">
-      <el-tabs v-model="activeName" type="border-card" stretch>
+      <el-tabs v-model="activeName" stretch type="border-card">
         <el-tab-pane label="账号密码登录" name="first">
-          <el-form :label-position="labelPosition" label-width="70px" :model="userInfo" :rules="rules" ref="userinfo">
+          <el-form ref="userinfo" :label-position="labelPosition" :model="userInfo" :rules="rules" label-width="70px">
             <h3>啊对对对对对</h3>
             <el-form-item label="账号" prop="userName">
               <el-input v-model="userInfo.userName"></el-input>
@@ -15,7 +15,7 @@
               <el-button type="primary" @click="login">登录</el-button>
               <el-button @click="userInfo = {}">重置</el-button>
             </el-form-item>
-            <el-button type="text" @click="dialog = true"> 点击注册 </el-button>
+            <el-button type="text" @click="dialog = true"> 点击注册</el-button>
           </el-form>
         </el-tab-pane>
         <!-- <el-tab-pane label="手机号登录" name="second">
@@ -51,8 +51,9 @@
         <el-image :src="src"></el-image>
       </div>
     </div>
-    <el-drawer title="注册" :visible.sync="dialog" direction="ltr" custom-class="demo-drawer" ref="drawer" :rules="rules"
-      label-width="70px">
+    <el-drawer ref="drawer" :rules="rules" :visible.sync="dialog" custom-class="demo-drawer" direction="ltr"
+               label-width="70px"
+               title="注册">
       <!-- <el-form
           :label-position="labelPosition"
           label-width="70px"
@@ -62,35 +63,37 @@
         > -->
       <div class="demo-drawer__content">
         <el-form :model="form">
-          <el-form-item label="用户名" :label-width="formLabelWidth" prop="userName">
+          <el-form-item :label-width="formLabelWidth" label="用户名" prop="userName">
             <el-col :span="17">
-              <el-input v-model="registerUserInfo.userName" autocomplete="off" maxlength="20" show-word-limit></el-input>
+              <el-input v-model="registerUserInfo.userName" autocomplete="off" maxlength="20"
+                        show-word-limit></el-input>
             </el-col>
           </el-form-item>
-          <el-form-item label="密码" :label-width="formLabelWidth" prop="userPassword">
+          <el-form-item :label-width="formLabelWidth" label="密码" prop="userPassword">
             <el-col :span="17">
-              <el-input placeholder="请输入密码" v-model="registerUserInfo.userPassword" show-password maxlength="20"
-                show-word-limit>
+              <el-input v-model="registerUserInfo.userPassword" maxlength="20" placeholder="请输入密码" show-password
+                        show-word-limit>
               </el-input>
             </el-col>
           </el-form-item>
-          <el-form-item label="确认密码" :label-width="formLabelWidth" prop="userPassword">
+          <el-form-item :label-width="formLabelWidth" label="确认密码" prop="userPassword">
             <el-col :span="17">
-              <el-input placeholder="请再次输入密码" v-model="registerUserInfo.userPassword2" show-password maxlength="20"
-                show-word-limit>
+              <el-input v-model="registerUserInfo.userPassword2" maxlength="20" placeholder="请再次输入密码"
+                        show-password
+                        show-word-limit>
               </el-input>
             </el-col>
           </el-form-item>
-          <el-form-item label="手机号" :label-width="formLabelWidth" prop="userPhone">
+          <el-form-item :label-width="formLabelWidth" label="手机号" prop="userPhone">
             <el-col :span="17">
-              <el-input placeholder="请输入手机号" v-model="registerUserInfo.userPhone" maxlength="11" show-word-limit>
+              <el-input v-model="registerUserInfo.userPhone" maxlength="11" placeholder="请输入手机号" show-word-limit>
               </el-input>
             </el-col>
           </el-form-item>
           <el-form-item>
             <el-form>
               <div class="demo-drawer__footer">
-                <el-button @click="cancelForm">取 消</el-button>
+                <el-button @click="cancelForm()">取 消</el-button>
                 <el-button type="primary" @click="registerUserClick()">确 定</el-button>
 
                 <!-- <el-button type="primary" @click="$refs.drawer.closeDrawer()" :loading="loading">{{ loading ? "提交中 ..." :
@@ -141,7 +144,7 @@ export default {
             message: '请输入账号',
             trigger: 'blur'
           },
-          { min: 3, max: 20, message: '长度在3到20之间', trigger: 'blur' }
+          {min: 3, max: 20, message: '长度在3到20之间', trigger: 'blur'}
         ],
         userPassword: [
           {
@@ -150,7 +153,7 @@ export default {
             message: '请输入密码',
             trigger: 'blur'
           },
-          { min: 4, max: 20, message: '长度在4到20之间', trigger: 'blur' }
+          {min: 4, max: 20, message: '长度在4到20之间', trigger: 'blur'}
         ],
         userPhone: [
           {
@@ -159,7 +162,7 @@ export default {
             message: '请输入手机号',
             trigger: 'blur'
           },
-          { min: 11, max: 11, message: '长度11', trigger: 'blur' }
+          {min: 11, max: 11, message: '长度11', trigger: 'blur'}
         ],
         verification: [
           {
@@ -168,7 +171,7 @@ export default {
             message: '请输入密码',
             trigger: 'blur'
           },
-          { min: 4, max: 4, message: '长度为4', trigger: 'blur' }
+          {min: 4, max: 4, message: '长度为4', trigger: 'blur'}
         ]
       }
     }
@@ -177,14 +180,18 @@ export default {
     registerUserClick () {
       console.log('registerUserInfo:', this.registerUserInfo)
       let registerUser =
-        { userName: this.registerUserInfo.userName, userPhone: this.registerUserInfo.userPhone, userPassword: this.registerUserInfo.userPassword }
+        {
+          userName: this.registerUserInfo.userName,
+          userPhone: this.registerUserInfo.userPhone,
+          userPassword: this.registerUserInfo.userPassword
+        }
       console.log('registerUser', registerUser)
       if (this.registerUserInfo.userPassword === this.registerUserInfo.userPassword2) {
         console.log('密码匹配')
         axios.post('/admin/user/register',
           Qs.stringify(registerUser)
         ).then((jsondata) => {
-          console.log('jsondata', jsondata)
+          console.log('json-data', jsondata)
         })
       } else {
         console.log('密码不匹配')
@@ -201,7 +208,7 @@ export default {
       const h = this.$createElement
       this.$notify({
         title: '成功',
-        message: h('i', { style: 'color: teal' }, action + '成功')
+        message: h('i', {style: 'color: teal'}, action + '成功')
       })
     },
     getCode () {

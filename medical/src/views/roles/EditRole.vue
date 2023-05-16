@@ -4,12 +4,13 @@
       <el-form-item label="角色名称">
         <el-col :span="10">
           <el-input
-            type="text"
+            v-model="role.roleName"
             maxlength="20"
             show-word-limit
-            v-model="role.roleName"
+            type="text"
           ></el-input
-        ></el-col>
+          >
+        </el-col>
       </el-form-item>
       <!-- <el-form-item label="菜单权限">
         <el-tree
@@ -28,11 +29,11 @@
         <el-tree
           ref="action_tree"
           :data="rightList"
-          show-checkbox
-          default-expand-all
-          node-key="rightId"
           :default-checked-keys="rightzjList"
           :props="defaultProps"
+          default-expand-all
+          node-key="rightId"
+          show-checkbox
         >
         </el-tree>
       </el-form-item>
@@ -44,6 +45,7 @@
 <script>
 import Qs from 'qs'
 import axios from '../../utils/request'
+
 export default {
   data () {
     return {

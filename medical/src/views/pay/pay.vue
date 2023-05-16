@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="main">
-      <div class="desc" />
+      <div class="desc"/>
       <div class="content">
         <div class="box">
           <div class="left">
@@ -9,7 +9,7 @@
             <span>订单号</span>
           </div>
           <div class="right">
-            <input v-model="payInfo.outTradeNo" size="small" placeholder="订单号..." />
+            <input v-model="payInfo.outTradeNo" placeholder="订单号..." size="small"/>
           </div>
         </div>
         <div class="box">
@@ -18,7 +18,7 @@
             <span>商品名称</span>
           </div>
           <div class="right">
-            <input v-model="payInfo.subject" size="small" placeholder="商品名称..." />
+            <input v-model="payInfo.subject" placeholder="商品名称..." size="small"/>
           </div>
         </div>
         <div class="box">
@@ -27,7 +27,7 @@
             <span>商品价格</span>
           </div>
           <div class="right">
-            <input v-model="payInfo.totalAmount" size="small" placeholder="1-99之间" />
+            <input v-model="payInfo.totalAmount" placeholder="1-99之间" size="small"/>
           </div>
         </div>
         <div class="box">
@@ -36,8 +36,8 @@
             <span>商品描述</span>
           </div>
           <div class="right">
-            <input v-model="payInfo.description" type="textarea" :autosize="{ minRows: 4, maxRows: 4 }"
-              placeholder="请输入内容" maxlength="200" show-word-limit />
+            <input v-model="payInfo.description" :autosize="{ minRows: 4, maxRows: 4 }" maxlength="200"
+                   placeholder="请输入内容" show-word-limit type="textarea"/>
           </div>
         </div>
         <div style="margin-top: 20px; left: 85px">
@@ -82,6 +82,7 @@
 
 <script>
 import axios from 'axios'
+
 export default {
   data () {
     return {
@@ -102,7 +103,8 @@ export default {
         .then(_ => {
           done()
         })
-        .catch(_ => { })
+        .catch(_ => {
+        })
     },
     testbtn () {
       axios

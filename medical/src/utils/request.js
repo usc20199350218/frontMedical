@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { Message } from 'element-ui'
+import {Message} from 'element-ui'
 import store from '@/store'
 
 // axios({})
@@ -35,7 +35,6 @@ service.interceptors.request.use(
 
 // 用service 发的请求 响应也会被拦截
 service.interceptors.response.use(
-
   // 正常会来  status200
   response => {
     const res = response.data

@@ -2,12 +2,13 @@
   <div>
     <el-row>
       <el-col :span="1" style="float: left;">
-        <el-input placeholder="请输入内容" v-model="searchText" class="input-with-select" style="width: 50vw;">
-          <el-select v-model="storeId" slot="prepend" placeholder="请选择店铺" style="width: 15vw;" @change="searchF()">
+        <el-input v-model="searchText" class="input-with-select" placeholder="请输入内容" style="width: 50vw;">
+          <el-select slot="prepend" v-model="storeId" placeholder="请选择店铺" style="width: 15vw;" @change="searchF()">
             <el-option v-for="store in storeList" :key="store.storeId" :label="store.storeName"
-              :value="store.storeId"></el-option>
+                       :value="store.storeId"></el-option>
           </el-select>
-          <el-select v-model="searchMethod" slot="prepend" placeholder="请选择搜索方式" style="width: 8vw;" @change="searchF()">
+          <el-select slot="prepend" v-model="searchMethod" placeholder="请选择搜索方式" style="width: 8vw;"
+                     @change="searchF()">
             <el-option label="药品名称" value="药品名称"></el-option>
             <el-option label="药品编号" value="药品编号"></el-option>
           </el-select>
@@ -17,41 +18,41 @@
     </el-row>
     <el-row style="height: 60vh;">
       <!-- <el-col :span="12" style="background-color: aqua;"> -->
-        <el-table ref="multipleTable" :data="scDrugList" tooltip-effect="dark" @selection-change="handleSelectionChange">
-          <el-table-column type="selection" width="55">
-          </el-table-column>
-          <el-table-column label="图片" width="120">
-            <template slot-scope="scope">
-              <img :src="scope.row.drugDetailPath" width="100px">
-            </template>
-          </el-table-column>
-          <el-table-column label="品名" width="120">
-            <template slot-scope="scope">{{ scope.row.drugName }}</template>
-          </el-table-column>
-          <el-table-column prop="drugSpecification" label="规格" width="120">
-          </el-table-column>
-          <el-table-column prop="drugRetailPrice" label="单价" width="120">
-          </el-table-column>
-          <el-table-column label="数量" width="120">
-            <template slot-scope="scope">
-              <el-input-number size="mini" style="width: 80px;" v-model="scope.row.number" controls-position="right"
-                @change="sizeChange(scope.row)" :min="1" :max="50"></el-input-number>
-            </template>
-          </el-table-column>
-        </el-table>
+      <el-table ref="multipleTable" :data="scDrugList" tooltip-effect="dark" @selection-change="handleSelectionChange">
+        <el-table-column type="selection" width="55">
+        </el-table-column>
+        <el-table-column label="图片" width="120">
+          <template slot-scope="scope">
+            <img :src="scope.row.drugDetailPath" width="100px">
+          </template>
+        </el-table-column>
+        <el-table-column label="品名" width="120">
+          <template slot-scope="scope">{{ scope.row.drugName }}</template>
+        </el-table-column>
+        <el-table-column label="规格" prop="drugSpecification" width="120">
+        </el-table-column>
+        <el-table-column label="单价" prop="drugRetailPrice" width="120">
+        </el-table-column>
+        <el-table-column label="数量" width="120">
+          <template slot-scope="scope">
+            <el-input-number v-model="scope.row.number" :max="50" :min="1" controls-position="right"
+                             size="mini" style="width: 80px;" @change="sizeChange(scope.row)"></el-input-number>
+          </template>
+        </el-table-column>
+      </el-table>
       <!-- </el-col> -->
       <!-- <el-col :span="12"> -->
-        <div>
+      <div>
           <span style="float: left;">
             总金额
             {{ totalPrice }} 元
           </span>
 
-          <el-button @click="settlement()">结算</el-button>
-        </div>
-        <div>
-          <!-- <el-button @click="settlement()">结算</el-button> -->
-        </div>
+        <el-button @click="settlement()">结算</el-button>
+      </div>
+      <div>
+        <!-- <el-button @click="settlement()">结算</el-button> -->
+      </div>
       <!-- </el-col> -->
     </el-row>
 
@@ -65,6 +66,7 @@
 import Qs from 'qs'
 import mystore from '../../store'
 import axios from '../../utils/request'
+
 export default {
   data () {
     return {
@@ -108,7 +110,7 @@ export default {
       // 进入confirm页面准备结算
       this.$router.push({
         path: '/online/confirm',
-        query: { drugDetailList: list, storeId: this.storeId }
+        query: {drugDetailList: list, storeId: this.storeId}
       })
     },
     sizeChange (val) {

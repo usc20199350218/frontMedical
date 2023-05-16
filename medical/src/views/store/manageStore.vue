@@ -7,21 +7,21 @@
           !search ||
           data.storeName.toLowerCase().includes(search.toLowerCase())
       )
-        " fit stripe mix-height="100" style="width: 100%">
-        <el-table-column label="店铺ID" min-width="50px" fixed="left">
+        " fit mix-height="100" stripe style="width: 100%">
+        <el-table-column fixed="left" label="店铺ID" min-width="50px">
           <template slot-scope="storeList">
             <span style="margin-left: 10px">{{ storeList.row.storeId }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="店铺ID" min-width="50px" fixed="left">
+        <el-table-column fixed="left" label="店铺ID" min-width="50px">
           <template slot-scope="storeList">
             <!-- <span style="margin-left: 10px">{{ storeList.row.storeId }}</span> -->
-            <img :src="storeList.row.storePath" width="100px" alt="图片"/>
+            <img :src="storeList.row.storePath" alt="图片" width="100px"/>
           </template>
         </el-table-column>
-        <el-table-column label="店铺名称" width="180" fixed="left">
+        <el-table-column fixed="left" label="店铺名称" width="180">
           <template slot-scope="storeList">
-            <el-popover trigger="hover" placement="top">
+            <el-popover placement="top" trigger="hover">
               <p>电话: {{ storeList.row.contactPhone }}</p>
               <p>地址: {{ storeList.row.storeAddress }}</p>
               <div slot="reference" class="name-wrapper">
@@ -30,45 +30,46 @@
             </el-popover>
           </template>
         </el-table-column>
-        <el-table-column label="状态" width="85px" fixed="left">
+        <el-table-column fixed="left" label="状态" width="85px">
           <template slot-scope="storeList">
             <el-switch v-model="storeList.row.storeStatus" :active-value="1" :inactive-value="0" active-color="#13ce66"
-              inactive-color="#ff4949" @change="storesStateChaged(storeList.row)">
+                       inactive-color="#ff4949" @change="storesStateChaged(storeList.row)">
             </el-switch>
           </template>
         </el-table-column>
-        <el-table-column label="营业时间" min-width="80px" fixed="left">
+        <el-table-column fixed="left" label="营业时间" min-width="80px">
           <template slot-scope="storeList">
             <span style="margin-left: 10px">{{ storeList.row.businessHours }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="区域" min-width="80px" fixed="left">
+        <el-table-column fixed="left" label="区域" min-width="80px">
           <template slot-scope="storeList">
             <span style="margin-left: 10px">{{ storeList.row.area }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="商圈" min-width="80px" fixed="left">
+        <el-table-column fixed="left" label="商圈" min-width="80px">
           <template slot-scope="storeList">
             <span style="margin-left: 10px">{{ storeList.row.businessDistrict }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="创建时间" min-width="80px" fixed="left">
+        <el-table-column fixed="left" label="创建时间" min-width="80px">
           <template slot-scope="storeList">
             <span style="margin-left: 10px">{{ storeList.row.createTime }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="更新时间" min-width="80px" fixed="left">
+        <el-table-column fixed="left" label="更新时间" min-width="80px">
           <template slot-scope="storeList">
             <span style="margin-left: 10px">{{ storeList.row.modifiedTime }}</span>
           </template>
         </el-table-column>
-        <el-table-column align="left" width="300px" fixed="right">
+        <el-table-column align="left" fixed="right" width="300px">
           <template slot="header" slot-scope="storeList">
             <el-col :span="14">
-              <el-input v-model="search" size="mini" v-if="storeList" placeholder="输入关键字搜索" />
+              <el-input v-if="storeList" v-model="search" placeholder="输入关键字搜索" size="mini"/>
             </el-col>
-            <el-button type="primary" size="mini" icon="el-icon-circle-plus-outline" round
-              @click="store = {}, showAdd = true">添加</el-button>
+            <el-button icon="el-icon-circle-plus-outline" round size="mini" type="primary"
+                       @click="store = {}, showAdd = true">添加
+            </el-button>
           </template>
           <template slot-scope="storeList">
             <el-button size="mini" @click="handleEdit(storeList.$index, storeList.row)">编辑</el-button>
@@ -81,33 +82,39 @@
     </div>
 
     <div>
-      <el-dialog title="新增店铺" :visible.sync="showAdd">
+      <el-dialog :visible.sync="showAdd" title="新增店铺">
         <el-form ref="form" :model="store" label-width="80px" size="mini">
           <el-form-item label="店铺名称">
             <el-col :span="10">
-              <el-input type="textarea" maxlength="32" show-word-limit v-model="store.storeName"></el-input></el-col>
+              <el-input v-model="store.storeName" maxlength="32" show-word-limit type="textarea"></el-input>
+            </el-col>
           </el-form-item>
           <el-form-item label="电话">
             <el-col :span="10">
-              <el-input type="text" maxlength="18" show-word-limit v-model="store.contactPhone"></el-input></el-col>
+              <el-input v-model="store.contactPhone" maxlength="18" show-word-limit type="text"></el-input>
+            </el-col>
           </el-form-item>
           <el-form-item label="区域">
             <el-col :span="10">
-              <el-input type="textarea" maxlength="32" show-word-limit v-model="store.area"></el-input></el-col>
+              <el-input v-model="store.area" maxlength="32" show-word-limit type="textarea"></el-input>
+            </el-col>
           </el-form-item>
           <el-form-item label="商圈">
             <el-col :span="10">
-              <el-input type="textarea" maxlength="250" show-word-limit
-                v-model="store.businessDistrict"></el-input></el-col>
+              <el-input v-model="store.businessDistrict" maxlength="250" show-word-limit
+                        type="textarea"></el-input>
+            </el-col>
           </el-form-item>
           <el-form-item label="地址">
             <el-col :span="10">
-              <el-input type="textarea" maxlength="250" show-word-limit v-model="store.storeAddress"></el-input></el-col>
+              <el-input v-model="store.storeAddress" maxlength="250" show-word-limit type="textarea"></el-input>
+            </el-col>
           </el-form-item>
           <el-form-item label="营业时间">
             <el-col :span="10">
-              <el-input type="text" maxlength="10" placeholder="HH:mm-HH:mm" show-word-limit
-                v-model="store.businessHours"></el-input></el-col>
+              <el-input v-model="store.businessHours" maxlength="10" placeholder="HH:mm-HH:mm" show-word-limit
+                        type="text"></el-input>
+            </el-col>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -117,33 +124,39 @@
       </el-dialog>
     </div>
     <div>
-      <el-dialog title="更新店铺" :visible.sync="showUpd">
+      <el-dialog :visible.sync="showUpd" title="更新店铺">
         <el-form ref="form" :model="store" label-width="80px" size="mini">
           <el-form-item label="店铺名称">
             <el-col :span="10">
-              <el-input type="textarea" maxlength="32" show-word-limit v-model="store.storeName"></el-input></el-col>
+              <el-input v-model="store.storeName" maxlength="32" show-word-limit type="textarea"></el-input>
+            </el-col>
           </el-form-item>
           <el-form-item label="电话">
             <el-col :span="10">
-              <el-input type="text" maxlength="18" show-word-limit v-model="store.contactPhone"></el-input></el-col>
+              <el-input v-model="store.contactPhone" maxlength="18" show-word-limit type="text"></el-input>
+            </el-col>
           </el-form-item>
           <el-form-item label="区域">
             <el-col :span="10">
-              <el-input type="textarea" maxlength="32" show-word-limit v-model="store.area"></el-input></el-col>
+              <el-input v-model="store.area" maxlength="32" show-word-limit type="textarea"></el-input>
+            </el-col>
           </el-form-item>
           <el-form-item label="商圈">
             <el-col :span="10">
-              <el-input type="textarea" maxlength="250" show-word-limit
-                v-model="store.businessDistrict"></el-input></el-col>
+              <el-input v-model="store.businessDistrict" maxlength="250" show-word-limit
+                        type="textarea"></el-input>
+            </el-col>
           </el-form-item>
           <el-form-item label="地址">
             <el-col :span="10">
-              <el-input type="textarea" maxlength="250" show-word-limit v-model="store.storeAddress"></el-input></el-col>
+              <el-input v-model="store.storeAddress" maxlength="250" show-word-limit type="textarea"></el-input>
+            </el-col>
           </el-form-item>
           <el-form-item label="营业时间">
             <el-col :span="10">
-              <el-input type="text" maxlength="10" placeholder="HH:mm-HH:mm" show-word-limit
-                v-model="store.businessHours"></el-input></el-col>
+              <el-input v-model="store.businessHours" maxlength="10" placeholder="HH:mm-HH:mm" show-word-limit
+                        type="text"></el-input>
+            </el-col>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -162,12 +175,12 @@
         <el-table :data="staffsList" style="width: 100%">
           <el-table-column label="头像">
             <template slot-scope="scope">
-              <img :src="scope.row.userAvatarUrl" style="width: 100px;" />
+              <img :src="scope.row.userAvatarUrl" style="width: 100px;"/>
             </template>
           </el-table-column>
           <el-table-column label="姓名" width="180">
             <template slot-scope="scope">
-              <el-popover trigger="hover" placement="top">
+              <el-popover placement="top" trigger="hover">
                 <p>姓名: {{ scope.row.userName }}</p>
                 <p>住址: {{ scope.row.userRealName }}</p>
                 <div slot="reference" class="name-wrapper">
@@ -201,6 +214,7 @@
 <script>
 import Qs from 'qs'
 import axios from '../../utils/request'
+
 export default {
   data () {
     return {
@@ -222,7 +236,7 @@ export default {
       const h = this.$createElement
       this.$notify({
         title: '成功',
-        message: h('i', { style: 'color: teal' }, action + '成功')
+        message: h('i', {style: 'color: teal'}, action + '成功')
       })
     },
     getStoreList () {

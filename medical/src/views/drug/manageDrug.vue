@@ -6,13 +6,13 @@
           !search ||
           data.drugName.toLowerCase().includes(search.toLowerCase())
       )
-    " fit stripe mix-height="100" style="width: 100%">
-      <el-table-column label="ID" min-width="80px" fixed="left">
+    " fit mix-height="100" stripe style="width: 100%">
+      <el-table-column fixed="left" label="ID" min-width="80px">
         <template slot-scope="drugsList">
           <span style="margin-left: 10px">{{ drugsList.row.drugId }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="品名" min-width="150px" fixed="left">
+      <el-table-column fixed="left" label="品名" min-width="150px">
         <template slot-scope="drugsList">
           <span style="margin-left: 10px">{{ drugsList.row.drugName }}</span>
         </template>
@@ -41,7 +41,7 @@
       <el-table-column label="状态" width="85px">
         <template slot-scope="drugsList">
           <el-switch v-model="drugsList.row.drugStatus" :active-value="1" :inactive-value="0" active-color="#13ce66"
-            inactive-color="#ff4949" @change="drugStateChaged(drugsList.row)">
+                     inactive-color="#ff4949" @change="drugStateChaged(drugsList.row)">
           </el-switch>
         </template>
       </el-table-column>
@@ -62,13 +62,14 @@
           }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="left" width="220px" fixed="right">
+      <el-table-column align="left" fixed="right" width="220px">
         <template slot="header" slot-scope="drugsList">
           <el-col :span="14">
-            <el-input v-model="search" size="mini" v-if="drugsList" placeholder="输入关键字搜索" />
+            <el-input v-if="drugsList" v-model="search" placeholder="输入关键字搜索" size="mini"/>
           </el-col>
-          <el-button type="primary" size="mini" icon="el-icon-circle-plus-outline" round
-            @click="addShowdialog">添加</el-button>
+          <el-button icon="el-icon-circle-plus-outline" round size="mini" type="primary"
+                     @click="addShowdialog">添加
+          </el-button>
         </template>
         <template slot-scope="drugsList">
           <el-button size="mini" @click="handleEdit(drugsList.$index, drugsList.row)">编辑</el-button>
@@ -82,33 +83,35 @@
     </el-table>
 
     <div>
-      <el-dialog title="新数据" :visible.sync="dialogFormVisible">
+      <el-dialog :visible.sync="dialogFormVisible" title="新数据">
         <el-form ref="form" :model="drug" label-width="80px" size="mini">
           <el-form-item label="品名">
             <el-col>
-              <el-input type="text" maxlength="20" placeholder="请输入品名" show-word-limit
-                v-model="drug.drugName"></el-input></el-col>
+              <el-input v-model="drug.drugName" maxlength="20" placeholder="请输入品名" show-word-limit
+                        type="text"></el-input>
+            </el-col>
           </el-form-item>
           <el-form-item label="处方">
             <el-col>
-              <el-select v-model="drug.isRx" placeholder="请选择品类" default-first-option>
-                <el-option label="非处方药" :value="0"></el-option><el-option label="处方药" :value="1"></el-option>
+              <el-select v-model="drug.isRx" default-first-option placeholder="请选择品类">
+                <el-option :value="0" label="非处方药"></el-option>
+                <el-option :value="1" label="处方药"></el-option>
 
               </el-select>
             </el-col>
           </el-form-item>
-          <el-form-item label="品类" min-width="150px" fixed="left">
+          <el-form-item fixed="left" label="品类" min-width="150px">
             <el-select v-model="drug.typeId" filterable placeholder="请选择药品">
-              <el-option v-for="item in typeList" :key="item.typeId" :value="item.typeId"
-                :label="item.typeName">
+              <el-option v-for="item in typeList" :key="item.typeId" :label="item.typeName"
+                         :value="item.typeId">
               </el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="状态">
             <el-col>
               <el-select v-model="drug.drugStatus" placeholder="请选择状态">
-                <el-option label="有效" :value="1"></el-option>
-                <el-option label="无效" :value="0"></el-option>
+                <el-option :value="1" label="有效"></el-option>
+                <el-option :value="0" label="无效"></el-option>
               </el-select>
             </el-col>
           </el-form-item>
@@ -121,32 +124,34 @@
     </div>
 
     <div>
-      <el-dialog title="修改数据" :visible.sync="dialogFormVisibles">
+      <el-dialog :visible.sync="dialogFormVisibles" title="修改数据">
         <el-form ref="form" :model="drug" label-width="80px" size="mini">
           <el-form-item label="品名">
             <el-col>
-              <el-input type="text" maxlength="20" placeholder="请输入品名" show-word-limit
-                v-model="drug.drugName"></el-input></el-col>
+              <el-input v-model="drug.drugName" maxlength="20" placeholder="请输入品名" show-word-limit
+                        type="text"></el-input>
+            </el-col>
           </el-form-item>
           <el-form-item label="处方">
             <el-col>
-              <el-select v-model="drug.isRx" placeholder="请选择品类" default-first-option>
-                <el-option label="非处方药" :value="0"></el-option><el-option label="处方药" :value="1"></el-option>
+              <el-select v-model="drug.isRx" default-first-option placeholder="请选择品类">
+                <el-option :value="0" label="非处方药"></el-option>
+                <el-option :value="1" label="处方药"></el-option>
               </el-select>
             </el-col>
           </el-form-item>
-          <el-form-item label="品类" min-width="150px" fixed="left">
+          <el-form-item fixed="left" label="品类" min-width="150px">
             <el-select v-model="drug.typeId" filterable placeholder="请选择药品">
-              <el-option v-for="item in typeList" :key="item.typeId" :value="item.typeId"
-                :label="item.typeName">
+              <el-option v-for="item in typeList" :key="item.typeId" :label="item.typeName"
+                         :value="item.typeId">
               </el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="状态">
             <el-col>
               <el-select v-model="drug.drugStatus" placeholder="请选择状态">
-                <el-option label="有效" :value="1"></el-option>
-                <el-option label="无效" :value="0"></el-option>
+                <el-option :value="1" label="有效"></el-option>
+                <el-option :value="0" label="无效"></el-option>
               </el-select>
             </el-col>
           </el-form-item>
@@ -159,9 +164,10 @@
     </div>
 
     <div class="block">
-      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
-        :current-page="pageInfo.current" :page-sizes="[5, 10, 20, 30, 100, 1000, 10000]" :page-size="pageInfo.size"
-        layout="total, sizes, prev, pager, next, jumper" :total="pageInfo.total">
+      <el-pagination :current-page="pageInfo.current" :page-size="pageInfo.size"
+                     :page-sizes="[5, 10, 20, 30, 100, 1000, 10000]" :total="pageInfo.total"
+                     layout="total, sizes, prev, pager, next, jumper"
+                     @size-change="handleSizeChange" @current-change="handleCurrentChange">
       </el-pagination>
     </div>
   </div>
@@ -170,10 +176,11 @@
 <script>
 import Qs from 'qs'
 import axios from '../../utils/request'
+
 export default {
   data () {
     return {
-      pageInfo: { current: 0, size: 5 },
+      pageInfo: {current: 0, size: 5},
       search: '',
       dialogFormVisible: false,
       dialogFormVisibles: false,
@@ -274,7 +281,7 @@ export default {
       //     console.log('change to 1')
       //     this.handleOnLine(0, item)
       //   }
-      let changeData = { status: item.drugStatus, drugId: item.drugId }
+      let changeData = {status: item.drugStatus, drugId: item.drugId}
       axios({
         method: 'put',
         url: '/admin/drug/status',
@@ -292,7 +299,7 @@ export default {
       const h = this.$createElement
       this.$notify({
         title: '操作成功',
-        message: h('i', { style: 'color: teal' }, action + '成功')
+        message: h('i', {style: 'color: teal'}, action + '成功')
       })
       this.getDrugsList()
     },
@@ -302,7 +309,7 @@ export default {
       axios({
         method: 'get',
         url: '/admin/drug/page',
-        params: { 'current': this.pageInfo.current, 'size': this.pageInfo.size }
+        params: {'current': this.pageInfo.current, 'size': this.pageInfo.size}
       }).then((jsondata) => {
         this.drugsList = jsondata.data.records
         console.log('drugsList:', jsondata.data.records)
@@ -334,7 +341,7 @@ export default {
       axios({
         method: 'put',
         url: '/admin/drug/offline',
-        params: { drugId: row.drugId }
+        params: {drugId: row.drugId}
       })
         .then((jsondata) => {
           console.log(jsondata)
@@ -349,7 +356,7 @@ export default {
       axios({
         method: 'put',
         url: '/admin/drug/online',
-        data: Qs.stringify({ drugId: row.drugId })
+        data: Qs.stringify({drugId: row.drugId})
       })
         .then((jsondata) => {
           console.log(jsondata)

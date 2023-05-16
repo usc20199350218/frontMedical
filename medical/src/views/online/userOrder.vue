@@ -2,37 +2,40 @@
   <div>
     <el-row :span="24">
       <el-col :span="4.5">
-        <el-date-picker v-model="chooseDate" type="daterange" align="right" unlink-panels range-separator="至"
-          start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions" @change="searchStart()"
-          value-format="yyyy-MM-dd">
+        <el-date-picker v-model="chooseDate" :picker-options="pickerOptions" align="right" end-placeholder="结束日期" range-separator="至"
+                        start-placeholder="开始日期" type="daterange" unlink-panels
+                        value-format="yyyy-MM-dd"
+                        @change="searchStart()">
         </el-date-picker>
       </el-col>
       <el-col :span="17">
-        <el-input placeholder="请输入内容" v-model="searchText" class="input-with-select">
-          <el-select v-model="storeId" slot="prepend" placeholder="选择店铺" @change="searchStart()" style="width: 150px;">
+        <el-input v-model="searchText" class="input-with-select" placeholder="请输入内容">
+          <el-select slot="prepend" v-model="storeId" placeholder="选择店铺" style="width: 150px;"
+                     @change="searchStart()">
             <el-option key="" value="">全部</el-option>
             <el-option v-for="store in storeList" :key="store.storeId" :label="store.storeName" :value="store.storeId">
             </el-option>
           </el-select>
-          <el-select v-model="orderType" slot="prepend" placeholder="选择类型" @change="searchStart()"
-            style="padding-left: 30px; width: 150px;">
+          <el-select slot="prepend" v-model="orderType" placeholder="选择类型" style="padding-left: 30px; width: 150px;"
+                     @change="searchStart()">
             <el-option key="" value="">全部</el-option>
             <el-option v-for="type in orderTypeList" :key="type" :label="type" :value="type">
             </el-option>
           </el-select>
-          <el-select v-model="payment" slot="prepend" placeholder="选择支付方式" @change="searchStart()"
-            style="padding-left: 30px; width: 150px;">
+          <el-select slot="prepend" v-model="payment" placeholder="选择支付方式" style="padding-left: 30px; width: 150px;"
+                     @change="searchStart()">
             <el-option key="" value="">全部</el-option>
             <el-option v-for="item in paymentList" :key="item" :label="item" :value="item">
             </el-option>
           </el-select>
-          <el-select v-model="payStatus" slot="prepend" placeholder="选择状态" @change="searchStart()"
-            style="padding-left: 30px; width: 150px;">
+          <el-select slot="prepend" v-model="payStatus" placeholder="选择状态" style="padding-left: 30px; width: 150px;"
+                     @change="searchStart()">
             <el-option key="" value="">全部</el-option>
             <el-option v-for="item in payStatusList" :key="item" :label="item" :value="item">
             </el-option>
           </el-select>
-          <el-select v-model="searchMethod" slot="prepend" placeholder="请选择" style="padding-left: 30px;  width: 8vw;">
+          <el-select slot="prepend" v-model="searchMethod" placeholder="请选择"
+                     style="padding-left: 30px;  width: 8vw;">
             <el-option label="药品名称" value="药品名称"></el-option>
             <el-option label="药品编号" value="药品编号"></el-option>
           </el-select>
@@ -41,8 +44,8 @@
       </el-col>
     </el-row>
     <div>
-      <el-table ref="multipleTable" :data="orderList" tooltip-effect="dark" style="width: 100%"
-        @selection-change="handleSelectionChange">
+      <el-table ref="multipleTable" :data="orderList" style="width: 100%" tooltip-effect="dark"
+                @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55">
         </el-table-column>
         <el-table-column label="订单编号" prop="orderNum">
@@ -63,7 +66,7 @@
             <span v-else>error</span>
           </template>
         </el-table-column>
-        <el-table-column prop="paymentTime" label="支付时间" show-overflow-tooltip>
+        <el-table-column label="支付时间" prop="paymentTime" show-overflow-tooltip>
         </el-table-column>
         <el-table-column label="支付状态">
           <template slot-scope="scope">
@@ -82,9 +85,10 @@
         </el-table-column>
       </el-table>
       <div class="block">
-        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
-          :current-page="pageInfo.current" :page-sizes="[5, 10, 20, 30, 100, 1000, 10000]" :page-size="pageInfo.size"
-          layout="total, sizes, prev, pager, next, jumper" :total="pageInfo.total">
+        <el-pagination :current-page="pageInfo.current" :page-size="pageInfo.size"
+                       :page-sizes="[5, 10, 20, 30, 100, 1000, 10000]" :total="pageInfo.total"
+                       layout="total, sizes, prev, pager, next, jumper"
+                       @size-change="handleSizeChange" @current-change="handleCurrentChange">
         </el-pagination>
       </div>
     </div>
@@ -93,7 +97,7 @@
         <el-table :data="orderDetailList">
           <el-table-column label="药品名称">
             <template slot-scope="scope">
-              <el-popover trigger="hover" placement="top">
+              <el-popover placement="top" trigger="hover">
                 <p>Id: {{ scope.row.orderDetailId }}</p>
                 <div slot="reference" class="name-wrapper">
                   <el-tag size="medium">{{ scope.row.drugName }}</el-tag>
@@ -129,7 +133,7 @@
             <el-input v-model="order.userPhone" :disabled="true"></el-input>
           </el-form-item>
           <el-form-item label="地址">
-            <el-input v-model="order.deliveryAddress" type="textarea" :disabled="true"></el-input>
+            <el-input v-model="order.deliveryAddress" :disabled="true" type="textarea"></el-input>
           </el-form-item>
         </el-form>
       </el-dialog>
@@ -140,6 +144,7 @@
 <script>
 import mystore from '../../store'
 import axios from '../../utils/request'
+
 export default {
   data () {
     return {
@@ -181,7 +186,7 @@ export default {
       payment: '',
       paymentList: [],
       paymentMethodMap: {},
-      pageInfo: { current: 0, size: 10 },
+      pageInfo: {current: 0, size: 10},
       orderDetailList: [],
       showTitle: '详情',
       showDetail: false,

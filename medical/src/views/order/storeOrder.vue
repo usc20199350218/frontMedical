@@ -2,8 +2,8 @@
   <div>
     <el-row :span="24">
       <el-col :span="12">
-        <el-input placeholder="请输入内容" v-model="userValue" class="input-with-select">
-          <el-select v-model="userField" slot="prepend" placeholder="请选择" style="padding-left: 30px;  width: 8vw;">
+        <el-input v-model="userValue" class="input-with-select" placeholder="请输入内容">
+          <el-select slot="prepend" v-model="userField" placeholder="请选择" style="padding-left: 30px;  width: 8vw;">
             <el-option label="用户真实姓名" value="realName"></el-option>
             <el-option label="用户电话" value="phone"></el-option>
           </el-select>
@@ -20,37 +20,40 @@
     </el-row>
     <el-row :span="24">
       <el-col :span="5">
-        <el-date-picker v-model="chooseDate" type="daterange" align="right" unlink-panels range-separator="至"
-          start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions" @change="searchStart()"
-          value-format="yyyy-MM-dd">
+        <el-date-picker v-model="chooseDate" :picker-options="pickerOptions" align="right" end-placeholder="结束日期" range-separator="至"
+                        start-placeholder="开始日期" type="daterange" unlink-panels
+                        value-format="yyyy-MM-dd"
+                        @change="searchStart()">
         </el-date-picker>
       </el-col>
       <el-col :span="18">
-        <el-input placeholder="请输入内容" v-model="searchText" class="input-with-select">
-          <el-select v-model="storeId" slot="prepend" placeholder="选择店铺" @change="searchStart()" style="width: 150px;">
+        <el-input v-model="searchText" class="input-with-select" placeholder="请输入内容">
+          <el-select slot="prepend" v-model="storeId" placeholder="选择店铺" style="width: 150px;"
+                     @change="searchStart()">
             <el-option key="" value="">全部</el-option>
             <el-option v-for="store in storeList" :key="store.storeId" :label="store.storeName" :value="store.storeId">
             </el-option>
           </el-select>
-          <el-select v-model="orderType" slot="prepend" placeholder="选择类型" @change="searchStart()"
-            style="padding-left: 30px; width: 150px;">
+          <el-select slot="prepend" v-model="orderType" placeholder="选择类型" style="padding-left: 30px; width: 150px;"
+                     @change="searchStart()">
             <el-option key="" value="">全部</el-option>
             <el-option v-for="type in orderTypeList" :key="type" :label="type" :value="type">
             </el-option>
           </el-select>
-          <el-select v-model="payment" slot="prepend" placeholder="选择支付方式" @change="searchStart()"
-            style="padding-left: 30px; width: 150px;">
+          <el-select slot="prepend" v-model="payment" placeholder="选择支付方式" style="padding-left: 30px; width: 150px;"
+                     @change="searchStart()">
             <el-option key="" value="">全部</el-option>
             <el-option v-for="item in paymentList" :key="item" :label="item" :value="item">
             </el-option>
           </el-select>
-          <el-select v-model="payStatus" slot="prepend" placeholder="选择状态" @change="searchStart()"
-            style="padding-left: 30px; width: 150px;">
+          <el-select slot="prepend" v-model="payStatus" placeholder="选择状态" style="padding-left: 30px; width: 150px;"
+                     @change="searchStart()">
             <el-option key="" value="">全部</el-option>
             <el-option v-for="item in payStatusList" :key="item" :label="item" :value="item">
             </el-option>
           </el-select>
-          <el-select v-model="searchMethod" slot="prepend" placeholder="请选择" style="padding-left: 30px;  width: 8vw;">
+          <el-select slot="prepend" v-model="searchMethod" placeholder="请选择"
+                     style="padding-left: 30px;  width: 8vw;">
             <el-option label="药品名称" value="药品名称"></el-option>
             <el-option label="药品编号" value="药品编号"></el-option>
             <el-option label="订单编号" value="订单编号"></el-option>
@@ -60,8 +63,8 @@
       </el-col>
     </el-row>
     <div>
-      <el-table ref="multipleTable" :data="orderList" tooltip-effect="dark" style="width: 100%"
-        @selection-change="handleSelectionChange">
+      <el-table ref="multipleTable" :data="orderList" style="width: 100%" tooltip-effect="dark"
+                @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55">
         </el-table-column>
         <el-table-column label="订单编号" prop="orderNum">
@@ -82,7 +85,7 @@
             <span v-else>error</span>
           </template>
         </el-table-column>
-        <el-table-column prop="paymentTime" label="支付时间" show-overflow-tooltip>
+        <el-table-column label="支付时间" prop="paymentTime" show-overflow-tooltip>
         </el-table-column>
         <el-table-column label="订单状态">
           <template slot-scope="scope">
@@ -99,19 +102,21 @@
           <template slot-scope="scope">
             <el-button @click="handleLook(scope.row)">详情</el-button>
             <el-button v-if="scope.row.status !== 'REFUND' && scope.row.status !== 'REFUNDING'"
-              @click="refund(scope.row)">退款</el-button>
+                       @click="refund(scope.row)">退款
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
       <div class="block">
-        <el-pagination @size-change=" handleSizeChange " @current-change=" handleCurrentChange "
-          :current-page=" pageInfo.current " :page-sizes=" [5, 10, 20, 30, 100, 1000, 10000] " :page-size=" pageInfo.size "
-          layout="total, sizes, prev, pager, next, jumper" :total=" pageInfo.total ">
+        <el-pagination :current-page=" pageInfo.current " :page-size=" pageInfo.size "
+                       :page-sizes=" [5, 10, 20, 30, 100, 1000, 10000] " :total=" pageInfo.total "
+                       layout="total, sizes, prev, pager, next, jumper"
+                       @size-change=" handleSizeChange " @current-change=" handleCurrentChange ">
         </el-pagination>
       </div>
     </div>
 
-    <el-dialog title="选择用户" :visible.sync=" showSelectUser " :before-close=" handleClose ">
+    <el-dialog :before-close=" handleClose " :visible.sync=" showSelectUser " title="选择用户">
       <el-table :data=" userList " style="width: 100%">
         <el-table-column label="用户Id">
           <template slot-scope="userList">
@@ -120,7 +125,7 @@
         </el-table-column>
         <el-table-column label="姓名">
           <template slot-scope="userList">
-            <el-popover trigger="hover" placement="top">
+            <el-popover placement="top" trigger="hover">
               <p>姓名: {{ userList.row.name }}</p>
               <p>生日: {{ userList.row.userBirthday }}</p>
               <p>昵称: {{ userList.row.userNickName }}</p>
@@ -154,9 +159,10 @@
         </el-table-column>
       </el-table>
       <div class="block">
-        <el-pagination @size-change=" handleSizeChange " @current-change=" handleCurrentChange "
-          :current-page=" pageInfo.current " :page-sizes=" [5, 10, 20, 30, 100, 1000, 10000] " :page-size=" pageInfo.size "
-          layout="total, sizes, prev, pager, next, jumper" :total=" pageInfo.total ">
+        <el-pagination :current-page=" pageInfo.current " :page-size=" pageInfo.size "
+                       :page-sizes=" [5, 10, 20, 30, 100, 1000, 10000] " :total=" pageInfo.total "
+                       layout="total, sizes, prev, pager, next, jumper"
+                       @size-change=" handleSizeChange " @current-change=" handleCurrentChange ">
         </el-pagination>
       </div>
     </el-dialog>
@@ -166,7 +172,7 @@
         <el-table :data=" orderDetailList ">
           <el-table-column label="药品名称">
             <template slot-scope="scope">
-              <el-popover trigger="hover" placement="top">
+              <el-popover placement="top" trigger="hover">
                 <p>Id: {{ scope.row.orderDetailId }}</p>
                 <div slot="reference" class="name-wrapper">
                   <el-tag size="medium">{{ scope.row.drugName }}</el-tag>
@@ -198,6 +204,7 @@
 <script>
 import mystore from '../../store'
 import axios from '../../utils/request'
+
 export default {
   data () {
     return {
@@ -246,8 +253,8 @@ export default {
       payment: '',
       paymentList: [],
       paymentMethodMap: {},
-      pageInfo: { current: 0, size: 10 },
-      pageInfoInternal: { current: 0, size: 10 },
+      pageInfo: {current: 0, size: 10},
+      pageInfoInternal: {current: 0, size: 10},
       userField: 'realName',
       userValue: '',
       showSelectUser: false,
@@ -306,7 +313,8 @@ export default {
         .then(_ => {
           done()
         })
-        .catch(_ => { })
+        .catch(_ => {
+        })
     },
     searchUser () {
       axios.get('/admin/user/search', {

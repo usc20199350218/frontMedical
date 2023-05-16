@@ -41,8 +41,8 @@
         </el-col>
         <el-col :span="12">
           <div class="grid-content bg-purple">
-            <el-input placeholder="请输入内容" v-model="searchText1" class="input-with-select">
-              <el-select v-model="searchType1" slot="prepend" placeholder="请选择">
+            <el-input v-model="searchText1" class="input-with-select" placeholder="请输入内容">
+              <el-select slot="prepend" v-model="searchType1" placeholder="请选择">
                 <el-option label="用户真实姓名" value="realName"></el-option>
                 <el-option label="用户电话" value="phone"></el-option>
               </el-select>
@@ -88,15 +88,15 @@
     <div class="activity">
       this.result.orderNum+
       {{ this.result.orderNum }}
-      <br />
+      <br/>
       | this.orderList+ {{ this.orderList }}
-      <br />|this.result+ {{ this.result }}
+      <br/>|this.result+ {{ this.result }}
     </div>
     <div class="pay">
       <div class="payChoose">
         <el-radio-group v-model="payment">
-          <el-radio-button v-for="item in paymentList" :label="item" :key="item"
-            :disabled="chosePayMent"></el-radio-button>
+          <el-radio-button v-for="item in paymentList" :key="item" :disabled="chosePayMent"
+                           :label="item"></el-radio-button>
         </el-radio-group>
       </div>
       <div class="payBtn">
@@ -110,7 +110,7 @@
       </div>
 
     </div>
-    <el-dialog title="选择用户" :visible.sync="showSelectUser" :before-close="handleClose">
+    <el-dialog :before-close="handleClose" :visible.sync="showSelectUser" title="选择用户">
       <el-table :data="userList" style="width: 100%">
         <el-table-column label="用户Id">
           <template slot-scope="userList">
@@ -119,7 +119,7 @@
         </el-table-column>
         <el-table-column label="姓名">
           <template slot-scope="userList">
-            <el-popover trigger="hover" placement="top">
+            <el-popover placement="top" trigger="hover">
               <p>姓名: {{ userList.row.name }}</p>
               <p>生日: {{ userList.row.userBirthday }}</p>
               <p>昵称: {{ userList.row.userNickName }}</p>
@@ -153,17 +153,18 @@
         </el-table-column>
       </el-table>
       <div class="block">
-        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
-          :current-page="pageInfo.current" :page-sizes="[5, 10, 20, 30, 100, 1000, 10000]" :page-size="pageInfo.size"
-          layout="total, sizes, prev, pager, next, jumper" :total="pageInfo.total">
+        <el-pagination :current-page="pageInfo.current" :page-size="pageInfo.size"
+                       :page-sizes="[5, 10, 20, 30, 100, 1000, 10000]" :total="pageInfo.total"
+                       layout="total, sizes, prev, pager, next, jumper"
+                       @size-change="handleSizeChange" @current-change="handleCurrentChange">
         </el-pagination>
       </div>
     </el-dialog>
 
     <button @click="showSelectUser = true">显示弹窗</button>
-    <el-dialog title="支付" :visible.sync="showPayQrCode" :before-close="handleClose">
+    <el-dialog :before-close="handleClose" :visible.sync="showPayQrCode" title="支付">
       <!-- <img :src="getImgUrl()" v-if="showImg" alt="fail"> -->
-      <img :src="getImgUrl()" v-if="showImg" alt="fail">
+      <img v-if="showImg" :src="getImgUrl()" alt="fail">
       <!-- <div v-if="showModal" class="modal">
             <div class="modal-content" v-html="modalContent"></div>
             <button @click="showModal = false">关闭弹窗</button>
@@ -173,7 +174,7 @@
         <el-button type="primary" @click="showPayQrCode = false">确 定</el-button>
       </span>
     </el-dialog>
-    <el-dialog :visible.sync="dialogVisible" @open="startCountDown" @close="closeFunction">
+    <el-dialog :visible.sync="dialogVisible" @close="closeFunction" @open="startCountDown">
       <button v-bind:disabled="isDisabled" v-on:click="disableButton">{{ buttonText }}</button>
     </el-dialog>
     <div class="payMode">
@@ -200,8 +201,9 @@
 import Qs from 'qs'
 import axios from '../../utils/request'
 import Index from '../Index.vue'
+
 export default {
-  components: { Index },
+  components: {Index},
   data () {
     return {
       chosePayMent: false,
@@ -209,7 +211,7 @@ export default {
       buttonText: 'Please wait 5 seconds',
       dialogVisible: false,
       countDown: 5,
-      pageInfo: { current: 0, size: 5 },
+      pageInfo: {current: 0, size: 5},
       userList: [],
       showModal: false,
       modalContent: '<h1>这是一个HTML弹窗</h1><p>这是一些HTML内容</p><img :src="getImgUrl()" alt="支付二维码"></img>',
@@ -266,7 +268,7 @@ export default {
           clearInterval(this.timer)
           this.timer = null
           console.log(this.timer)
-          this.$router.push({ path: '/store/offline' })
+          this.$router.push({path: '/store/offline'})
         } else {
           console.log('清理失败')
         }
@@ -378,13 +380,16 @@ export default {
       console.log(this.pageInfo)
       this.searchUser()
     },
-    getImgUrl () { return 'http://localhost:8088/api/alipay/pay?money=' + this.result.amount },
+    getImgUrl () {
+      return 'http://localhost:8088/api/alipay/pay?money=' + this.result.amount
+    },
     handleClose (done) {
       this.$confirm('确认关闭？')
         .then(_ => {
           done()
         })
-        .catch(_ => { })
+        .catch(_ => {
+        })
     },
     handleChoose (index, row) {
       this.user = row
@@ -437,11 +442,11 @@ export default {
     },
     finish () {
       /**
-         * 此时点击结算按钮
-         * 如果需要输入用户则有值，如果没有后端处理
-         * 根据选择的支付方式，动态的展示结果（支付宝则开始获取二维码地址）
-         *
-         */
+       * 此时点击结算按钮
+       * 如果需要输入用户则有值，如果没有后端处理
+       * 根据选择的支付方式，动态的展示结果（支付宝则开始获取二维码地址）
+       *
+       */
       this.chosePayMent = true
       console.log('开始结算')
       console.log('this.user.userId:', this.user.userId)
