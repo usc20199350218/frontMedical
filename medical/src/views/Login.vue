@@ -112,6 +112,7 @@
 <script>
 import axios from '../utils/request'
 import Qs from 'qs'
+
 export default {
   data () {
     return {
@@ -192,6 +193,12 @@ export default {
           Qs.stringify(registerUser)
         ).then((jsondata) => {
           console.log('json-data', jsondata)
+          if (jsondata.code === 200) {
+            this.$message({
+              message: '注册成功',
+              type: 'success'
+            })
+          }
         })
       } else {
         console.log('密码不匹配')
@@ -234,7 +241,7 @@ export default {
       console.log(this.userInfo)
       let jsondata = await axios({
         method: 'post',
-        url: 'login',
+        url: '/login',
         data: Qs.stringify(this.userInfo)
       })
       console.log(jsondata)

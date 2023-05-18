@@ -2,9 +2,9 @@
   <div class="index" style="overflow-y: hidden">
     <el-container direction="vertical" style="height: 100%">
       <el-header>
-        <img src="https://www.itheima.com/images/logo.png" style="float: left;" @click="getMenus"/>
+        <img src="https://www.itheima.com/images/logo.png" style="float: left;" @click="getMenus" alt="icon"/>
         <div style="float: right;">
-          <el-avatar :size="50" :src="circleUrl"></el-avatar>
+          <el-avatar :size="50" :src="circleUrl" alt="circleUrl"></el-avatar>
           <span>{{ userName }}</span>
           <el-link :underline="false" type="danger" @click="quit">注销</el-link>
         </div>

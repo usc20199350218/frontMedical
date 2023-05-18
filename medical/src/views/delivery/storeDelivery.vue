@@ -93,7 +93,7 @@
           <template slot-scope="deliveryList">
             <!-- 抢单 -->
             <el-button v-if="deliveryList.row.deliveryStatus === 'CREATED'" size="mini" type="primary"
-                       @click="handleClick(deliveryList.row, 'PICKUP')">抢单
+                       @click="handleClick(deliveryList.row, 'PICKUP')">确认
             </el-button>
             <!-- 取货 -->
             <el-button v-if="deliveryList.row.deliveryStatus === 'PICKUP'" size="mini"

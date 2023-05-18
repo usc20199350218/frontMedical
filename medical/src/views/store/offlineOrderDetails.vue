@@ -85,13 +85,6 @@
         </el-col>
       </el-row>
     </div>
-    <div class="activity">
-      this.result.orderNum+
-      {{ this.result.orderNum }}
-      <br/>
-      | this.orderList+ {{ this.orderList }}
-      <br/>|this.result+ {{ this.result }}
-    </div>
     <div class="pay">
       <div class="payChoose">
         <el-radio-group v-model="payment">

@@ -6,11 +6,16 @@
         data.rightText.toLowerCase().includes(search.toLowerCase())
     )
       " fit stripe style="width: 100%">
-      <el-table-column label="rightId" prop="rightId"></el-table-column>
-      <el-table-column label="rightText" prop="rightText"></el-table-column>
-      <el-table-column label="rightType" prop="rightType"></el-table-column>
-      <el-table-column label="rightUrl" prop="rightUrl"></el-table-column>
-      <el-table-column label="rightParentId" prop="rightParentId">
+      <el-table-column label="菜单Id" prop="rightId"></el-table-column>
+      <el-table-column label="菜单名" prop="rightText"></el-table-column>
+      <el-table-column label="菜单类型">
+        <template slot-scope="rightList">
+          <span v-if="rightList.row.rightType === 1">子菜单</span>
+          <span v-if="rightList.row.rightType === 0">父菜单</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="菜单路径" prop="rightUrl"></el-table-column>
+      <el-table-column label="父菜单" prop="rightParentId">
       </el-table-column>
       <el-table-column align="left">
         <template slot="header" slot-scope="rightList">
@@ -40,11 +45,11 @@
               <el-option :value="1" label="子菜单"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item v-if="newRight.rightType == '1'" label="菜单路径" prop="rightText">
+          <el-form-item v-if="newRight.rightType === '1'" label="菜单路径" prop="rightText">
             <el-input v-model="newRight.rightUrl"></el-input>
           </el-form-item>
 
-          <el-form-item v-if="newRight.rightType == '1'" label="父菜单" prop="rightType">
+          <el-form-item v-if="newRight.rightType === '1'" label="父菜单" prop="rightType">
             <el-select v-model="newRight.rightParentId" placeholder="请选择父菜单">
               <el-option v-for="rightParent in rightParentList" :key="rightParent.rightId"
                          :label="rightParent.rightText"
@@ -57,7 +62,8 @@
           <el-form-item label="角色">
             <el-checkbox-group v-model="newRight.roleId">
               <el-checkbox-button v-for="role in roleList" :key="role.roleId" :label="role.roleId">{{
-                role.roleName }}
+                  role.roleName
+                }}
               </el-checkbox-button>
             </el-checkbox-group>
           </el-form-item>
@@ -80,11 +86,11 @@
               <el-option :value="1" label="子菜单"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item v-if="changeRight.rightType == '1'" label="菜单路径" prop="rightText">
+          <el-form-item v-if="changeRight.rightType === '1'" label="菜单路径" prop="rightText">
             <el-input v-model="changeRight.rightUrl"></el-input>
           </el-form-item>
 
-          <el-form-item v-if="changeRight.rightType == '1'" label="父菜单" prop="rightType">
+          <el-form-item v-if="changeRight.rightType === '1'" label="父菜单" prop="rightType">
             <el-select v-model="changeRight.rightParentId" placeholder="请选择父菜单">
               <el-option v-for="rightParent in rightParentList" :key="rightParent.rightId"
                          :label="rightParent.rightText"
@@ -121,11 +127,10 @@
               <el-option :value="1" label="子菜单"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item v-if="right.rightType == '1'" label="菜单路径" prop="rightText">
+          <el-form-item v-if="right.rightType === 1" label="菜单路径" prop="rightUrl">
             <el-input v-model="right.rightUrl"></el-input>
           </el-form-item>
-
-          <el-form-item v-if="right.rightType == '1'" label="父菜单" prop="rightType">
+          <el-form-item v-if="right.rightType === 1" label="父菜单" prop="rightType">
             <el-select v-model="right.rightParentId" placeholder="请选择父菜单">
               <el-option v-for="rightParent in rightParentList" :key="rightParent.rightId"
                          :label="rightParent.rightText"
@@ -144,7 +149,7 @@
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="right = { roleId: [] }, showEdit = false, getAllRightList()">取 消</el-button>
+          <el-button @click="right = { roleId: [] }, showEdit = false , getAllRightList()">取 消</el-button>
           <el-button type="primary" @click="submit('right')">确 定</el-button>
         </div>
       </el-dialog>
@@ -419,7 +424,9 @@ export default {
             message: '删除成功',
             type: 'success'
           })
+          this.getAllRightList()
         }
+        this.getAllRightList()
       })
       this.getAllRightList()
     },
@@ -429,12 +436,10 @@ export default {
         method: 'get',
         url: '/admin/right'
       }).then((jsondata) => {
-        console.log(jsondata)
+        console.log('获取全部菜单权限:', jsondata)
         this.rightList = jsondata.data
       })
     }
   }
 }
 </script>
-
-<style></style>

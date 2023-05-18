@@ -9,10 +9,10 @@
     <div>
 
       <el-table :data="applyBatchList.filter(
-          (data) =>
-            !search ||
-            data.positionName.toLowerCase().includes(search.toLowerCase())
-        )
+        (data) =>
+          !search ||
+          data.positionName.toLowerCase().includes(search.toLowerCase())
+      )
         " fit mix-height="100" stripe style="width: 100%">
         <el-table-column fixed="left" label="药品详情ID" min-width="80px">
           <template slot-scope="applyBatchList">
@@ -64,10 +64,9 @@
         <el-table-column align="left" fixed="right" width="220px">
           <template slot="header" slot-scope="applyBatchList">
             <el-col :span="14">
-              <el-input v-if="applyBatchList" v-model="search" placeholder="输入关键字搜索" size="mini"/>
+              <el-input v-if="applyBatchList" v-model="search" placeholder="输入关键字搜索" size="mini" />
             </el-col>
-            <el-button icon="el-icon-circle-plus-outline" round size="mini" type="primary"
-                       @click="position = {}">添加
+            <el-button icon="el-icon-circle-plus-outline" round size="mini" type="primary" @click="position = {}">添加
             </el-button>
           </template>
           <template slot-scope="applyBatchList">
@@ -97,10 +96,10 @@
     <div>
       <el-dialog :title="activeTit" :visible.sync="showDetail">
         <el-table :data="storeBatchDetailList.filter(
-            (data) =>
-              !searchNew ||
-              data.batchId == searchNew
-          )
+          (data) =>
+            !searchNew ||
+            data.batchId == searchNew
+        )
           " fit mix-height="100" stripe style="width: 100%">
           <el-table-column fixed="left" label="店内批次Id" min-width="80px">
             <template slot-scope="storeBatchDetailList">
@@ -125,10 +124,9 @@
           <el-table-column align="left" fixed="right" width="220px">
             <template slot="header" slot-scope="applyBatchList">
               <el-col :span="14">
-                <el-input v-if="applyBatchList" v-model="search" placeholder="输入关键字搜索" size="mini"/>
+                <el-input v-if="applyBatchList" v-model="search" placeholder="输入关键字搜索" size="mini" />
               </el-col>
-              <el-button icon="el-icon-circle-plus-outline" round size="mini" type="primary"
-                         @click="position = {}">添加
+              <el-button icon="el-icon-circle-plus-outline" round size="mini" type="primary" @click="position = {}">添加
               </el-button>
             </template>
             <template slot-scope="applyBatchList">
@@ -161,7 +159,8 @@ export default {
       showDetail: false,
       storeBatchDetailList: [],
       searchNew: '',
-      activeStoreName: ''
+      activeStoreName: '',
+      activeDrug: {}
     }
   },
   created () {
@@ -173,7 +172,7 @@ export default {
       const h = this.$createElement
       this.$notify({
         title: '成功',
-        message: h('i', {style: 'color: teal'}, action + '成功')
+        message: h('i', { style: 'color: teal' }, action + '成功')
       })
     },
     // async getStoreList () {
@@ -250,12 +249,19 @@ export default {
           'applyIdList': row.applyIdList,
           'status': status,
           'drugDetailId': this.activeDrugDetailId
+        }).then((jsondata) => {
+          if (jsondata.code === '200') {
+            this.$message({
+              message: '操作成功',
+              type: 'success'
+            })
+          }
         })
       }
       // 刷新
       this.getApplyBatchList()
       // this.refreshKey++
-      location.reload()
+      // location.reload()
     },
     handleFail () {
       axios.put('/admin/store_batch/fast', {
@@ -263,6 +269,10 @@ export default {
       })
         .then(jsondata => {
           if (jsondata.code === '200') {
+            this.$message({
+              message: '操作成功',
+              type: 'success'
+            })
             this.remarkShow = false
             this.remarkText = ''
             this.activeDrugDetailId = ''
@@ -282,20 +292,35 @@ export default {
       // })
       // 使用临时查询的方法
 
+      // axios({
+      //   method: 'get',
+      //   url: '/admin/store_batch/apply/details/external',
+      //   params: {
+      //     'storeId': this.storeList[this.activeStoreNum].storeId,
+      //     'drugDetailId': row.drugDetailId
+      //   }
+      // }).then(jsondata => {
+      //   this.storeBatchDetailList = jsondata.data
+      //   console.log('获取的详情为:', this.storeBatchDetailList)
+      // })
+      this.activeDrug = row
+      this.getData()
+      // 开启弹窗
+      this.activeTit = this.activeStoreName + '_' + row.drugName
+      this.showDetail = true
+    },
+    getData () {
       axios({
         method: 'get',
         url: '/admin/store_batch/apply/details/external',
         params: {
           'storeId': this.storeList[this.activeStoreNum].storeId,
-          'drugDetailId': row.drugDetailId
+          'drugDetailId': this.activeDrug.drugDetailId
         }
       }).then(jsondata => {
         this.storeBatchDetailList = jsondata.data
         console.log('获取的详情为:', this.storeBatchDetailList)
       })
-      // 开启弹窗
-      this.activeTit = this.activeStoreName + '_' + row.drugName
-      this.showDetail = true
     },
     handleReturn (index, row) {
       console.log('退回', row)
@@ -306,12 +331,16 @@ export default {
       axios({
         method: 'put',
         url: '/admin/store_batch/apply/change',
-        params: {'storeBatchId': row.storeBatchId, 'storeBatchStatus': status}
+        params: { 'storeBatchId': row.storeBatchId, 'storeBatchStatus': status }
       })
         .then(jsondata => {
           console.log(jsondata)
           if (jsondata.code === '200') {
-            this.noti('操作')
+            this.$message({
+              message: '操作成功',
+              type: 'success'
+            })
+            this.getData()
           }
         })
     }

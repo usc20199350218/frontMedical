@@ -60,7 +60,6 @@
     <div>
       <el-dialog :visible.sync="dialogFormVisible" title="新数据">
         <el-form ref="form" :model="brand" label-width="80px" size="mini">
-          <div>{{ brand }}</div>
           <el-form-item label="品牌名称">
             <el-input v-model="brand.brandName"></el-input>
           </el-form-item>

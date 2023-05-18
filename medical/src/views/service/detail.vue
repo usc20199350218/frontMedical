@@ -130,6 +130,12 @@ export default {
     }
   },
   methods: {
+    newService () {
+      this.editService = false
+      this.service.serviceDate = this.getServiceDate()
+      this.getBlank()
+      this.service.isNormal = ''
+    },
     back () {
       this.$router.push({path: '/service/choose', query: {userId: this.userId, userRealName: this.userRealName}})
     },

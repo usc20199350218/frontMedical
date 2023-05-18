@@ -7,19 +7,18 @@
         <el-option label="处方" value="1"></el-option>
       </el-select>
       <el-select slot="prepend" v-model="brandId" placeholder="品牌" style="padding-left: 30px; width: 150px;"
-                 @change="getBatchsList()">
+        @change="getBatchsList()">
         <el-option key="" value="">全部</el-option>
         <el-option v-for="item in brandList" :key="item.brandId" :label="item.brandName"
-                   :value="item.brandId"></el-option>
+          :value="item.brandId"></el-option>
       </el-select>
       <el-select slot="prepend" v-model="typeId" placeholder="分类" style="padding-left: 30px; width: 150px;"
-                 @change="getBatchsList()">
+        @change="getBatchsList()">
         <el-option key="" value="">全部</el-option>
         <el-option v-for="item in typeList" :key="item.typeId" :label="item.typeName" :value="item.typeId"></el-option>
       </el-select>
-      <el-select slot="prepend" v-model="searchMethod" placeholder="请选择方式"
-                 style="padding-left: 30px; width: 150px;"
-                 @change="getBatchsList()">
+      <el-select slot="prepend" v-model="searchMethod" placeholder="请选择方式" style="padding-left: 30px; width: 150px;"
+        @change="getBatchsList()">
         <el-option label="药品名称" value="drugName"></el-option>
         <el-option label="药品详情编号" value="drugDetailId"></el-option>
       </el-select>
@@ -100,10 +99,9 @@
       <el-table-column align="left" fixed="right" width="300px">
         <template slot="header" slot-scope="batchsList">
           <el-col :span="14">
-            <el-input v-if="batchsList" v-model="search" placeholder="输入关键字搜索" size="mini"/>
+            <el-input v-if="batchsList" v-model="search" placeholder="输入关键字搜索" size="mini" />
           </el-col>
-          <el-button icon="el-icon-circle-plus-outline" round size="mini" type="primary"
-                     @click="addShowdialog">添加
+          <el-button icon="el-icon-circle-plus-outline" round size="mini" type="primary" @click="addShowdialog">添加
           </el-button>
         </template>
         <template slot-scope="batchsList">
@@ -123,7 +121,7 @@
           <el-form-item fixed="left" label="药品" min-width="150px">
             <el-select v-model="batch.drugDetailId" filterable placeholder="请选择药品">
               <el-option v-for="item in drugDetailList" :key="item.drugDetailId" :label="item.drugName"
-                         :value="item.drugDetailId">
+                :value="item.drugDetailId">
                 {{ item.drugDetailId }}-{{ item.drugName }}-{{ item.drugSpecification }}
               </el-option>
             </el-select>
@@ -131,7 +129,7 @@
           <el-form-item label="数量（盒）">
             <el-col>
               <el-input v-model="batch.batchPurchaseQuantity" maxlength="20" placeholder="请输入数量（盒）" show-word-limit
-                        type="text"></el-input>
+                type="text"></el-input>
             </el-col>
           </el-form-item>
         </el-form>
@@ -151,7 +149,7 @@
           <el-form-item fixed="left" label="药品" min-width="150px">
             <el-select v-model="batch.drugDetailId" :disabled="true" filterable placeholder="请选择药品">
               <el-option v-for="item in drugDetailList" :key="item.drugDetailId" :label="item.drugName"
-                         :value="item.drugDetailId">
+                :value="item.drugDetailId">
                 {{ item.drugDetailId }}-{{ item.drugName }}-{{ item.drugSpecification }}
               </el-option>
             </el-select>
@@ -159,7 +157,7 @@
           <el-form-item label="数量（盒）">
             <el-col>
               <el-input v-model="batch.batchPurchaseQuantity" maxlength="20" placeholder="请输入数量（盒）" show-word-limit
-                        type="text"></el-input>
+                type="text"></el-input>
             </el-col>
           </el-form-item>
         </el-form>
@@ -167,8 +165,7 @@
           <!-- <el-button @click="getBatchDetails(activeDrugDetailId, nowActiveName), dialogFormVisibles = false">取
             消</el-button> -->
           <!-- <el-button @click="closedialog(dialogFormVisibles)">取 消</el-button> -->
-          <el-button
-            @click="dialogFormVisibles = false, getBatchDetails(activeDrugDetailId, nowActiveName), batch = {}">取
+          <el-button @click="dialogFormVisibles = false, getBatchDetails(activeDrugDetailId, nowActiveName), batch = {}">取
             消
           </el-button>
           <el-button type="primary" @click="updItem(), dialogFormVisibles = false, batch = {}">确 定</el-button>
@@ -182,7 +179,7 @@
           <el-form-item fixed="left" label="药品" min-width="150px">
             <el-select v-model="batch.drugDetailId" :disabled="true" filterable placeholder="请选择药品">
               <el-option v-for="item in drugDetailList" :key="item.drugDetailId" :label="item.drugName"
-                         :value="item.drugDetailId">
+                :value="item.drugDetailId">
                 {{ item.drugDetailId }}-{{ item.drugName }}-{{ item.drugSpecification }}
               </el-option>
             </el-select>
@@ -190,13 +187,13 @@
           <el-form-item label="计划数量（盒）">
             <el-col>
               <el-input v-model="batch.batchPurchaseQuantity" maxlength="20" placeholder="请输入数量（盒）" show-word-limit
-                        type="text"></el-input>
+                type="text"></el-input>
             </el-col>
           </el-form-item>
           <el-form-item label="实际数量（盒）">
             <el-col>
               <el-input v-model="batch.batchPurchaseQuantity" maxlength="20" placeholder="请输入数量（盒）" show-word-limit
-                        type="text"></el-input>
+                type="text"></el-input>
             </el-col>
           </el-form-item>
           <el-form-item label="生产日期">
@@ -208,13 +205,13 @@
           <el-form-item label="批号">
             <el-col>
               <el-input v-model="batch.batchNumber" maxlength="20" placeholder="批号" show-word-limit
-                        type="text"></el-input>
+                type="text"></el-input>
             </el-col>
           </el-form-item>
           <el-form-item label="保质期">
             <el-col>
               <el-input v-model="batch.batchValidityPeriod" maxlength="20" placeholder="保质期(月)" show-word-limit
-                        type="text"></el-input>
+                type="text"></el-input>
             </el-col>
           </el-form-item>
         </el-form>
@@ -228,7 +225,7 @@
 
     <div>
       <el-dialog :close-on-click-modal="false" :max-width=this.maxWidth :title="drugName + ' 库存情况'"
-                 :visible.sync="dialogFormVisibleDetails">
+        :visible.sync="dialogFormVisibleDetails">
         <!-- <el-dialog :title="`<span style='color: red; font-weight: bold;'>${drugName}</span> 库存情况`"
         :visible.sync="dialogFormVisibleDetails" :max-width=this.maxWidth :close-on-click-modal="false"> -->
         <!-- 标签页标签头 -->
@@ -284,7 +281,7 @@
           <el-table-column align="left" fixed="right" width="270px">
             <template slot="header" slot-scope="batchDetailsList">
               <el-col :span="14">
-                <el-input v-if="batchDetailsList" v-model="searchNew" placeholder="输入关键字搜索" size="mini"/>
+                <el-input v-if="batchDetailsList" v-model="searchNew" placeholder="输入关键字搜索" size="mini" />
               </el-col>
               <!-- <el-button type="primary" size="mini" icon="el-icon-circle-plus-outline" round
                 @click="addShowdialog">添加</el-button> -->
@@ -295,8 +292,7 @@
               this.dialogFormVisible = true -->
             </template>
             <template slot-scope="batchDetailsList">
-              <el-button size="mini"
-                         @click="handleEditDetail(batchDetailsList.$index, batchDetailsList.row)">编辑
+              <el-button size="mini" @click="handleEditDetail(batchDetailsList.$index, batchDetailsList.row)">编辑
               </el-button>
               <!-- 批次状态/0-创建/1-正常/2-售完/3-过期/4-禁止-后期增加/ -->
               <!-- 创建对应编辑、通过、不通过 -->
@@ -314,36 +310,36 @@
 
               <!-- 通过变为进货 -->
               <el-button v-if="batchDetailsList.row.batchStatus === 'CREATED'" size="mini" type="primary"
-                         @click="batchStatusChange(batchDetailsList.$index, batchDetailsList.row, 'NORMAL_PURCHASE')">
+                @click="batchStatusChange(batchDetailsList.$index, batchDetailsList.row, 'NORMAL_PURCHASE')">
                 通过
               </el-button>
               <!-- 不通过变为禁止，且需要弹窗填写备注 -->
               <el-button v-if="batchDetailsList.row.batchStatus === 'CREATED'" size="mini" type="warning"
-                         @click="batchStatusChange(batchDetailsList.$index, batchDetailsList.row, 'FORBIDDEN')">
+                @click="batchStatusChange(batchDetailsList.$index, batchDetailsList.row, 'FORBIDDEN')">
                 不通过
               </el-button>
               <!-- 上架变为正常 -->
               <el-button v-if="batchDetailsList.row.batchStatus === 'NORMAL_PURCHASE'" size="mini" type="warning"
-                         @click="batchStatusChange(batchDetailsList.$index, batchDetailsList.row, 'SOLD')">
+                @click="batchStatusChange(batchDetailsList.$index, batchDetailsList.row, 'SOLD')">
                 上架
               </el-button>
               <!-- 禁止，需要弹窗填写利用 -->
               <el-button v-if="batchDetailsList.row.batchStatus === 'SOLD'" size="mini" type="danger"
-                         @click="batchStatusChange(batchDetailsList.$index, batchDetailsList.row, 'FORBIDDEN')">
+                @click="batchStatusChange(batchDetailsList.$index, batchDetailsList.row, 'FORBIDDEN')">
                 下架
               </el-button>
               <!-- 销毁，数量变为零，需要弹窗 -->
               <el-button v-if="batchDetailsList.row.batchStatus === 'EXPIRED'" size="mini" type="danger"
-                         @click="batchStatusChange(batchDetailsList.$index, batchDetailsList.row, 'EXPIRED_PROCESSED')">
+                @click="batchStatusChange(batchDetailsList.$index, batchDetailsList.row, 'EXPIRED_PROCESSED')">
                 销毁
               </el-button>
               <!-- 恢复变为正常 -->
               <el-button v-if="batchDetailsList.row.batchStatus === 'FORBIDDEN'" size="mini" type="primary"
-                         @click="batchStatusChange(batchDetailsList.$index, batchDetailsList.row, null)">
+                @click="batchStatusChange(batchDetailsList.$index, batchDetailsList.row, null)">
                 恢复
               </el-button>
               <el-button v-if="batchDetailsList.row.batchStatus === 'SOLD_OUT'" size="mini" type="primary"
-                         @click="batchAdd(batchDetailsList.$index, batchDetailsList.row)">
+                @click="batchAdd(batchDetailsList.$index, batchDetailsList.row)">
                 +1
               </el-button>
             </template>
@@ -355,9 +351,9 @@
     </div>
     <div class="block">
       <el-pagination :current-page="pageInfo.current" :page-size="pageInfo.size"
-                     :page-sizes="[5, 10, 20, 30, 100, 1000, 10000]" :total="pageInfo.total"
-                     layout="total, sizes, prev, pager, next, jumper"
-                     @size-change="handleSizeChange" @current-change="handleCurrentChange">
+        :page-sizes="[5, 10, 20, 30, 100, 1000, 10000]" :total="pageInfo.total"
+        layout="total, sizes, prev, pager, next, jumper" @size-change="handleSizeChange"
+        @current-change="handleCurrentChange">
       </el-pagination>
     </div>
     <div>
@@ -370,8 +366,7 @@
         <el-form ref="form" :model="batch" label-width="100px" size="mini">
           <el-form-item label="备注">
             <el-col>
-              <el-input v-model="batch.remark" maxlength="999" placeholder="备注" show-word-limit
-                        type="text"></el-input>
+              <el-input v-model="batch.remark" maxlength="999" placeholder="备注" show-word-limit type="text"></el-input>
             </el-col>
           </el-form-item>
         </el-form>
@@ -386,32 +381,33 @@
         <el-form ref="form" :model="batch" label-width="100px" size="mini">
           <el-form-item label="计划数量（盒）">
             <el-col>
-              <el-input v-model="batch.batchPurchaseQuantity" :disabled="true" maxlength="20" placeholder="请输入数量（盒）" show-word-limit
-                        type="text"></el-input>
+              <el-input v-model="batch.batchPurchaseQuantity" :disabled="true" maxlength="20" placeholder="请输入数量（盒）"
+                show-word-limit type="text"></el-input>
             </el-col>
           </el-form-item>
           <el-form-item label="实际数量（盒）">
             <el-col>
               <el-input v-model="batch.batchExistingQuantity" maxlength="20" placeholder="请输入数量（盒）" show-word-limit
-                        type="text"></el-input>
+                type="text"></el-input>
             </el-col>
           </el-form-item>
           <el-form-item label="生产日期">
             <el-col>
-              <el-date-picker v-model="batch.batchProductionDate" placeholder="选择日期" type="date">
+              <el-date-picker  value-format="yyyy-MM-dd" v-model="batch.batchProductionDate" placeholder="选择日期" type="date">
               </el-date-picker>
             </el-col>
           </el-form-item>
           <el-form-item label="批号">
             <el-col>
               <el-input v-model="batch.batchNumber" maxlength="20" placeholder="批号" show-word-limit
-                        type="text"></el-input>
+                type="text"></el-input>
             </el-col>
           </el-form-item>
           <el-form-item label="保质期">
             <el-col>
               <el-input v-model="batch.batchValidityPeriod" maxlength="20" placeholder="保质期(月)" show-word-limit
-                        type="text"></el-input>
+                type="text">
+              </el-input>
             </el-col>
           </el-form-item>
         </el-form>
@@ -439,9 +435,9 @@ export default {
   data () {
     return {
       // 分页信息
-      pageInfo: {current: 0, size: 5},
+      pageInfo: { current: 0, size: 5 },
       // 详情分页信息，废弃，——数据量不大
-      pageInfoNew: {current: 0, size: 5},
+      pageInfoNew: { current: 0, size: 5 },
       search: '',
       dialogFormVisible: false,
       dialogFormVisibles: false,
@@ -560,7 +556,7 @@ export default {
     },
     drugStateChaged (item) {
       console.log('change', item)
-      let changeData = {drugDetailsStatus: item.drugDetailsStatus, drugDetailsId: item.drugDetailsId}
+      let changeData = { drugDetailsStatus: item.drugDetailsStatus, drugDetailsId: item.drugDetailsId }
       axios({
         method: 'put',
         url: '/admin/drugdetail/status',
@@ -578,7 +574,7 @@ export default {
       const h = this.$createElement
       this.$notify({
         title: '操作成功',
-        message: h('i', {style: 'color: teal'}, action + '成功')
+        message: h('i', { style: 'color: teal' }, action + '成功')
       })
       this.getBatchsList()
     },
@@ -654,7 +650,7 @@ export default {
       axios({
         method: 'get',
         url: `/admin/batch/detail/` + drugDetailId,
-        params: {'active': active}
+        params: { 'active': active }
       }).then(jsondata => {
         this.batchDetailsList = jsondata.data
         console.log('batchDetailsList:', this.batchDetailsList)

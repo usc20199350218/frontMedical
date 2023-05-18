@@ -13,10 +13,10 @@
             <span style="margin-left: 10px">{{ storeList.row.storeId }}</span>
           </template>
         </el-table-column>
-        <el-table-column fixed="left" label="店铺ID" min-width="50px">
+        <el-table-column fixed="left" label="店铺照片" min-width="50px">
           <template slot-scope="storeList">
             <!-- <span style="margin-left: 10px">{{ storeList.row.storeId }}</span> -->
-            <img :src="storeList.row.storePath" alt="图片" width="100px"/>
+            <img :src="storeList.row.storePath" alt="图片" height="100px"/>
           </template>
         </el-table-column>
         <el-table-column fixed="left" label="店铺名称" width="180">
@@ -86,8 +86,21 @@
         <el-form ref="form" :model="store" label-width="80px" size="mini">
           <el-form-item label="店铺名称">
             <el-col :span="10">
-              <el-input v-model="store.storeName" maxlength="32" show-word-limit type="textarea"></el-input>
+              <el-input v-model="store.storeName" maxlength="32" show-word-limit></el-input>
             </el-col>
+          </el-form-item>
+          <el-form-item label="照片上传">
+            <!-- <el-col> -->
+            <el-upload :file="fileList" :on-preview="handlePreview"
+                       :on-remove="handleRemove" :on-success="filesuccess"
+                       action="http://localhost:8088/api/upload?module=storepath" class="upload-demo"
+                       list-type="picture">
+              <el-button size="small" type="primary">点击上传</el-button>
+              <div slot="tip" class="el-upload__tip">
+                只能上传jpg/png文件且不超过500kb
+              </div>
+            </el-upload>
+            <el-input v-model="store.storePath" placeholder="照片路径，copy" type="text"></el-input>
           </el-form-item>
           <el-form-item label="电话">
             <el-col :span="10">
@@ -128,8 +141,21 @@
         <el-form ref="form" :model="store" label-width="80px" size="mini">
           <el-form-item label="店铺名称">
             <el-col :span="10">
-              <el-input v-model="store.storeName" maxlength="32" show-word-limit type="textarea"></el-input>
+              <el-input v-model="store.storeName" maxlength="32" show-word-limit ></el-input>
             </el-col>
+          </el-form-item>
+          <el-form-item label="照片上传">
+            <!-- <el-col> -->
+            <el-upload :file="fileList" :on-preview="handlePreview"
+                       :on-remove="handleRemove" :on-success="filesuccess"
+                       action="http://localhost:8088/api/upload?module=storepath" class="upload-demo"
+                       list-type="picture">
+              <el-button size="small" type="primary">点击上传</el-button>
+              <div slot="tip" class="el-upload__tip">
+                只能上传jpg/png文件且不超过500kb
+              </div>
+            </el-upload>
+            <el-input v-model="store.storePath" placeholder="照片路径，copy" type="text"></el-input>
           </el-form-item>
           <el-form-item label="电话">
             <el-col :span="10">
@@ -225,13 +251,30 @@ export default {
       showUpd: false,
       staffsList: [],
       staffTitle: '详情',
-      showStaffs: false
+      showStaffs: false,
+      fileList: ''
     }
   },
   created () {
     this.getStoreList()
   },
   methods: {
+    filesuccess (response, file, fileList) {
+      console.log(response)
+      if (response.data !== null) {
+        this.noti('上传')
+      }
+      this.store.storePath = response.data
+
+      // console.log(file)
+      // console.log(fileList)
+    },
+    handlePreview (file) {
+      console.log(file)
+    },
+    handleRemove (file, fileList) {
+      console.log(file, fileList)
+    },
     noti (action) {
       const h = this.$createElement
       this.$notify({

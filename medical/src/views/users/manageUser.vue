@@ -51,7 +51,7 @@
       </el-table-column>
       <el-table-column fixed="left" label="头像" min-width="150px">
         <template slot-scope="usersList">
-          <img v-if="usersList.row.userAvatarUrl != ''" :src="usersList.row.userAvatarUrl" alt="头像" width="100px"/>
+          <img v-if="usersList.row.userAvatarUrl !== ''" :src="usersList.row.userAvatarUrl" alt="头像" width="100px"/>
           <span v-else>空</span>
         </template>
       </el-table-column>
@@ -106,8 +106,8 @@
       <el-table-column label="用户更新日期" width="180px">
         <template slot-scope="usersList">
           <span style="margin-left: 10px">{{
-            usersList.row.modifiedTime
-          }}</span>
+              usersList.row.modifiedTime
+            }}</span>
         </template>
       </el-table-column>
       <el-table-column align="left" fixed="right" min-width="320px">
@@ -340,7 +340,8 @@
           <el-form-item label="头像上传">
             <!-- <el-col> -->
             <el-upload :file="fileList" :on-preview="handlePreview"
-                       :on-remove="handleRemove" :on-success="filesuccess" action="http://localhost:8088/api/upload?module=userpath" class="upload-demo"
+                       :on-remove="handleRemove" :on-success="filesuccess"
+                       action="http://localhost:8088/api/upload?module=userpath" class="upload-demo"
                        list-type="picture">
               <el-button size="small" type="primary">点击上传</el-button>
               <div slot="tip" class="el-upload__tip">
@@ -351,7 +352,8 @@
             <el-input v-model="user.userAvatarUrl" placeholder="头像路径，copy" type="text"></el-input>
           </el-form-item>
           <el-form-item label="生日">
-            <el-date-picker v-model="user.userBirthday" :picker-options="pickerOptions" placeholder="创建日期" type="date"
+            <el-date-picker v-model="user.userBirthday" :picker-options="pickerOptions" placeholder="创建日期"
+                            type="date"
                             value-format="yyyy-MM-dd">
             </el-date-picker>
           </el-form-item>
@@ -467,7 +469,7 @@ export default {
         ]
       },
       searchText: '',
-      searchMethod: '姓名',
+      searchMethod: 'userRealName',
       roleId: '',
       userVip: '',
       userGender: '男女',
@@ -481,6 +483,15 @@ export default {
     this.getUsersList()
   },
   methods: {
+    handleReset (index, row) {
+      axios.put(`/admin/user/reset/` + row.userId).then((jsondata) => {
+        console.log('重置密码', jsondata)
+        if (jsondata.code === '200') {
+          this.noti('重置密码')
+        }
+        this.getUsersList()
+      })
+    },
     clean () {
       this.searchText = ''
       this.searchMethod = '姓名'
@@ -499,6 +510,7 @@ export default {
           this.noti('save')
           this.showEdit = false
           this.user = {}
+          this.fileList = []
         }
       })
     },
@@ -631,7 +643,6 @@ export default {
       // this.getUsersList()
     },
     getUsersList () {
-      console.log('pageInfo:>', this.pageInfo)
       // 获取用户分页列表
       axios({
         method: 'get',
@@ -655,6 +666,7 @@ export default {
       })
     },
     handleEdit (index, row) {
+      this.fileList = []
       // console.log(index, row)
       console.log(index)
       console.log(row)
