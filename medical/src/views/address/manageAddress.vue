@@ -75,7 +75,7 @@ export default {
     isDefaultChaged (val) {
       console.log('默认', val)
       axios.post('/api/address/save', Qs.stringify(val)).then((jsondata) => {
-        console.log('默认jsondata', jsondata)
+        console.log('默认json-data', jsondata)
         this.getAddressList()
       })
     },
@@ -118,7 +118,7 @@ export default {
     },
     getAddressList () {
       axios.get('/api/address/' + this.userId).then((jsondata) => {
-        console.log('jsondata', jsondata)
+        console.log('json-data', jsondata)
         this.addressList = jsondata.data
       })
     },

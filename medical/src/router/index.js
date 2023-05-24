@@ -39,6 +39,7 @@ import newService from '../views/service/newService'
 import welcome from '../views/welcome'
 import manageAddress from '../views/address/manageAddress'
 import chat from '../views/users/chat'
+import userInfo from '../views/users/userInfo.vue'
 
 Vue.use(Router)
 
@@ -53,7 +54,7 @@ export default new Router({
     {
       path: '/index',
       component: Index,
-      redirect: '/welcome',
+      // redirect: '/welcome',
       children: [
         {
           path: '/nothing',
@@ -203,6 +204,10 @@ export default new Router({
           path: '/chat',
           name: 'chat',
           component: chat
+        }, {
+          path: '/user/info',
+          name: 'userInfo',
+          component: userInfo
         }
       ]
     }, {

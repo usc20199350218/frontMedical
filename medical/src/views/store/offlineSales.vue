@@ -62,7 +62,8 @@
         <div class="orderDetail">
           <el-table :key="menuKey"
                     :ref="orderList"
-                    :data="orderList.filter(data => !search || data.drugName.toLowerCase().includes(search.toLowerCase()))" style="width: 100%">
+                    :data="orderList.filter(data => !search || data.drugName.toLowerCase().includes(search.toLowerCase()))"
+                    style="width: 100%">
             <el-table-column label="店NO" prop="storeBatchId" width="60px">
             </el-table-column>
             <el-table-column label="名称" prop="drugName">
@@ -92,7 +93,7 @@
           </el-table>
         </div>
         <div class="orderOperate">
-          <span>{{ amount }}</span>
+          <span>总金额 {{ amount }} </span>
           <el-button type="warning" @click="clearOrder()">重置</el-button>
           <el-button type="primary" @click="generateOrder()">结算</el-button>
         </div>

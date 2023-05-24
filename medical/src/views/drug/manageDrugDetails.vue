@@ -55,8 +55,8 @@
       </el-table-column>
       <el-table-column label="处方" min-width="60px">
         <template slot-scope="drugDetailsList">
-          <span v-if="drugDetailsList.row.isRx == '0'">非处方药</span>
-          <span v-if="drugDetailsList.row.isRx == '1'">处方药</span>
+          <span v-if="drugDetailsList.row.isRx === '0'">非处方药</span>
+          <span v-if="drugDetailsList.row.isRx === '1'">处方药</span>
         </template>
       </el-table-column>
       <el-table-column label="状态" width="85px">
@@ -69,8 +69,8 @@
       <el-table-column label="更新日期" width="100px">
         <template slot-scope="drugDetailsList">
           <span style="margin-left: 10px">{{
-            drugDetailsList.row.modifiedTime
-          }}</span>
+              drugDetailsList.row.modifiedTime
+            }}</span>
         </template>
       </el-table-column>
       <el-table-column align="left" fixed="right" width="220px">
@@ -355,6 +355,7 @@ export default {
       }
     },
     addShowdialog () {
+      this.fileList = ''
       this.drugDetail = {}
       this.getBrandList()
       this.getDrugList()
@@ -417,6 +418,7 @@ export default {
       console.log(row)
       this.getBrandList()
       this.getDrugList()
+      this.fileList = row.drugDetailPath
       this.drugDetail = row
       this.fileList = this.drugDetail.drugDetailPath
       this.dialogFormVisibles = true

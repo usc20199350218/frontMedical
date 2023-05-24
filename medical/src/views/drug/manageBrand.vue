@@ -249,13 +249,12 @@ export default {
     getUserList () {
       axios({
         method: 'get',
-        url: '/admin/user'
+        url: '/admin/user/supplier'
       }).then((jsondata) => {
         this.usersList = jsondata.data
         console.log('用户list:' + jsondata.data)
       })
     }
-
   }
 }
 </script>

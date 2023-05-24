@@ -25,7 +25,8 @@
               <el-option v-for="type in typeList" :key="type.typeId" :label="type.typeName" :value="type.typeId">
               </el-option>
             </el-select>
-            <el-select slot="prepend" v-model="searchMethod" placeholder="请选择" style="padding-left: 30px; width: 150px;"
+            <el-select slot="prepend" v-model="searchMethod" placeholder="请选择"
+                       style="padding-left: 30px; width: 150px;"
                        @change="searchStart()">
               <el-option label="药品名称" value="1"></el-option>
               <el-option label="药品编号" value="2"></el-option>
@@ -41,9 +42,8 @@
           <el-button @click="backChoose()">选择店铺</el-button>
         </el-col>
         <el-col :span="1">
-          <el-button icon="el-icon-shopping-cart-full" style="float: right;" @click="toShoppingCart()">{{
-            shoppingCartNum
-            }}
+          <el-button icon="el-icon-shopping-cart-full" style="float: right;" @click="toShoppingCart()">
+            {{ shoppingCartNum }}
           </el-button>
         </el-col>
       </el-row>
@@ -175,6 +175,7 @@ export default {
     this.storeName = this.$route.query.storeName
     this.getTypeList()
 
+    this.getCartNum()
     this.searchStart()
   },
   methods: {
@@ -257,6 +258,11 @@ export default {
       }).then((jsondata) => {
         console.log(jsondata)
         this.typeList = jsondata.data
+      })
+    },
+    getCartNum () {
+      axios.get(`/api/shopping_cart/` + this.userId + `/number`).then((jsondata) => {
+        this.shoppingCartNum = jsondata.data
       })
     },
     cleanTypeId () {
