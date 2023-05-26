@@ -13,7 +13,7 @@
         </el-table-column>
         <el-table-column label="状况">
           <template slot-scope="serviceList">
-            <span v-if="serviceList.row.isNormal == '1'" style="color: green;">正常</span>
+            <span v-if="serviceList.row.isNormal === '1'" style="color: green;">正常</span>
             <span v-else style="color: red;">异常</span>
           </template>
         </el-table-column>

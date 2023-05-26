@@ -54,15 +54,15 @@
         </el-table-column>
         <el-table-column label="类型">
           <template slot-scope="scope">
-            <span v-if="scope.row.orderType == 'OFFLINE'">线下</span>
-            <span v-else-if="scope.row.orderType == 'ONLINE'">线上</span>
+            <span v-if="scope.row.orderType === 'OFFLINE'">线下</span>
+            <span v-else-if="scope.row.orderType === 'ONLINE'">线上</span>
           </template>
         </el-table-column>
         <el-table-column label="支付方式">
           <template slot-scope="scope">
-            <span v-if="scope.row.paymentMethod == 'CASH'">现金</span>
-            <span v-else-if="scope.row.paymentMethod == 'ALIPAY'">支付宝</span>
-            <span v-else-if="scope.row.paymentMethod == 'WECHATPAY'">现金</span>
+            <span v-if="scope.row.paymentMethod === 'CASH'">现金</span>
+            <span v-else-if="scope.row.paymentMethod === 'ALIPAY'">支付宝</span>
+            <span v-else-if="scope.row.paymentMethod === 'WECHATPAY'">现金</span>
             <span v-else>error</span>
           </template>
         </el-table-column>
@@ -70,17 +70,17 @@
         </el-table-column>
         <el-table-column label="支付状态">
           <template slot-scope="scope">
-            <span v-if="scope.row.status == 'CREATED'">创建</span>
-            <span v-else-if="scope.row.status == 'SUCCESS'">成功</span>
-            <span v-else-if="scope.row.status == 'ING'">支付中</span>
-            <span v-else-if="scope.row.status == 'GIVE_UP'">放弃</span>
+            <span v-if="scope.row.status === 'CREATED'">创建</span>
+            <span v-else-if="scope.row.status === 'SUCCESS'">成功</span>
+            <span v-else-if="scope.row.status === 'ING'">支付中</span>
+            <span v-else-if="scope.row.status === 'GIVE_UP'">放弃</span>
             <span v-else>error</span>
           </template>
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button @click="handleLook(scope.row)">详情</el-button>
-            <el-button v-if="scope.row.orderType == 'ONLINE'" @click="handleLookAll(scope.row)">收件人</el-button>
+            <el-button v-if="scope.row.orderType === 'ONLINE'" @click="handleLookAll(scope.row)">收件人</el-button>
           </template>
         </el-table-column>
       </el-table>

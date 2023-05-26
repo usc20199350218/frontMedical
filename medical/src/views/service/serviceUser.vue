@@ -48,8 +48,8 @@
         </el-table-column>
         <el-table-column label="vip">
           <template slot-scope="userList">
-            <span v-if="userList.row.userVip == '0'">非vip</span>
-            <span v-if="userList.row.userVip != '0'" style="margin-left: 10px">{{ userList.row.userVip
+            <span v-if="userList.row.userVip === '0'">非vip</span>
+            <span v-if="userList.row.userVip !== '0'" style="margin-left: 10px">{{ userList.row.userVip
             }}级</span>
           </template>
         </el-table-column>

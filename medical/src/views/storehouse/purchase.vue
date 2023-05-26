@@ -47,8 +47,8 @@
       </el-table-column>
       <el-table-column label="品类" min-width="60px">
         <template slot-scope="batchsList">
-          <span v-if="batchsList.row.isRx == '0'">非处方药</span>
-          <span v-if="batchsList.row.isRx == '1'">处方药</span>
+          <span v-if="batchsList.row.isRx === 0">非处方药</span>
+          <span v-if="batchsList.row.isRx === 1">处方药</span>
         </template>
       </el-table-column>
       <el-table-column label="规格" min-width="125px">

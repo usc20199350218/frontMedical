@@ -6,7 +6,7 @@
       <div>
         <div v-for="store in storeList" :key="store.storeId" class="storeMode">
           <el-card shadow="hover">
-            <img :src="store.storePath" class="image"/>
+            <img :src="store.storePath" class="image" alt=""/>
             <div style="padding: 14px">
               <span class="storeName">{{ store.storeName }}</span>
               <hr/>

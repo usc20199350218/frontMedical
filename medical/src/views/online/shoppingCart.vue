@@ -23,7 +23,7 @@
         </el-table-column>
         <el-table-column label="图片" width="120">
           <template slot-scope="scope">
-            <img :src="scope.row.drugDetailPath" width="100px">
+            <img :src="scope.row.drugDetailPath" width="100px" alt="">
           </template>
         </el-table-column>
         <el-table-column label="品名" width="120">

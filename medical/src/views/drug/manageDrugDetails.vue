@@ -55,8 +55,8 @@
       </el-table-column>
       <el-table-column label="处方" min-width="60px">
         <template slot-scope="drugDetailsList">
-          <span v-if="drugDetailsList.row.isRx === '0'">非处方药</span>
-          <span v-if="drugDetailsList.row.isRx === '1'">处方药</span>
+          <span v-if="drugDetailsList.row.isRx === 0">非处方药</span>
+          <span v-if="drugDetailsList.row.isRx === 1">处方药</span>
         </template>
       </el-table-column>
       <el-table-column label="状态" width="85px">

@@ -31,8 +31,8 @@
         </el-table-column>
         <el-table-column fixed="left" label="处方" min-width="80px">
           <template slot-scope="applyBatchList">
-            <span v-if="applyBatchList.row.isRx == '0'">非处方药</span>
-            <span v-if="applyBatchList.row.isRx == '1'">处方药</span>
+            <span v-if="applyBatchList.row.isRx === 0">非处方药</span>
+            <span v-if="applyBatchList.row.isRx === 1">处方药</span>
           </template>
         </el-table-column>
         <el-table-column fixed="left" label="品类" min-width="80px">
@@ -98,7 +98,7 @@
         <el-table :data="storeBatchDetailList.filter(
           (data) =>
             !searchNew ||
-            data.batchId == searchNew
+            data.batchId === searchNew
         )
           " fit mix-height="100" stripe style="width: 100%">
           <el-table-column fixed="left" label="店内批次Id" min-width="80px">

@@ -1,10 +1,61 @@
 <template>
   <div class="loginMax">
+    <!--    <div class="login">-->
+    <!--      <el-tabs v-model="activeName" stretch type="border-card">-->
+    <!--        <el-tab-pane label="账号密码登录" name="first">-->
+    <!--          <el-form ref="userinfo" :label-position="labelPosition" :model="userInfo" :rules="rules" label-width="70px">-->
+    <!--            <h3>啊对对对对对</h3>-->
+    <!--            <el-form-item label="账号" prop="userName">-->
+    <!--              <el-input v-model="userInfo.userName"></el-input>-->
+    <!--            </el-form-item>-->
+    <!--            <el-form-item label="密码" prop="userPassword">-->
+    <!--              <el-input v-model="userInfo.userPassword" show-password></el-input>-->
+    <!--            </el-form-item>-->
+    <!--            <el-form-item>-->
+    <!--              <el-button type="primary" @click="login">登录</el-button>-->
+    <!--              <el-button @click="userInfo = {}">重置</el-button>-->
+    <!--            </el-form-item>-->
+    <!--            <el-button type="text" @click="dialog = true"> 点击注册</el-button>-->
+    <!--          </el-form>-->
+    <!--        </el-tab-pane>-->
+    <!--        &lt;!&ndash; <el-tab-pane label="手机号登录" name="second">-->
+    <!--            <el-form-->
+    <!--              :label-position="labelPosition"-->
+    <!--              label-width="70px"-->
+    <!--              :model="userInfoTwo"-->
+    <!--              :rules="rules"-->
+    <!--              ref="userInfoTwo"-->
+    <!--            >-->
+    <!--              <h3>啊对对对对对</h3>-->
+    <!--              <el-form-item label="手机号" prop="userPhone">-->
+    <!--                <el-input v-model="userInfoTwo.userPhone"></el-input>-->
+    <!--              </el-form-item>-->
+    <!--              <el-form-item label="验证码" prop="verification">-->
+    <!--                <el-col :span="15">-->
+    <!--                  <el-input v-model="userInfoTwo.verification"></el-input>-->
+    <!--                </el-col>-->
+    <!--                <el-button type="primary" @click="getCode">获取验证码</el-button>-->
+    <!--              </el-form-item>-->
+    <!--              <el-form-item>-->
+    <!--                <el-button type="primary" @click="loginByPhone">登录</el-button>-->
+    <!--                <el-button @click="userInfoTwo = {}"-->
+    <!--                  >重置</el-button-->
+    <!--                > </el-form-item-->
+    <!--              ><el-button type="text" @click="dialog = true">-->
+    <!--                点击注册-->
+    <!--              </el-button>-->
+    <!--            </el-form>-->
+    <!--          </el-tab-pane> &ndash;&gt;-->
+    <!--      </el-tabs>-->
+    <!--      <div class="block">-->
+    <!--        <el-image :src="src"></el-image>-->
+    <!--      </div>-->
+    <!--    </div>-->
     <div class="login">
       <el-tabs v-model="activeName" stretch type="border-card">
-        <el-tab-pane label="账号密码登录" name="first">
+        <el-tab-pane label="社区药店管理系统" name="first">
           <el-form ref="userinfo" :label-position="labelPosition" :model="userInfo" :rules="rules" label-width="70px">
-            <h3>啊对对对对对</h3>
+            <h3>欢迎登录社区药店管理系统</h3>
             <el-form-item label="账号" prop="userName">
               <el-input v-model="userInfo.userName"></el-input>
             </el-form-item>
@@ -18,42 +69,11 @@
             <el-button type="text" @click="dialog = true"> 点击注册</el-button>
           </el-form>
         </el-tab-pane>
-        <!-- <el-tab-pane label="手机号登录" name="second">
-            <el-form
-              :label-position="labelPosition"
-              label-width="70px"
-              :model="userInfoTwo"
-              :rules="rules"
-              ref="userInfoTwo"
-            >
-              <h3>啊对对对对对</h3>
-              <el-form-item label="手机号" prop="userPhone">
-                <el-input v-model="userInfoTwo.userPhone"></el-input>
-              </el-form-item>
-              <el-form-item label="验证码" prop="verification">
-                <el-col :span="15">
-                  <el-input v-model="userInfoTwo.verification"></el-input>
-                </el-col>
-                <el-button type="primary" @click="getCode">获取验证码</el-button>
-              </el-form-item>
-              <el-form-item>
-                <el-button type="primary" @click="loginByPhone">登录</el-button>
-                <el-button @click="userInfoTwo = {}"
-                  >重置</el-button
-                > </el-form-item
-              ><el-button type="text" @click="dialog = true">
-                点击注册
-              </el-button>
-            </el-form>
-          </el-tab-pane> -->
       </el-tabs>
-      <div class="block">
-        <el-image :src="src"></el-image>
-      </div>
     </div>
+
     <el-drawer ref="drawer" :rules="rules" :visible.sync="dialog" custom-class="demo-drawer" direction="ltr"
-               label-width="70px"
-               title="注册">
+      label-width="70px" title="注册">
       <!-- <el-form
           :label-position="labelPosition"
           label-width="70px"
@@ -65,22 +85,20 @@
         <el-form :model="form">
           <el-form-item :label-width="formLabelWidth" label="用户名" prop="userName">
             <el-col :span="17">
-              <el-input v-model="registerUserInfo.userName" autocomplete="off" maxlength="20"
-                        show-word-limit></el-input>
+              <el-input v-model="registerUserInfo.userName" autocomplete="off" maxlength="20" show-word-limit></el-input>
             </el-col>
           </el-form-item>
           <el-form-item :label-width="formLabelWidth" label="密码" prop="userPassword">
             <el-col :span="17">
               <el-input v-model="registerUserInfo.userPassword" maxlength="20" placeholder="请输入密码" show-password
-                        show-word-limit>
+                show-word-limit>
               </el-input>
             </el-col>
           </el-form-item>
           <el-form-item :label-width="formLabelWidth" label="确认密码" prop="userPassword">
             <el-col :span="17">
-              <el-input v-model="registerUserInfo.userPassword2" maxlength="20" placeholder="请再次输入密码"
-                        show-password
-                        show-word-limit>
+              <el-input v-model="registerUserInfo.userPassword2" maxlength="20" placeholder="请再次输入密码" show-password
+                show-word-limit>
               </el-input>
             </el-col>
           </el-form-item>
@@ -145,7 +163,7 @@ export default {
             message: '请输入账号',
             trigger: 'blur'
           },
-          {min: 3, max: 20, message: '长度在3到20之间', trigger: 'blur'}
+          { min: 3, max: 20, message: '长度在3到20之间', trigger: 'blur' }
         ],
         userPassword: [
           {
@@ -154,7 +172,7 @@ export default {
             message: '请输入密码',
             trigger: 'blur'
           },
-          {min: 4, max: 20, message: '长度在4到20之间', trigger: 'blur'}
+          { min: 4, max: 20, message: '长度在4到20之间', trigger: 'blur' }
         ],
         userPhone: [
           {
@@ -163,7 +181,7 @@ export default {
             message: '请输入手机号',
             trigger: 'blur'
           },
-          {min: 11, max: 11, message: '长度11', trigger: 'blur'}
+          { min: 11, max: 11, message: '长度11', trigger: 'blur' }
         ],
         verification: [
           {
@@ -172,7 +190,7 @@ export default {
             message: '请输入密码',
             trigger: 'blur'
           },
-          {min: 4, max: 4, message: '长度为4', trigger: 'blur'}
+          { min: 4, max: 4, message: '长度为4', trigger: 'blur' }
         ]
       }
     }
@@ -181,11 +199,11 @@ export default {
     registerUserClick () {
       console.log('registerUserInfo:', this.registerUserInfo)
       let registerUser =
-        {
-          userName: this.registerUserInfo.userName,
-          userPhone: this.registerUserInfo.userPhone,
-          userPassword: this.registerUserInfo.userPassword
-        }
+      {
+        userName: this.registerUserInfo.userName,
+        userPhone: this.registerUserInfo.userPhone,
+        userPassword: this.registerUserInfo.userPassword
+      }
       console.log('registerUser', registerUser)
       if (this.registerUserInfo.userPassword === this.registerUserInfo.userPassword2) {
         console.log('密码匹配')
@@ -215,7 +233,7 @@ export default {
       const h = this.$createElement
       this.$notify({
         title: '成功',
-        message: h('i', {style: 'color: teal'}, action + '成功')
+        message: h('i', { style: 'color: teal' }, action + '成功')
       })
     },
     getCode () {
@@ -260,22 +278,57 @@ export default {
 </script>
 
 <style>
+
 .loginMax {
-  width: 100%;
-  height: 100%;
+  width: 99vw;
+  height: 98vh;
+  background-image: url('https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg');
+
+  /* 背景图垂直、水平均居中 */
+  background-position: center center;
+  /* 背景图不平铺 */
+  background-repeat: no-repeat;
+  /* 当内容高度大于图片高度时，背景图像的位置相对于viewport固定 */
+  background-attachment: fixed;
+  /* 让背景图基于容器大小伸缩 */
+  background-size: cover;
+  /* 设置背景颜色，背景图加载过程中会显示背景色 */
+  background-color: #464646;
+
 }
+
+/* .login {
+  width: 500px;
+  /* height: 20px; */
+/* background-color:rgb(9, 133, 249); */
+/* border: solid 1px #dcdfe6; */
+/* border-radius: 10px; */
+/* position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); */
+/* padding-right: 40px; */
+/* } */
 
 .login {
   width: 500px;
-  /* height: 20px; */
-  /* background-color:rgb(9, 133, 249); */
-  /* border: solid 1px #dcdfe6; */
-  /* border-radius: 10px; */
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  /* padding-right: 40px; */
+  padding: 10px;
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  /* //background-color: rgba(255, 255, 255, 12);
+//backdrop-filter: blur(10px);
+//background: rgba(255, 255, 255, 0.2); */
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border-radius: 25px;
+  box-shadow: inset 0 0 6px rgba(255, 255, 255, 0.1);
+
 }
 
 .login h3 {
