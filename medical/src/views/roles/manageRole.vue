@@ -1,11 +1,10 @@
 <template>
   <div class="manageRole">
-    <el-table :data="
-      roleList.filter(
-        (data) =>
-          !search || data.roleName.toLowerCase().includes(search.toLowerCase())
-      )
-    " :tree-props="{ children: 'children', hasChildren: 'hasChildren' }" fit stripe style="width: 100%">
+    <el-table :data="roleList.filter(
+      (data) =>
+        !search || data.roleName.toLowerCase().includes(search.toLowerCase())
+    )
+      " :tree-props="{ children: 'children', hasChildren: 'hasChildren' }" fit stripe style="width: 100%">
       <el-table-column label="角色Id" prop="roleId"></el-table-column>
       <el-table-column label="角色名" prop="roleName"></el-table-column>
       <el-table-column label="创建时间" prop="createTime"></el-table-column>
@@ -13,10 +12,9 @@
       <el-table-column align="left">
         <template slot="header" slot-scope="roleList">
           <el-col :span="14">
-            <el-input v-if="roleList" v-model="search" placeholder="输入关键字搜索" size="mini"/>
+            <el-input v-if="roleList" v-model="search" placeholder="输入关键字搜索" size="mini" />
           </el-col>
-          <el-button icon="el-icon-circle-plus-outline" round size="mini" type="primary"
-                     @click="addShowdialog">添加
+          <el-button icon="el-icon-circle-plus-outline" round size="mini" type="primary" @click="addShowdialog">添加
           </el-button>
         </template>
         <template slot-scope="scope">
@@ -34,14 +32,8 @@
             </el-input>
           </el-form-item>
           <el-form-item label="赋权">
-            <el-tree
-              ref="action_tree"
-              :data="rightList"
-              :default-checked-keys=this.default_checked_keys
-              :default-expanded-keys=default_checked_keys
-              :props=defaultProps
-              default-expand-all
-              node-key="rightId"
+            <el-tree ref="action_tree" :data="rightList" :default-checked-keys=this.default_checked_keys
+              :default-expanded-keys=default_checked_keys :props=defaultProps default-expand-all node-key="rightId"
               show-checkbox>
             </el-tree>
           </el-form-item>
@@ -62,9 +54,9 @@
             </el-col>
           </el-form-item>
           <el-form-item label="菜单权限">
-            <el-tree ref="action_tree" :data="rightList" :default-checked-keys="this.default_checked_keys" :default-expanded-keys="default_checked_keys" :props="defaultProps"
-                     default-expand-all node-key="rightId"
-                     show-checkbox>
+            <el-tree ref="action_tree" :data="rightList" :default-checked-keys="this.default_checked_keys"
+              :default-expanded-keys="default_checked_keys" :props="defaultProps" default-expand-all node-key="rightId"
+              show-checkbox>
             </el-tree>
           </el-form-item>
         </el-form>
@@ -106,6 +98,15 @@ export default {
   },
 
   methods: {
+    handleDelete (index, row) {
+      axios.delete(`/admin/role/` + row.roleId).then((jsondata) => {
+        console.log('删除', row.roleId)
+        if (jsondata.code === '200') {
+          this.noti('删除')
+          this.getRoleList()
+        }
+      })
+    },
     updItem () {
       // this.temp = this.$refs.tree.getCheckedNodes()
       // this.roleRight.rightList = this.$refs.tree.getCheckedNodes()
@@ -223,7 +224,7 @@ export default {
       const h = this.$createElement
       this.$notify({
         title: '成功',
-        message: h('i', {style: 'color: teal'}, action + '成功')
+        message: h('i', { style: 'color: teal' }, action + '成功')
       })
     },
     getRoleList () {
@@ -244,7 +245,7 @@ export default {
       let objData = JSON.stringify(row)
       this.$router.push({
         path: '/role/edit',
-        query: {allData: encodeURIComponent(objData)}
+        query: { allData: encodeURIComponent(objData) }
       })
       // this.role = row
       // console.log(row)

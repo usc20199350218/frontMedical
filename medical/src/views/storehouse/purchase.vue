@@ -20,7 +20,7 @@
       <el-select slot="prepend" v-model="searchMethod" placeholder="请选择方式" style="padding-left: 30px; width: 150px;"
         @change="getBatchsList()">
         <el-option label="药品名称" value="drugName"></el-option>
-        <el-option label="药品详情编号" value="drugDetailId"></el-option>
+        <el-option label="药品详情编号" value="drugNumber"></el-option>
       </el-select>
       <el-button slot="append" icon="el-icon-search" @click="getBatchsList()"></el-button>
     </el-input>

@@ -494,7 +494,7 @@ export default {
     },
     clean () {
       this.searchText = ''
-      this.searchMethod = '姓名'
+      this.searchMethod = 'userRealName'
       this.roleId = ''
       this.userVip = ''
       this.userGender = '男女'
@@ -690,6 +690,7 @@ export default {
           console.log('删除', jsondata.data)
           if (jsondata.code === '200') {
             this.noti('删除')
+            this.getUsersList()
           }
         })
         .then(console.error())
@@ -705,7 +706,7 @@ export default {
           console.log(jsondata)
           if (jsondata.code === '200') {
             // alert('下架成功')
-            this.noti('下架')
+            this.noti('封禁')
           }
         })
         .then(console.error())
@@ -721,7 +722,7 @@ export default {
           console.log(jsondata)
           if (jsondata.code === '200') {
             // alert('上架成功')
-            this.noti('上架')
+            this.noti('解封')
           }
         })
         .then(console.error())

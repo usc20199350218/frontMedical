@@ -70,7 +70,8 @@
             </el-button>
           </template>
           <template slot-scope="applyBatchList">
-            <el-button size="mini" @click="handleClick(applyBatchList.row, 'pass')">通过</el-button>
+            <el-button size="mini" :disabled="applyBatchList.row.totalBalance <= 0"
+              @click="handleClick(applyBatchList.row, 'pass')">通过</el-button>
             <el-button size="mini" @click="handleLook(applyBatchList.$index, applyBatchList.row)">详情</el-button>
             <el-button size="mini" type="danger" @click="handleClick(applyBatchList.row, 'fail')">退回</el-button>
           </template>
@@ -122,16 +123,16 @@
             </template>
           </el-table-column>
           <el-table-column align="left" fixed="right" width="220px">
-            <template slot="header" slot-scope="applyBatchList">
+            <template slot="header" slot-scope="storeBatchDetailList">
               <el-col :span="14">
-                <el-input v-if="applyBatchList" v-model="search" placeholder="输入关键字搜索" size="mini" />
+                <el-input v-if="storeBatchDetailList" v-model="search" placeholder="输入关键字搜索" size="mini" />
               </el-col>
-              <el-button icon="el-icon-circle-plus-outline" round size="mini" type="primary" @click="position = {}">添加
-              </el-button>
+              <!-- <el-button icon="el-icon-circle-plus-outline" round size="mini" type="primary" @click="position = {}">添加
+              </el-button> -->
             </template>
-            <template slot-scope="applyBatchList">
-              <el-button size="mini" @click="detailClick(applyBatchList.row, 'pass')">通过</el-button>
-              <el-button size="mini" type="danger" @click="detailClick(applyBatchList.row, 'fail')">退回</el-button>
+            <template slot-scope="storeBatchDetailList">
+              <el-button size="mini" :disabled="storeBatchDetailList.row.totalBalance <= 0" @click="detailClick(storeBatchDetailList.row, 'pass')">通过</el-button>
+              <el-button size="mini" type="danger" @click="detailClick(storeBatchDetailList.row, 'fail')">退回</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -239,7 +240,6 @@ export default {
       this.getApplyBatchList()
     },
     handleClick (row, status) {
-      console.log(status, row)
       if (status === 'fail') {
         this.activeApplyIdList = row.applyIdList
         this.remarkShow = true
@@ -259,8 +259,10 @@ export default {
         })
       }
       // 刷新
+
       this.getApplyBatchList()
-      // this.refreshKey++
+
+      this.refreshKey++
       // location.reload()
     },
     handleFail () {

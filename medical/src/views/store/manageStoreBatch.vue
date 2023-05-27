@@ -237,7 +237,7 @@
     </div>
     <div>
       <el-dialog :visible.sync="showContactPerson" title="联系人">
-        <span>{{ roleId }}</span>
+        <!-- <span>{{ roleId }}</span> -->
         <span>{{ contactPerson }}</span>
       </el-dialog>
     </div>

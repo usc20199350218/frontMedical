@@ -16,7 +16,7 @@
         <el-table-column fixed="left" label="店铺照片" min-width="50px">
           <template slot-scope="storeList">
             <!-- <span style="margin-left: 10px">{{ storeList.row.storeId }}</span> -->
-            <img :src="storeList.row.storePath" alt="图片" height="100px"/>
+            <img :src="storeList.row.storePath" alt="图片" height="100px" />
           </template>
         </el-table-column>
         <el-table-column fixed="left" label="店铺名称" width="180">
@@ -33,7 +33,7 @@
         <el-table-column fixed="left" label="状态" width="85px">
           <template slot-scope="storeList">
             <el-switch v-model="storeList.row.storeStatus" :active-value="1" :inactive-value="0" active-color="#13ce66"
-                       inactive-color="#ff4949" @change="storesStateChaged(storeList.row)">
+              inactive-color="#ff4949" @change="storesStateChaged(storeList.row)">
             </el-switch>
           </template>
         </el-table-column>
@@ -65,10 +65,10 @@
         <el-table-column align="left" fixed="right" width="300px">
           <template slot="header" slot-scope="storeList">
             <el-col :span="14">
-              <el-input v-if="storeList" v-model="search" placeholder="输入关键字搜索" size="mini"/>
+              <el-input v-if="storeList" v-model="search" placeholder="输入关键字搜索" size="mini" />
             </el-col>
             <el-button icon="el-icon-circle-plus-outline" round size="mini" type="primary"
-                       @click="store = {}, showAdd = true">添加
+              @click="store = {}, showAdd = true">添加
             </el-button>
           </template>
           <template slot-scope="storeList">
@@ -91,10 +91,8 @@
           </el-form-item>
           <el-form-item label="照片上传">
             <!-- <el-col> -->
-            <el-upload :file="fileList" :on-preview="handlePreview"
-                       :on-remove="handleRemove" :on-success="filesuccess"
-                       action="http://localhost:8088/api/upload?module=storepath" class="upload-demo"
-                       list-type="picture">
+            <el-upload :file="fileList" :on-preview="handlePreview" :on-remove="handleRemove" :on-success="filesuccess"
+              action="http://localhost:8088/api/upload?module=storepath" class="upload-demo" list-type="picture">
               <el-button size="small" type="primary">点击上传</el-button>
               <div slot="tip" class="el-upload__tip">
                 只能上传jpg/png文件且不超过500kb
@@ -114,8 +112,7 @@
           </el-form-item>
           <el-form-item label="商圈">
             <el-col :span="10">
-              <el-input v-model="store.businessDistrict" maxlength="250" show-word-limit
-                        type="textarea"></el-input>
+              <el-input v-model="store.businessDistrict" maxlength="250" show-word-limit type="textarea"></el-input>
             </el-col>
           </el-form-item>
           <el-form-item label="地址">
@@ -126,7 +123,7 @@
           <el-form-item label="营业时间">
             <el-col :span="10">
               <el-input v-model="store.businessHours" maxlength="10" placeholder="HH:mm-HH:mm" show-word-limit
-                        type="text"></el-input>
+                type="text"></el-input>
             </el-col>
           </el-form-item>
         </el-form>
@@ -141,15 +138,13 @@
         <el-form ref="form" :model="store" label-width="80px" size="mini">
           <el-form-item label="店铺名称">
             <el-col :span="10">
-              <el-input v-model="store.storeName" maxlength="32" show-word-limit ></el-input>
+              <el-input v-model="store.storeName" maxlength="32" show-word-limit></el-input>
             </el-col>
           </el-form-item>
           <el-form-item label="照片上传">
             <!-- <el-col> -->
-            <el-upload :file="fileList" :on-preview="handlePreview"
-                       :on-remove="handleRemove" :on-success="filesuccess"
-                       action="http://localhost:8088/api/upload?module=storepath" class="upload-demo"
-                       list-type="picture">
+            <el-upload :file="fileList" :on-preview="handlePreview" :on-remove="handleRemove" :on-success="filesuccess"
+              action="http://localhost:8088/api/upload?module=storepath" class="upload-demo" list-type="picture">
               <el-button size="small" type="primary">点击上传</el-button>
               <div slot="tip" class="el-upload__tip">
                 只能上传jpg/png文件且不超过500kb
@@ -169,8 +164,7 @@
           </el-form-item>
           <el-form-item label="商圈">
             <el-col :span="10">
-              <el-input v-model="store.businessDistrict" maxlength="250" show-word-limit
-                        type="textarea"></el-input>
+              <el-input v-model="store.businessDistrict" maxlength="250" show-word-limit type="textarea"></el-input>
             </el-col>
           </el-form-item>
           <el-form-item label="地址">
@@ -181,7 +175,7 @@
           <el-form-item label="营业时间">
             <el-col :span="10">
               <el-input v-model="store.businessHours" maxlength="10" placeholder="HH:mm-HH:mm" show-word-limit
-                        type="text"></el-input>
+                type="text"></el-input>
             </el-col>
           </el-form-item>
         </el-form>
@@ -201,7 +195,7 @@
         <el-table :data="staffsList" style="width: 100%">
           <el-table-column label="头像">
             <template slot-scope="scope">
-              <img :src="scope.row.userAvatarUrl" style="width: 100px;"/>
+              <img :src="scope.row.userAvatarUrl" style="width: 100px;" />
             </template>
           </el-table-column>
           <el-table-column label="姓名" width="180">
@@ -225,15 +219,16 @@
               <span> {{ scope.row.userPhone }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="操作">
-            <template slot-scope="scope">
-              <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-              <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
-            </template>
-          </el-table-column>
+          <!-- <el-table-column label="操作"> -->
+            <!-- <template slot-scope="scope"> -->
+              <!-- <el-button size="mini" @click="handleEditStaff(scope.$index, scope.row)">编辑</el-button> -->
+              <!-- <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button> -->
+            <!-- </template> -->
+          <!-- </el-table-column> -->
         </el-table>
       </el-dialog>
     </div>
+
   </div>
 </template>
 
@@ -252,13 +247,17 @@ export default {
       staffsList: [],
       staffTitle: '详情',
       showStaffs: false,
-      fileList: ''
+      fileList: '',
+      showUpdStaff: false
     }
   },
   created () {
     this.getStoreList()
   },
   methods: {
+    handleEditStaff (index, row) {
+      this.showUpdStaff = true
+    },
     filesuccess (response, file, fileList) {
       console.log(response)
       if (response.data !== null) {
@@ -279,7 +278,7 @@ export default {
       const h = this.$createElement
       this.$notify({
         title: '成功',
-        message: h('i', {style: 'color: teal'}, action + '成功')
+        message: h('i', { style: 'color: teal' }, action + '成功')
       })
     },
     getStoreList () {

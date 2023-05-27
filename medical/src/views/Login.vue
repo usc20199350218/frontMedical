@@ -53,7 +53,7 @@
     <!--    </div>-->
     <div class="login">
       <el-tabs v-model="activeName" stretch type="border-card">
-        <el-tab-pane label="社区药店管理系统" name="first">
+        <el-tab-pane label="账号密码登录" name="first">
           <el-form ref="userinfo" :label-position="labelPosition" :model="userInfo" :rules="rules" label-width="70px">
             <h3>欢迎登录社区药店管理系统</h3>
             <el-form-item label="账号" prop="userName">
@@ -211,7 +211,7 @@ export default {
           Qs.stringify(registerUser)
         ).then((jsondata) => {
           console.log('json-data', jsondata)
-          if (jsondata.code === 200) {
+          if (jsondata.code === '200') {
             this.$message({
               message: '注册成功',
               type: 'success'

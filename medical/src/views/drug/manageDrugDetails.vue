@@ -120,7 +120,7 @@
               </el-upload>
             </el-col>
             <el-col>
-              <el-input v-model="drugDetail.drugDetailPath" placeholder="电影路径，直接输路径，cpoy用" type="text">
+              <el-input v-model="drugDetail.drugDetailPath" placeholder="图片路径，直接输路径，cpoy用" type="text">
               </el-input>
             </el-col>
           </el-form-item>
@@ -134,7 +134,7 @@
           </el-form-item>
           <el-form-item label="规格">
             <el-col>
-              <el-input v-model="drugDetail.drugSpecification" maxlength="20" placeholder="请输入品名" show-word-limit
+              <el-input v-model="drugDetail.drugSpecification" maxlength="20" placeholder="请输入规格" show-word-limit
                         type="text"></el-input>
             </el-col>
           </el-form-item>
@@ -208,7 +208,7 @@
           </el-form-item>
           <el-form-item label="规格">
             <el-col>
-              <el-input v-model="drugDetail.drugSpecification" maxlength="20" placeholder="请输入品名" show-word-limit
+              <el-input v-model="drugDetail.drugSpecification" maxlength="20" placeholder="请输入规格" show-word-limit
                         type="text"></el-input>
             </el-col>
           </el-form-item>

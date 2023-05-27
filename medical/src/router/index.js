@@ -54,7 +54,7 @@ export default new Router({
     {
       path: '/index',
       component: Index,
-      // redirect: '/welcome',
+      redirect: '/welcome',
       children: [
         {
           path: '/nothing',

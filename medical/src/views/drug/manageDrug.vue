@@ -327,7 +327,7 @@ export default {
     handleDelete (index, row) {
       axios({
         method: 'delete',
-        url: `/admin/user/` + row.drugId
+        url: `/admin/drug/` + row.drugId
       })
         .then((jsondata) => {
           console.log('删除' + jsondata.data)

@@ -236,6 +236,10 @@ export default {
       }).then(
         jsondata => {
           console.log('click:', jsondata)
+          this.$message({
+            message: '操作成功',
+            type: 'success'
+          })
           this.getDeliveryList()
         }
       )
@@ -293,7 +297,7 @@ export default {
       })
         .then(jsondata => {
           console.log(jsondata)
-          if (jsondata.code === '200') {
+          if (jsondata.code === 200) {
             this.noti('操作')
           }
         })
